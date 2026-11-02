@@ -115,6 +115,7 @@ The window is a JavaFX `WebView` showing the HTML/CSS in `src/main/resources/sta
   - `ui`: `TalkCareUi` (wires everything), `Navigator` (screens + access rules), `Session` (signed-in account, observers), `UiCall` (API result → JavaFX thread), `Dialogs`, `ImagePicker` (native file chooser), `Poller`.
   - `ui/dom`: `Dom` / `El`, a small fluent wrapper over the WebView DOM.
   - `ui/controller`: one controller per part of the page, all extending `Controller` (`NavbarController`, `AuthController`, `VerificationController`, `ProfileController`, `InfoPagesController`, `ChatController`, `ProfessionalInboxController`, `ReportsController`, `AdminController`, `ConnectionController`). Screens that react to being shown implement `Screen`.
+- **OOP:** see [`docs/oop-usage.md`](docs/oop-usage.md) for how encapsulation, abstraction, inheritance and polymorphism are used, with code references.
 - **To add a button:** put `data-action="my-action"` on it in the HTML and register `router.onClick("my-action", ...)` in the controller that owns that screen.
 
 ## Password recovery email
