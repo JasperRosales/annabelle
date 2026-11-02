@@ -64,6 +64,10 @@ public final class AdminController extends Controller implements Screen {
             dom().byClass("admin-role-pill").forEach(p -> p.toggleClass("active", userRole.equals(p.data("arg"))));
             renderUsers();
         });
+        router.onClick("admin-user-status", action -> {
+            String[] parts = action.arg().split(":", 2);
+            setUserStatus(Long.parseLong(parts[0]), parts[1]);
+        });
         router.onInput("admin-user-search", action -> {
             userQuery = action.source().trimmedValue().toLowerCase(Locale.ROOT);
             renderUsers();
@@ -324,12 +328,36 @@ public final class AdminController extends Controller implements Screen {
                 dom().create("div").append(
                         dom().create("div", "user-name", user.displayName()),
                         dom().create("div", "user-email", orDefault(user.email(), ""))));
+        El actions = dom().create("div", "user-actions");
+        if (user.id() != session().require().id()) {
+            boolean blocked = "SUSPENDED".equals(status) || "DEACTIVATED".equals(status);
+            actions.append(dom().create("button", "dsh-btn small " + (blocked ? "secondary" : "ghost"),
+                            blocked ? "Reactivate" : "Suspend")
+                    .attr("type", "button")
+                    .attr("data-action", "admin-user-status")
+                    .attr("data-arg", user.id() + ":" + (blocked ? "REACTIVATE" : "SUSPEND")));
+        }
         return dom().create("div", "admin-user-row").append(
                 who,
                 dom().create("div").append(dom().create("span",
                         "role-tag role-" + orDefault(user.role(), "CLIENT").toLowerCase(), user.roleLabel())),
                 dom().create("div").append(dom().create("span",
-                        "user-status status-" + status.toLowerCase().replace('_', '-'), statusLabel(status))));
+                        "user-status status-" + status.toLowerCase().replace('_', '-'), statusLabel(status))),
+                actions);
+    }
+
+    private void setUserStatus(long userId, String action) {
+        Account user = users.stream().filter(u -> u.id() == userId).findFirst().orElse(null);
+        if (user == null) return;
+        if ("SUSPEND".equals(action) && !dialogs().confirm("Suspend " + user.displayName()
+                + "? They will be signed out and cannot sign in until reactivated.")) return;
+        UiCall.of(api().admin().setUserStatus(userId, action))
+                .onSuccess(updated -> {
+                    loadUsers();
+                    loadActivity();
+                })
+                .onError(error -> dialogs().error("Could not update the account: " + error.getMessage()))
+                .start();
     }
 
     private static String statusLabel(String status) {

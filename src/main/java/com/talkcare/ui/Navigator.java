@@ -13,6 +13,10 @@ import java.util.Map;
  * when its view is shown or left.
  */
 public final class Navigator {
+    /** Screens only clients use; other roles are sent to their own dashboard. */
+    private static final java.util.Set<String> CLIENT_ONLY =
+            java.util.Set.of("dashboard", "services", "chat", "report-form", "report-success");
+
     private final Dom dom;
     private final Session session;
     private final Map<String, Screen> screens = new HashMap<>();
@@ -74,7 +78,7 @@ public final class Navigator {
         if (session.isSignedIn()) {
             String home = session.homeView();
             if ("home".equals(viewId)) return home;
-            if ("dashboard".equals(viewId) && !session.require().isClient()) return home;
+            if (CLIENT_ONLY.contains(viewId) && !session.require().isClient()) return home;
             if ("admin".equals(viewId) && !"admin".equals(home)) return home;
             return viewId;
         }

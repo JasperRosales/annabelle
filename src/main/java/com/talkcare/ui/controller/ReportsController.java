@@ -25,6 +25,7 @@ public final class ReportsController extends Controller implements Screen {
     private final AppointmentsController appointments;
     private final ReportDetailsController details;
     private String filter = "All";
+    private boolean pastSessions;
     private List<Report> shown = List.of();
 
     public ReportsController(UiContext context, AppointmentsController appointments, ReportDetailsController details) {
@@ -46,12 +47,21 @@ public final class ReportsController extends Controller implements Screen {
         appointments.onChange(() -> {
             if ("dashboard".equals(navigator().currentView())) loadSessions();
         });
-        navigator().register(this, "dashboard");
+        router.onClick("client-sessions-tab", action -> {
+            pastSessions = "past".equals(action.arg());
+            dom().byClass("client-session-tab").forEach(t -> t.toggleClass("active", action.arg().equals(t.data("arg"))));
+            loadSessions();
+        });
+        navigator().register(this, "dashboard", "report-form");
     }
 
     @Override
     public void onShow(String viewId) {
         Account account = session().require();
+        if ("report-form".equals(viewId)) {
+            prefillReport(account);
+            return;
+        }
         byId("dash-user-name").text(account.displayName());
         El chip = byId("dash-account-status").removeClass("verified").removeClass("pending");
         if (account.isVerified()) chip.addClass("verified").text("Verified account");
@@ -61,12 +71,24 @@ public final class ReportsController extends Controller implements Screen {
         loadSessions();
     }
 
-    /** Upcoming requested/confirmed sessions, soonest first. */
+    /** The report form starts with the signed-in client's details. */
+    private void prefillReport(Account account) {
+        byId("report-name").value(orDefault(account.fullName(), account.displayName()));
+        byId("report-email").value(orDefault(account.email(), ""));
+        byId("report-address").value(orDefault(account.address(), ""));
+        byId("report-contact").value(orDefault(account.contactNo(), ""));
+        byId("report-submit-status").text("");
+    }
+
+    /** Upcoming: requested/confirmed sessions still ahead. Past: everything else, newest first. */
     private void loadSessions() {
         UiCall.of(api().appointments().list())
                 .onSuccess(list -> appointments.render(byId("client-sessions-list"),
-                        list.stream().filter(a -> a.isActive() && Formats.isFuture(a.end())).limit(4).toList(),
-                        AppointmentsController.Viewer.CLIENT, "Book a time with your professional."))
+                        list.stream().filter(a -> pastSessions != (a.isActive() && Formats.isFuture(a.end())))
+                                .limit(pastSessions ? 8 : 4).toList(),
+                        AppointmentsController.Viewer.CLIENT, pastSessions
+                                ? "Finished and cancelled sessions appear here."
+                                : "Book a time with your professional."))
                 .onError(error -> byId("client-sessions-list").clear()
                         .append(dom().create("div", "admin-request-error", "Could not load sessions.")))
                 .start();

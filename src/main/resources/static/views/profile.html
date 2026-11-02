@@ -1,35 +1,75 @@
-<!-- PAGE 4: PROFILE SCREEN (With Picture Upload) -->
-<section class="view-screen" id="view-profile">
-  <div class="profile-screen-container">
-    <h2 class="profile-title">PROFILE</h2>
-
-    <div class="profile-card">
-      <div class="profile-avatar-column">
-        <img src="assets/individual.svg" alt="Profile" class="profile-avatar-large" id="profile-display-img">
-        <button type="button" class="btn-upload-photo" data-action="pick-profile-photo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-          Upload Picture
-        </button>
+<!-- PAGE 4: PROFILE (every role) -->
+<section class="view-screen dsh" id="view-profile">
+  <div class="dsh-container narrow">
+    <header class="dsh-header">
+      <div>
+        <p class="dsh-eyebrow">Account</p>
+        <h1 class="dsh-title">My profile</h1>
+        <p class="dsh-subtitle">Keep your contact details up to date so TalkCare can reach you.</p>
       </div>
-
-      <div class="profile-fields-column">
-        <div class="profile-field-row">
-          <div class="profile-field-label">User name:</div>
-          <input type="text" id="profile-username" class="profile-field-input" value="maxsmith">
-        </div>
-
-        <div class="profile-field-row">
-          <div class="profile-field-label">Email:</div>
-          <input type="email" id="profile-email" class="profile-field-input" value="max.smith@talkcare.com">
-        </div>
-
-        <div class="profile-field-row">
-          <div class="profile-field-label">Password:</div>
-          <input type="password" id="profile-password" class="profile-field-input" value="max123">
-        </div>
-
-        <button type="button" class="btn-update-profile" data-action="save-profile">Update Information</button>
+      <div class="dsh-header-actions">
+        <button type="button" class="dsh-btn secondary" data-action="navigate" data-arg="home">Back to dashboard</button>
       </div>
+    </header>
+
+    <div class="profile-layout">
+      <section class="dsh-card profile-summary">
+        <img src="assets/individual.svg" alt="Profile photo" class="profile-photo" id="profile-display-img">
+        <button type="button" class="dsh-btn secondary small" data-action="pick-profile-photo">Change photo</button>
+        <h2 class="profile-name" id="profile-summary-name">—</h2>
+        <p class="profile-handle" id="profile-summary-username"></p>
+        <div class="profile-chips">
+          <span class="role-tag" id="profile-summary-role">Client</span>
+          <span class="user-status" id="profile-summary-status">Active</span>
+        </div>
+        <dl class="profile-facts">
+          <div><dt>Email</dt><dd id="profile-summary-email">—</dd></div>
+          <div><dt>ID on file</dt><dd id="profile-summary-id">Not submitted</dd></div>
+        </dl>
+        <button type="button" class="dsh-btn primary small" id="profile-verify-btn" data-action="navigate" data-arg="id-verify" hidden>Verify my identity</button>
+      </section>
+
+      <section class="dsh-card">
+        <form class="tc-form" data-submit="save-profile">
+          <h2 class="dsh-card-title wide">Personal details</h2>
+          <label class="auth-field wide">
+            <span>Full name</span>
+            <input type="text" name="fullName" class="auth-input" autocomplete="name" maxlength="150" required>
+          </label>
+          <label class="auth-field">
+            <span>Username</span>
+            <input type="text" name="username" class="auth-input" autocomplete="username" maxlength="100" required>
+          </label>
+          <label class="auth-field">
+            <span>Email</span>
+            <input type="email" name="email" class="auth-input" autocomplete="email" maxlength="150" required>
+          </label>
+          <label class="auth-field">
+            <span>Mobile number</span>
+            <input type="tel" name="contactNo" class="auth-input" autocomplete="tel" maxlength="50">
+          </label>
+          <label class="auth-field">
+            <span>Address</span>
+            <input type="text" name="address" class="auth-input" autocomplete="street-address" maxlength="500">
+          </label>
+
+          <h2 class="dsh-card-title wide form-section">Change password</h2>
+          <p class="dsh-card-sub wide">Leave both fields empty to keep your current password.</p>
+          <label class="auth-field">
+            <span>New password</span>
+            <input type="password" name="password" class="auth-input" autocomplete="new-password" placeholder="At least 8 characters">
+          </label>
+          <label class="auth-field">
+            <span>Confirm new password</span>
+            <input type="password" name="confirmPassword" class="auth-input" autocomplete="new-password">
+          </label>
+
+          <p class="tc-form-status wide" role="status" aria-live="polite"></p>
+          <div class="tc-actions wide">
+            <button type="submit" class="dsh-btn primary">Save changes</button>
+          </div>
+        </form>
+      </section>
     </div>
   </div>
 </section>

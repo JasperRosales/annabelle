@@ -73,10 +73,14 @@
         <section class="dsh-card">
           <div class="dsh-card-head">
             <div>
-              <h2 class="dsh-card-title">Upcoming sessions</h2>
-              <p class="dsh-card-sub">Requested and confirmed sessions.</p>
+              <h2 class="dsh-card-title">Sessions</h2>
+              <p class="dsh-card-sub">Your requested, confirmed and past sessions.</p>
             </div>
             <button type="button" class="auth-link" data-action="open-book-session">+ Book</button>
+          </div>
+          <div class="segmented">
+            <button class="activity-pill client-session-tab active" data-action="client-sessions-tab" data-arg="upcoming">Upcoming</button>
+            <button class="activity-pill client-session-tab" data-action="client-sessions-tab" data-arg="past">Past</button>
           </div>
           <div class="session-list" id="client-sessions-list"></div>
         </section>
@@ -137,22 +141,22 @@
       <form data-submit="submit-report">
         <div class="report-field-row">
           <div class="report-field-label">Full Name :</div>
-          <input type="text" id="report-name" class="report-field-input" value="Max Smith" required>
+          <input type="text" id="report-name" class="report-field-input" required>
         </div>
 
         <div class="report-field-row">
           <div class="report-field-label">Email :</div>
-          <input type="email" id="report-email" class="report-field-input" value="max.smith@talkcare.com" required>
+          <input type="email" id="report-email" class="report-field-input" required>
         </div>
 
         <div class="report-field-row">
           <div class="report-field-label">Address :</div>
-          <input type="text" id="report-address" class="report-field-input" value="Quezon City, Philippines" required>
+          <input type="text" id="report-address" class="report-field-input" required>
         </div>
 
         <div class="report-field-row">
           <div class="report-field-label">Contact No. :</div>
-          <input type="text" id="report-contact" class="report-field-input" value="096364664286" required>
+          <input type="text" id="report-contact" class="report-field-input" required>
         </div>
 
         <div class="report-field-row">
