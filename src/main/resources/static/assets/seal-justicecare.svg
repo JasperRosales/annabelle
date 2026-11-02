@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="47" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" />
+  <circle cx="50" cy="50" r="41" fill="#FFFFFF" stroke="#81C784" stroke-width="1.5" stroke-dasharray="3,2" />
+  
+  <!-- Scales of Justice inside seal -->
+  <g transform="translate(18, 16) scale(0.4)">
+    <rect x="74" y="100" width="12" height="15" rx="3" fill="#D4AF37" />
+    <path d="M78 100 L82 100 L81 40 L79 40 Z" fill="#D4AF37" />
+    <circle cx="80" cy="38" r="5" fill="#D4AF37" />
+    <path d="M45 42 Q80 38 115 42" stroke="#D4AF37" stroke-width="4" fill="none" />
+    
+    <line x1="48" y1="42" x2="40" y2="65" stroke="#C5A028" stroke-width="2" />
+    <line x1="48" y1="42" x2="56" y2="65" stroke="#C5A028" stroke-width="2" />
+    <path d="M36 65 Q48 78 60 65 Z" fill="#D4AF37" />
+
+    <line x1="112" y1="42" x2="104" y2="65" stroke="#C5A028" stroke-width="2" />
+    <line x1="112" y1="42" x2="120" y2="65" stroke="#C5A028" stroke-width="2" />
+    <path d="M100 65 Q112 78 124 65 Z" fill="#D4AF37" />
+  </g>
+  <!-- Leaves wreath below -->
+  <path d="M25 65 Q50 82 75 65" stroke="#388E3C" stroke-width="3" fill="none" stroke-linecap="round" />
+</svg>
+

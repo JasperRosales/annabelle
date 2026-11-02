@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <radialGradient id="faceGrad" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#FFE0B2" />
+      <stop offset="100%" stop-color="#FFCC80" />
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4E342E" />
+      <stop offset="100%" stop-color="#2D1810" />
+    </linearGradient>
+    <linearGradient id="sweaterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB8C00" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hair back -->
+  <path d="M50 45 C45 75 48 100 58 115 C58 115 54 85 58 50 Z" fill="url(#hairGrad)" />
+  <path d="M110 45 C115 75 112 100 102 115 C102 115 106 85 102 50 Z" fill="url(#hairGrad)" />
+
+  <!-- Body / Sweater -->
+  <path d="M52 110 L50 160 L110 160 L108 110 Q80 100 52 110 Z" fill="url(#sweaterGrad)" />
+  <!-- White Inner Shirt -->
+  <polygon points="70,110 90,110 80,126" fill="#FFFFFF" />
+  <!-- Cardigan Collar -->
+  <path d="M62 112 L80 135 L98 112" stroke="#BF360C" stroke-width="2.5" fill="none" />
+
+  <!-- Neck -->
+  <rect x="74" y="94" width="12" height="18" fill="url(#faceGrad)" rx="3" />
+
+  <!-- Head / Face -->
+  <ellipse cx="80" cy="72" rx="20" ry="24" fill="url(#faceGrad)" />
+  <!-- Blush -->
+  <circle cx="68" cy="78" r="4" fill="#FF8A80" opacity="0.4" />
+  <circle cx="92" cy="78" r="4" fill="#FF8A80" opacity="0.4" />
+  <!-- Smile -->
+  <path d="M75 82 Q80 86 85 82" stroke="#D84315" stroke-width="2" fill="none" stroke-linecap="round" />
+  <!-- Eyes -->
+  <path d="M68 70 Q71 67 74 70" stroke="#3E2723" stroke-width="2" fill="none" stroke-linecap="round" />
+  <path d="M86 70 Q89 67 92 70" stroke="#3E2723" stroke-width="2" fill="none" stroke-linecap="round" />
+
+  <!-- Hair front bangs -->
+  <path d="M60 62 C65 40 95 40 100 62 C94 52 86 54 80 57 C74 54 66 52 60 62 Z" fill="url(#hairGrad)" />
+  <path d="M56 68 C58 56 62 48 80 46 C98 48 102 56 104 68 C108 52 98 38 80 38 C62 38 52 52 56 68 Z" fill="url(#hairGrad)" />
+</svg>
+

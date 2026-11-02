@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <radialGradient id="goldLight" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFF9C4" />
+      <stop offset="50%" stop-color="#FBC02D" />
+      <stop offset="100%" stop-color="#F57F17" />
+    </radialGradient>
+    <linearGradient id="woodGavel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8D6E63" />
+      <stop offset="100%" stop-color="#4E342E" />
+    </linearGradient>
+    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C5CAE9" />
+      <stop offset="100%" stop-color="#7986CB" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Stack of Law Books -->
+  <rect x="25" y="125" width="110" height="18" rx="4" fill="#3949AB" />
+  <rect x="30" y="128" width="102" height="12" rx="2" fill="#E8EAF6" />
+  <rect x="35" y="112" width="95" height="16" rx="3" fill="#D32F2F" />
+  <rect x="38" y="115" width="90" height="10" rx="2" fill="#FFEBEE" />
+
+  <!-- Scales of Justice Base & Pillar -->
+  <path d="M70 112 L90 112 L84 45 L76 45 Z" fill="url(#goldLight)" />
+  <ellipse cx="80" cy="112" rx="18" ry="6" fill="#F57F17" />
+  <circle cx="80" cy="40" r="7" fill="url(#goldLight)" />
+  <!-- Beam -->
+  <path d="M40 45 Q80 40 120 45" stroke="url(#goldLight)" stroke-width="4.5" fill="none" stroke-linecap="round" />
+  
+  <!-- Left Pan -->
+  <line x1="42" y1="46" x2="32" y2="72" stroke="#F9A825" stroke-width="1.8" />
+  <line x1="42" y1="46" x2="52" y2="72" stroke="#F9A825" stroke-width="1.8" />
+  <path d="M28 72 Q42 86 56 72 Z" fill="url(#goldLight)" />
+
+  <!-- Right Pan -->
+  <line x1="118" y1="46" x2="108" y2="72" stroke="#F9A825" stroke-width="1.8" />
+  <line x1="118" y1="46" x2="128" y2="72" stroke="#F9A825" stroke-width="1.8" />
+  <path d="M104 72 Q118 86 132 72 Z" fill="url(#goldLight)" />
+
+  <!-- Wooden Gavel -->
+  <g transform="translate(48, 90) rotate(-35)">
+    <!-- Handle -->
+    <rect x="0" y="8" width="55" height="6" rx="3" fill="url(#woodGavel)" />
+    <!-- Head -->
+    <rect x="42" y="-4" width="16" height="30" rx="3" fill="url(#woodGavel)" stroke="#D7CCC8" stroke-width="1" />
+    <rect x="40" y="2" width="20" height="4" fill="#FFD54F" />
+    <rect x="40" y="16" width="20" height="4" fill="#FFD54F" />
+  </g>
+</svg>
+

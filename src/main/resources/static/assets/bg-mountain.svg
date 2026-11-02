@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#93a98c" />
+      <stop offset="60%" stop-color="#b6c9af" />
+      <stop offset="100%" stop-color="#dce6d5" />
+    </linearGradient>
+    <linearGradient id="mountFar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#728c6e" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#9bb397" stop-opacity="0.9" />
+    </linearGradient>
+    <linearGradient id="mountMid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4f6c4c" />
+      <stop offset="100%" stop-color="#6e8b6b" />
+    </linearGradient>
+    <linearGradient id="mountFore" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#344e32" />
+      <stop offset="100%" stop-color="#4e6d4c" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1200" height="600" fill="url(#skyGrad)" />
+
+  <!-- Sun Glow -->
+  <circle cx="850" cy="180" r="140" fill="#ffffff" opacity="0.18" />
+
+  <!-- Distant Peak -->
+  <path d="M0 320 Q200 240 380 280 T800 220 T1200 290 L1200 600 L0 600 Z" fill="url(#mountFar)" />
+
+  <!-- Mid Mountain Range -->
+  <path d="M0 380 Q180 290 350 340 T720 280 T1050 330 T1200 310 L1200 600 L0 600 Z" fill="url(#mountMid)" />
+
+  <!-- Misty Haze Band -->
+  <rect y="380" width="1200" height="60" fill="#ffffff" opacity="0.15" />
+
+  <!-- Foreground Forested Ridges -->
+  <path d="M0 450 Q160 380 320 420 T680 370 T980 430 T1200 390 L1200 600 L0 600 Z" fill="url(#mountFore)" />
+  
+  <!-- Subtle Pine Tree Silhouettes -->
+  <g fill="#253823" opacity="0.4">
+    <polygon points="120,440 115,465 125,465" />
+    <polygon points="135,435 129,462 141,462" />
+    <polygon points="150,442 145,468 155,468" />
+    <polygon points="280,410 274,438 286,438" />
+    <polygon points="295,415 289,442 301,442" />
+    <polygon points="850,390 843,425 857,425" />
+    <polygon points="870,385 862,420 878,420" />
+    <polygon points="890,392 884,428 896,428" />
+  </g>
+</svg>
+
