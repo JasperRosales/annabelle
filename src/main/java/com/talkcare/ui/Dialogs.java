@@ -1,6 +1,7 @@
 package com.talkcare.ui;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Window;
 
@@ -30,6 +31,15 @@ public final class Dialogs {
         dialog.setHeaderText(null);
         dialog.setContentText(message);
         return dialog.showAndWait().map(String::trim).filter(s -> !s.isEmpty());
+    }
+
+    /** OK/Cancel question; true when the user chose OK. */
+    public boolean confirm(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.CANCEL);
+        alert.initOwner(owner);
+        alert.setTitle(TITLE);
+        alert.setHeaderText(null);
+        return alert.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 
     private void show(Alert.AlertType type, String message) {

@@ -1,5 +1,9 @@
 package com.talkcare.ui.controller;
 
+import com.talkcare.model.Account;
+import com.talkcare.model.Appointment;
+import com.talkcare.model.Report;
+import com.talkcare.ui.Formats;
 import com.talkcare.model.Conversation;
 import com.talkcare.ui.ActionRouter;
 import com.talkcare.ui.Poller;
@@ -8,6 +12,7 @@ import com.talkcare.ui.UiCall;
 import com.talkcare.ui.dom.El;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +28,15 @@ public final class ProfessionalInboxController extends Controller implements Scr
     private List<Conversation> conversations = List.of();
     private Long selectedId;
 
-    public ProfessionalInboxController(UiContext context) {
+    private final AppointmentsController appointments;
+    private final ReportDetailsController details;
+    private List<Report> reports = List.of();
+
+    public ProfessionalInboxController(UiContext context, AppointmentsController appointments,
+                                       ReportDetailsController details) {
         super(context);
+        this.appointments = appointments;
+        this.details = details;
         this.messages = new MessageListView(context.dom(), context.session(), context.api().client());
     }
 
@@ -32,20 +44,99 @@ public final class ProfessionalInboxController extends Controller implements Scr
     public void bind(ActionRouter router) {
         router.onClick("professional-select", action -> select(Long.parseLong(action.arg())));
         router.onSubmit("professional-reply", action -> reply());
+        router.onClick("pro-report-details", action -> reports.stream()
+                .filter(r -> r.id() == Long.parseLong(action.arg())).findFirst().ifPresent(details::show));
+        appointments.onChange(() -> {
+            if (List.of(VIEWS).contains(navigator().currentView())) loadSessions();
+        });
         navigator().register(this, VIEWS);
     }
 
     @Override
     public void onShow(String viewId) {
-        String name = session().require().displayName();
-        dom().byClass("role-dashboard-user-name").forEach(el -> el.text(name));
+        Account account = session().require();
+        dom().byClass("role-dashboard-user-name").forEach(el -> el.text(account.displayName()));
+        dom().findById("view-" + viewId).ifPresent(view -> showApproval(view, account));
         refresh();
+        loadSessions();
+        loadReports();
         poller.start(this::refresh);
     }
 
     @Override
     public void onHide() {
         poller.stop();
+    }
+
+    private Optional<El> view() {
+        return dom().findById("view-" + session().homeView());
+    }
+
+    /** Active sessions (upcoming, or past but not yet completed) first, then a few finished ones. */
+    private void loadSessions() {
+        view().ifPresent(view -> UiCall.of(api().appointments().list())
+                .onSuccess(list -> {
+                    List<Appointment> active = list.stream().filter(Appointment::isActive).toList();
+                    List<Appointment> shown = new ArrayList<>(active);
+                    list.stream().filter(a -> !a.isActive()).limit(Math.max(0, 6 - active.size())).forEach(shown::add);
+                    view.firstByClass("pro-kpi-sessions").text(String.valueOf(
+                            active.stream().filter(a -> Formats.isFuture(a.end())).count()));
+                    appointments.render(view.firstByClass("pro-sessions-list"), shown,
+                            AppointmentsController.Viewer.PROFESSIONAL, "Session requests from your clients appear here.");
+                })
+                .onError(error -> view.firstByClass("pro-sessions-list").clear()
+                        .append(dom().create("div", "admin-request-error", "Could not load sessions.")))
+                .start());
+    }
+
+    private void loadReports() {
+        view().ifPresent(view -> UiCall.of(api().reports().all())
+                .onSuccess(list -> {
+                    reports = list;
+                    view.firstByClass("pro-kpi-reports").text(String.valueOf(list.stream().filter(Report::isOpen).count()));
+                    El container = view.firstByClass("pro-reports-list").clear();
+                    if (list.isEmpty()) {
+                        container.append(dom().create("div", "dsh-empty compact").append(
+                                dom().create("strong").text("No assigned reports"),
+                                dom().create("span").text("Reports routed to you will be listed here.")));
+                        return;
+                    }
+                    for (Report r : list) {
+                        container.append(dom().create("div", "report-row compact")
+                                .attr("data-action", "pro-report-details")
+                                .attr("data-arg", String.valueOf(r.id()))
+                                .append(dom().create("div", "report-cell-main").append(
+                                                dom().create("span", "report-icon"),
+                                                dom().create("div").append(
+                                                        dom().create("div", "report-code", orDefault(r.reportCode(), "Report")),
+                                                        dom().create("div", "report-meta",
+                                                                orDefault(r.concernType(), "") + " · " + Formats.relative(r.createdAt())))),
+                                        dom().create("div").append(dom().create("span",
+                                                "status-badge " + r.badgeClass(), orDefault(r.statusLabel(), "Under Review"))),
+                                        dom().create("div", "report-chevron", "\u203A")));
+                    }
+                })
+                .onError(error -> view.firstByClass("pro-reports-list").clear()
+                        .append(dom().create("div", "admin-request-error", "Could not load reports.")))
+                .start());
+    }
+
+    /** Self-registered professionals get clients only after an administrator approves their ID. */
+    private void showApproval(El view, Account account) {
+        view.firstByClass("pro-kpi-status").text(account.isVerified() ? "Verified"
+                : account.isAwaitingReview() ? "In review" : "Not verified");
+        El banner = view.firstByClass("pro-approval").hidden(account.isVerified());
+        if (account.isVerified()) return;
+        boolean submitted = account.isAwaitingReview();
+        banner.firstByClass("pro-approval-title").text(submitted
+                ? "Your account is awaiting approval"
+                : "Verify your identity to start receiving clients");
+        banner.firstByClass("pro-approval-text").text(submitted
+                ? "An administrator is reviewing your ID and license number, usually within 24 hours. "
+                        + "Clients are assigned to you once it is approved."
+                : "Upload a valid ID (IBP or PRC ID is fine). An administrator reviews it together with your "
+                        + "license number before clients are assigned to you.");
+        banner.firstByClass("pro-approval-action").hidden(submitted);
     }
 
     /** The inbox section inside the dashboard the API assigned to this professional. */
@@ -58,6 +149,7 @@ public final class ProfessionalInboxController extends Controller implements Scr
         inbox().ifPresent(inbox -> UiCall.of(api().chat().assigned())
                 .onSuccess(list -> {
                     conversations = list;
+                    dom().byClass("pro-kpi-conversations").forEach(el -> el.text(String.valueOf(list.size())));
                     if (selectedId != null && find(selectedId).isEmpty()) selectedId = null;
                     renderList(inbox);
                     if (selectedId == null && !list.isEmpty()) select(list.getFirst().id());

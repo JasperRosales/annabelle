@@ -1,54 +1,204 @@
-<section class="view-screen" id="view-professional-dashboard">
-  <div class="role-dashboard-wrap">
-    <div class="role-dashboard-card role-dashboard-content">
-      <div class="role-dashboard-heading">
+<!-- PSYCHIATRIST DASHBOARD -->
+<section class="view-screen dsh" id="view-professional-dashboard">
+  <div class="dsh-container">
+    <header class="dsh-header">
+      <div>
+        <p class="dsh-eyebrow">Psychiatrist dashboard · ThoMatt</p>
+        <h1 class="dsh-title">Welcome, <span class="role-dashboard-user-name">Professional</span></h1>
+        <p class="dsh-subtitle">Your ThoMatt clients, sessions and assigned reports in one place.</p>
+      </div>
+      <div class="dsh-header-actions">
+        <button type="button" class="dsh-btn secondary" data-action="navigate" data-arg="profile">My profile</button>
+      </div>
+    </header>
+
+    <div class="pro-approval" hidden>
+      <span class="pro-approval-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+      <div class="pro-approval-body">
+        <strong class="pro-approval-title"></strong>
+        <p class="pro-approval-text"></p>
+      </div>
+      <button type="button" class="dsh-btn primary pro-approval-action" data-action="navigate" data-arg="id-verify" hidden>Upload ID</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card tone-neutral">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Assigned clients</span>
+          <span class="kpi-value pro-kpi-conversations">0</span>
+          <span class="kpi-hint">Open conversations with you</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-blue">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Upcoming sessions</span>
+          <span class="kpi-value pro-kpi-sessions">0</span>
+          <span class="kpi-hint">Requested or confirmed</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-amber">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Assigned reports</span>
+          <span class="kpi-value pro-kpi-reports">0</span>
+          <span class="kpi-hint">Still open</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-green">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Account status</span>
+          <span class="kpi-value small pro-kpi-status">—</span>
+          <span class="kpi-hint">Verified by a TalkCare administrator</span>
+        </span>
+      </div>
+    </div>
+
+    <section class="dsh-card professional-inbox" aria-label="Assigned client messages">
+      <div class="dsh-card-head">
         <div>
-          <h1>Professional Dashboard</h1>
-          <p>Welcome, <strong class="role-dashboard-user-name">Professional</strong>. You are signed in with the Therapist role.</p>
+          <h2 class="dsh-card-title">Client inbox</h2>
+          <p class="dsh-card-sub">Select a conversation to read it and reply. New messages appear automatically.</p>
         </div>
       </div>
-      <section class="professional-inbox" aria-label="Assigned client messages">
-        <h2>Assigned conversations</h2>
-        <p class="professional-inbox-status" role="status"></p>
-        <div class="professional-inbox-layout">
-          <div class="professional-conversation-list" aria-label="Conversation list"></div>
-          <div class="professional-chat-panel">
-            <h3 class="professional-active-title">Select a conversation</h3>
-            <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
-            <form class="professional-reply-form" data-submit="professional-reply">
-              <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
-              <button class="professional-reply-send" type="submit" disabled>Send reply</button>
-            </form>
+      <p class="professional-inbox-status" role="status"></p>
+      <div class="professional-inbox-layout">
+        <div class="professional-conversation-list" aria-label="Conversation list"></div>
+        <div class="professional-chat-panel">
+          <h3 class="professional-active-title">Select a conversation</h3>
+          <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
+          <form class="professional-reply-form" data-submit="professional-reply">
+            <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
+            <button class="professional-reply-send" type="submit" disabled>Send reply</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="dsh-grid even">
+      <section class="dsh-card">
+        <div class="dsh-card-head">
+          <div>
+            <h2 class="dsh-card-title">Sessions</h2>
+            <p class="dsh-card-sub">Confirm requests, then mark sessions completed.</p>
           </div>
         </div>
+        <div class="session-list pro-sessions-list"></div>
+      </section>
+
+      <section class="dsh-card">
+        <div class="dsh-card-head">
+          <div>
+            <h2 class="dsh-card-title">Assigned reports</h2>
+            <p class="dsh-card-sub">Concerns routed to you. Select one for details.</p>
+          </div>
+        </div>
+        <div class="report-table compact pro-reports-list"></div>
       </section>
     </div>
   </div>
 </section>
 
-<section class="view-screen" id="view-case-handler-dashboard">
-  <div class="role-dashboard-wrap">
-    <div class="role-dashboard-card role-dashboard-content">
-      <div class="role-dashboard-heading">
+<!-- ATTORNEY (CASE HANDLER) DASHBOARD -->
+<section class="view-screen dsh" id="view-case-handler-dashboard">
+  <div class="dsh-container">
+    <header class="dsh-header">
+      <div>
+        <p class="dsh-eyebrow">Attorney dashboard · JusticeCare</p>
+        <h1 class="dsh-title">Welcome, <span class="role-dashboard-user-name">Professional</span></h1>
+        <p class="dsh-subtitle">Your JusticeCare clients, sessions and assigned reports in one place.</p>
+      </div>
+      <div class="dsh-header-actions">
+        <button type="button" class="dsh-btn secondary" data-action="navigate" data-arg="profile">My profile</button>
+      </div>
+    </header>
+
+    <div class="pro-approval" hidden>
+      <span class="pro-approval-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+      <div class="pro-approval-body">
+        <strong class="pro-approval-title"></strong>
+        <p class="pro-approval-text"></p>
+      </div>
+      <button type="button" class="dsh-btn primary pro-approval-action" data-action="navigate" data-arg="id-verify" hidden>Upload ID</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card tone-neutral">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Assigned clients</span>
+          <span class="kpi-value pro-kpi-conversations">0</span>
+          <span class="kpi-hint">Open conversations with you</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-blue">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Upcoming sessions</span>
+          <span class="kpi-value pro-kpi-sessions">0</span>
+          <span class="kpi-hint">Requested or confirmed</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-amber">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Assigned reports</span>
+          <span class="kpi-value pro-kpi-reports">0</span>
+          <span class="kpi-hint">Still open</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-green">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Account status</span>
+          <span class="kpi-value small pro-kpi-status">—</span>
+          <span class="kpi-hint">Verified by a TalkCare administrator</span>
+        </span>
+      </div>
+    </div>
+
+    <section class="dsh-card professional-inbox" aria-label="Assigned client messages">
+      <div class="dsh-card-head">
         <div>
-          <h1>Case Handler Dashboard</h1>
-          <p>Welcome, <strong class="role-dashboard-user-name">Case Handler</strong>. You are signed in with the Case Handler role.</p>
+          <h2 class="dsh-card-title">Client inbox</h2>
+          <p class="dsh-card-sub">Select a conversation to read it and reply. New messages appear automatically.</p>
         </div>
       </div>
-      <section class="professional-inbox" aria-label="Assigned client messages">
-        <h2>Assigned conversations</h2>
-        <p class="professional-inbox-status" role="status"></p>
-        <div class="professional-inbox-layout">
-          <div class="professional-conversation-list" aria-label="Conversation list"></div>
-          <div class="professional-chat-panel">
-            <h3 class="professional-active-title">Select a conversation</h3>
-            <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
-            <form class="professional-reply-form" data-submit="professional-reply">
-              <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
-              <button class="professional-reply-send" type="submit" disabled>Send reply</button>
-            </form>
+      <p class="professional-inbox-status" role="status"></p>
+      <div class="professional-inbox-layout">
+        <div class="professional-conversation-list" aria-label="Conversation list"></div>
+        <div class="professional-chat-panel">
+          <h3 class="professional-active-title">Select a conversation</h3>
+          <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
+          <form class="professional-reply-form" data-submit="professional-reply">
+            <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
+            <button class="professional-reply-send" type="submit" disabled>Send reply</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="dsh-grid even">
+      <section class="dsh-card">
+        <div class="dsh-card-head">
+          <div>
+            <h2 class="dsh-card-title">Sessions</h2>
+            <p class="dsh-card-sub">Confirm requests, then mark sessions completed.</p>
           </div>
         </div>
+        <div class="session-list pro-sessions-list"></div>
+      </section>
+
+      <section class="dsh-card">
+        <div class="dsh-card-head">
+          <div>
+            <h2 class="dsh-card-title">Assigned reports</h2>
+            <p class="dsh-card-sub">Concerns routed to you. Select one for details.</p>
+          </div>
+        </div>
+        <div class="report-table compact pro-reports-list"></div>
       </section>
     </div>
   </div>

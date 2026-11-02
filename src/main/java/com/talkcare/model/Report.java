@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /** A report/concern filed by a client (GET/POST /api/reports). */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Report(long id, String reportCode, String fullName, String concernType, String concernDetails,
-                     String status, String statusLabel, String remarks) {
+public record Report(long id, String reportCode, String fullName, String email, String contactNo,
+                     String concernType, String concernDetails, String involvedWitness, String serviceType,
+                     String status, String statusLabel, String remarks, String createdAt, String updatedAt) {
 
     public static final String UNDER_REVIEW = "UNDER_REVIEW";
     public static final String IN_PROGRESS = "IN_PROGRESS";
@@ -16,5 +17,9 @@ public record Report(long id, String reportCode, String fullName, String concern
         if (IN_PROGRESS.equals(status)) return "in-progress";
         if (RESOLVED.equals(status)) return "resolved";
         return "under-review";
+    }
+
+    public boolean isOpen() {
+        return !RESOLVED.equals(status);
     }
 }

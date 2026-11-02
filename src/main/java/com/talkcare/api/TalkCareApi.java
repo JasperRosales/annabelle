@@ -12,6 +12,8 @@ public final class TalkCareApi {
     private final ReportApi reports;
     private final AdminApi admin;
     private final HealthApi health;
+    private final AppointmentApi appointments;
+    private final NotificationApi notifications;
 
     public TalkCareApi(String baseUrl) {
         this.client = new ApiClient(baseUrl);
@@ -21,6 +23,8 @@ public final class TalkCareApi {
         this.reports = new ReportApi(client);
         this.admin = new AdminApi(client);
         this.health = new HealthApi(client);
+        this.appointments = new AppointmentApi(client);
+        this.notifications = new NotificationApi(client);
     }
 
     public ApiClient client() { return client; }
@@ -30,4 +34,6 @@ public final class TalkCareApi {
     public ReportApi reports() { return reports; }
     public AdminApi admin() { return admin; }
     public HealthApi health() { return health; }
+    public AppointmentApi appointments() { return appointments; }
+    public NotificationApi notifications() { return notifications; }
 }

@@ -3,14 +3,18 @@ package com.talkcare.ui.controller;
 import com.talkcare.model.Account;
 import com.talkcare.model.ActivityEntry;
 import com.talkcare.model.AdminRequest;
+import com.talkcare.model.Report;
 import com.talkcare.ui.ActionRouter;
 import com.talkcare.ui.Formats;
 import com.talkcare.ui.Screen;
 import com.talkcare.ui.UiCall;
 import com.talkcare.ui.dom.El;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -19,18 +23,25 @@ import java.util.Set;
  */
 public final class AdminController extends Controller implements Screen {
     private static final List<String> VERIFICATION_ROWS = List.of(
-            "review-id-type-row", "review-id-number-row", "review-address-row", "review-contact-row");
+            "review-role-row", "review-id-type-row", "review-id-number-row", "review-address-row", "review-contact-row");
     private static final List<String> REPORT_ROWS = List.of(
             "review-report-code-row", "review-concern-type-row", "review-details-row",
             "review-witness-row", "review-existing-remarks-row");
 
+    private static final DateTimeFormatter DAY_TITLE = DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.US);
+
     private final AdminCalendar calendar;
+    private final AppointmentsController appointments;
     private List<AdminRequest> requests = List.of();
     private AdminRequest reviewing;
+    private List<Account> users = List.of();
+    private String userRole = "ALL";
+    private String userQuery = "";
 
-    public AdminController(UiContext context) {
+    public AdminController(UiContext context, AppointmentsController appointments) {
         super(context);
         this.calendar = new AdminCalendar(context.dom());
+        this.appointments = appointments;
     }
 
     @Override
@@ -42,6 +53,31 @@ public final class AdminController extends Controller implements Screen {
         router.onClick("show-admin-remarks", action ->
                 showAll("review-remarks-label", "review-remarks", "review-save-remarks"));
         router.onClick("admin-review", action -> submitReview(action.arg()));
+        router.onClick("admin-calendar-prev", action -> { calendar.shift(-1); loadSchedule(); });
+        router.onClick("admin-calendar-next", action -> { calendar.shift(1); loadSchedule(); });
+        router.onClick("admin-calendar-day", action -> {
+            calendar.select(Integer.parseInt(action.arg()));
+            loadSchedule();
+        });
+        router.onClick("admin-user-role", action -> {
+            userRole = action.arg();
+            dom().byClass("admin-role-pill").forEach(p -> p.toggleClass("active", userRole.equals(p.data("arg"))));
+            renderUsers();
+        });
+        router.onClick("admin-user-status", action -> {
+            String[] parts = action.arg().split(":", 2);
+            setUserStatus(Long.parseLong(parts[0]), parts[1]);
+        });
+        router.onInput("admin-user-search", action -> {
+            userQuery = action.source().trimmedValue().toLowerCase(Locale.ROOT);
+            renderUsers();
+        });
+        appointments.onChange(() -> {
+            if ("admin".equals(navigator().currentView())) {
+                loadMetrics();
+                loadSchedule();
+            }
+        });
         navigator().register(this, "admin");
     }
 
@@ -57,6 +93,7 @@ public final class AdminController extends Controller implements Screen {
 
     private void reload() {
         loadMetrics();
+        loadOpenReports();
         loadPendingRequests();
         loadUsers();
         loadActivity();
@@ -75,13 +112,23 @@ public final class AdminController extends Controller implements Screen {
                 .start();
     }
 
+    private void loadOpenReports() {
+        UiCall.of(api().reports().all())
+                .onSuccess(all -> byId("stat-open-reports").text(String.valueOf(all.stream().filter(Report::isOpen).count())))
+                .onError(error -> byId("stat-open-reports").text("—"))
+                .start();
+    }
+
     private void loadPendingRequests() {
         UiCall.of(api().admin().pendingRequests())
                 .onSuccess(list -> {
                     requests = list;
+                    byId("admin-pending-count").text(String.valueOf(list.size()));
                     El container = byId("admin-pending-requests-list").clear();
                     if (list.isEmpty()) {
-                        container.append(dom().create("div", "admin-request-empty", "No pending requests"));
+                        container.append(dom().create("div", "dsh-empty").append(
+                            dom().create("strong").text("You're all caught up"),
+                            dom().create("span").text("New verifications and reports will appear here.")));
                         return;
                     }
                     for (int i = 0; i < list.size(); i++) container.append(requestRow(list.get(i), i));
@@ -94,23 +141,29 @@ public final class AdminController extends Controller implements Screen {
     private El requestRow(AdminRequest request, int index) {
         String title;
         String note;
+        String kind;
         if (request.isVerification()) {
             title = orDefault(request.name(), "Verification request");
+            kind = request.isProfessional() ? roleName(request.role()) + " verification" : "ID verification";
             note = orDefault(request.idType(), "ID")
                     + (orDefault(request.idNumber(), "").isEmpty() ? "" : " • " + request.idNumber())
-                    + " • Submitted " + Formats.dateTime(request.submittedAt());
+                    + (orDefault(request.licenseNo(), "").isEmpty() ? "" : " • License " + request.licenseNo());
         } else {
             title = orDefault(request.reportCode(), "Report/Concern");
-            note = orDefault(request.name(), "Client") + " • " + orDefault(request.concernType(), "Report")
-                    + " • Submitted " + Formats.dateTime(request.submittedAt());
+            kind = "Report";
+            note = orDefault(request.name(), "Client") + " • " + orDefault(request.concernType(), "Report");
         }
-        El info = dom().create("div", "admin-request-info").append(dom().create("div").append(
-                dom().create("div", "admin-request-title", title),
-                dom().create("div", "admin-request-note", note)));
+        El info = dom().create("div", "admin-request-info");
         if (request.isVerification() && !orDefault(request.imageUrl(), "").isEmpty()) {
             info.append(dom().create("img", "admin-request-image")
                     .src(assetUrl(request.imageUrl())).attr("alt", "Submitted ID document"));
         }
+        info.append(dom().create("div").append(
+                dom().create("div", "admin-request-title").append(
+                        dom().create("span").text(title),
+                        dom().create("span", "request-tag " + (request.isVerification() ? "verify" : "report"), kind)),
+                dom().create("div", "admin-request-note", note),
+                dom().create("div", "admin-request-time", "Submitted " + Formats.dateTime(request.submittedAt()))));
         El review = dom().create("button", "btn-admin-review", "Review")
                 .attr("type", "button")
                 .attr("data-action", "admin-open-review")
@@ -118,11 +171,18 @@ public final class AdminController extends Controller implements Screen {
         return dom().create("div", "admin-request-row").append(info, review);
     }
 
+    private static String roleName(String role) {
+        if (role == null || role.isBlank()) return "Client";
+        return role.charAt(0) + role.substring(1).toLowerCase();
+    }
+
     private void openReview(AdminRequest request) {
         reviewing = request;
         boolean verification = request.isVerification();
         setField("review-name", request.name());
         setField("review-email", request.email());
+        setField("review-role", roleName(request.role()));
+        setField("review-license", request.licenseNo());
         setField("review-submitted", Formats.dateTime(request.submittedAt()));
         setField("review-id-type", request.idType());
         setField("review-id-number", request.idNumber());
@@ -135,6 +195,7 @@ public final class AdminController extends Controller implements Screen {
         setField("review-existing-remarks", request.remarks());
         VERIFICATION_ROWS.forEach(id -> byId(id).hidden(!verification));
         REPORT_ROWS.forEach(id -> byId(id).hidden(verification));
+        byId("review-license-row").hidden(!verification || !request.isProfessional());
 
         El image = byId("review-image");
         boolean hasImage = verification && !orDefault(request.imageUrl(), "").isEmpty();
@@ -192,14 +253,17 @@ public final class AdminController extends Controller implements Screen {
                 .onSuccess(list -> {
                     El container = byId("admin-timeline-list").clear();
                     if (list.isEmpty()) {
-                        container.append(dom().create("div", "admin-activity-empty", "No recent activity"));
+                        container.append(dom().create("div", "dsh-empty compact").append(
+                                dom().create("strong").text("No recent activity")));
                         return;
                     }
                     for (ActivityEntry entry : list) {
                         String what = orDefault(entry.details(), orDefault(entry.action(), "Activity"));
                         container.append(dom().create("div", "admin-timeline-item").append(
                                 dom().create("span", "timeline-circle"),
-                                dom().create("span").text(what + " • " + Formats.dateTime(entry.createdAt()))));
+                                dom().create("div").append(
+                                        dom().create("div", "timeline-text", what),
+                                        dom().create("div", "timeline-time", Formats.dateTime(entry.createdAt())))));
                     }
                 })
                 .onError(error -> showError("admin-timeline-list", "Unable to load recent activity: " + error.getMessage()))
@@ -214,16 +278,41 @@ public final class AdminController extends Controller implements Screen {
                     showError("admin-calendar-grid", "Unable to load schedule: " + error.getMessage());
                 })
                 .start();
+        LocalDate day = calendar.selected();
+        byId("admin-day-title").text(DAY_TITLE.format(day));
+        UiCall.of(api().appointments().on(day))
+                .onSuccess(list -> appointments.render(byId("admin-day-sessions"), list,
+                        AppointmentsController.Viewer.ADMIN, "Nothing is scheduled on this day."))
+                .onError(error -> showError("admin-day-sessions", "Unable to load sessions: " + error.getMessage()))
+                .start();
     }
 
     private void loadUsers() {
         UiCall.of(api().admin().users())
-                .onSuccess(users -> {
-                    El container = byId("admin-active-users-list").clear();
-                    for (Account user : users) container.append(userRow(user));
+                .onSuccess(list -> {
+                    users = list;
+                    renderUsers();
                 })
                 .onError(error -> showError("admin-active-users-list", "Unable to load user profiles: " + error.getMessage()))
                 .start();
+    }
+
+    private void renderUsers() {
+        List<Account> shown = users.stream()
+                .filter(u -> "ALL".equals(userRole) || userRole.equals(u.role()))
+                .filter(u -> userQuery.isEmpty()
+                        || u.displayName().toLowerCase(Locale.ROOT).contains(userQuery)
+                        || orDefault(u.email(), "").toLowerCase(Locale.ROOT).contains(userQuery)
+                        || orDefault(u.username(), "").toLowerCase(Locale.ROOT).contains(userQuery))
+                .toList();
+        byId("admin-user-count").text(String.valueOf(shown.size()));
+        El container = byId("admin-active-users-list").clear();
+        if (shown.isEmpty()) {
+            container.append(dom().create("div", "dsh-empty compact").append(
+                    dom().create("strong").text("No matching users")));
+            return;
+        }
+        for (Account user : shown) container.append(userRow(user));
     }
 
     private El userRow(Account user) {
@@ -232,16 +321,54 @@ public final class AdminController extends Controller implements Screen {
             case Account.ROLE_PSYCHIATRIST -> "assets/avatar-therapist.svg";
             default -> "assets/individual.svg";
         };
-        El details = dom().create("div").attr("style", "font-size: 12px; color: #557053;")
-                .appendText(orDefault(user.email(), "") + " • ")
-                .append(dom().create("b").text(user.roleLabel()))
-                .appendText(" • Status: " + orDefault(user.status(), "VERIFIED"));
-        return dom().create("div", "admin-user-row").append(
+        String status = orDefault(user.status(), "VERIFIED");
+        El who = dom().create("div", "user-cell").append(
                 dom().create("img", "admin-user-thumb").src(orDefault(assetUrl(user.profilePictureUrl()), fallback))
-                        .attr("alt", "Avatar"),
-                dom().create("div").attr("style", "flex: 1;").append(
-                        dom().create("div").attr("style", "font-weight: 800; font-size: 15px;").text(user.displayName()),
-                        details));
+                        .attr("alt", ""),
+                dom().create("div").append(
+                        dom().create("div", "user-name", user.displayName()),
+                        dom().create("div", "user-email", orDefault(user.email(), ""))));
+        El actions = dom().create("div", "user-actions");
+        if (user.id() != session().require().id()) {
+            boolean blocked = "SUSPENDED".equals(status) || "DEACTIVATED".equals(status);
+            actions.append(dom().create("button", "dsh-btn small " + (blocked ? "secondary" : "ghost"),
+                            blocked ? "Reactivate" : "Suspend")
+                    .attr("type", "button")
+                    .attr("data-action", "admin-user-status")
+                    .attr("data-arg", user.id() + ":" + (blocked ? "REACTIVATE" : "SUSPEND")));
+        }
+        return dom().create("div", "admin-user-row").append(
+                who,
+                dom().create("div").append(dom().create("span",
+                        "role-tag role-" + orDefault(user.role(), "CLIENT").toLowerCase(), user.roleLabel())),
+                dom().create("div").append(dom().create("span",
+                        "user-status status-" + status.toLowerCase().replace('_', '-'), statusLabel(status))),
+                actions);
+    }
+
+    private void setUserStatus(long userId, String action) {
+        Account user = users.stream().filter(u -> u.id() == userId).findFirst().orElse(null);
+        if (user == null) return;
+        if ("SUSPEND".equals(action) && !dialogs().confirm("Suspend " + user.displayName()
+                + "? They will be signed out and cannot sign in until reactivated.")) return;
+        UiCall.of(api().admin().setUserStatus(userId, action))
+                .onSuccess(updated -> {
+                    loadUsers();
+                    loadActivity();
+                })
+                .onError(error -> dialogs().error("Could not update the account: " + error.getMessage()))
+                .start();
+    }
+
+    private static String statusLabel(String status) {
+        return switch (status) {
+            case "PENDING_VERIFICATION" -> "Pending";
+            case "VERIFIED" -> "Verified";
+            case "ACTIVE" -> "Active";
+            case "SUSPENDED" -> "Suspended";
+            case "DEACTIVATED" -> "Deactivated";
+            default -> status;
+        };
     }
 
     private void showError(String containerId, String message) {

@@ -35,6 +35,11 @@ public final class AdminApi {
                 new ReviewAction(request.type(), request.id(), action, reason, remarks));
     }
 
+    /** @param action "SUSPEND", "DEACTIVATE" or "REACTIVATE" */
+    public CompletableFuture<Account> setUserStatus(long userId, String action) {
+        return client.patch("/api/admin/users/" + userId + "/status", java.util.Map.of("action", action), Account.class);
+    }
+
     public CompletableFuture<List<ActivityEntry>> activity() {
         return client.get("/api/admin/activity", ACTIVITY);
     }
