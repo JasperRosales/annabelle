@@ -521,6 +521,17 @@ body.page-welcome .navbar .btn-getstarted:hover {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 }
 
+/* Keeps the hover area under the cursor while the card lifts by 8px; without it a cursor
+   near the bottom edge drops off the card and it bounces up and down. */
+.choice-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 8px;
+}
+
 .choice-card-title {
   font-size: 26px;
   font-weight: 800;
@@ -571,7 +582,6 @@ body.page-welcome .navbar .btn-getstarted:hover {
   max-height: 210px;
   object-fit: contain;
   background: transparent;
-  mix-blend-mode: multiply;
 }
 
 /* PAGE 1: LOGIN SECTION */

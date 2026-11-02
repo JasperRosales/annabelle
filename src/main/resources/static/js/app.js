@@ -79,6 +79,9 @@ function navigateTo(viewId) {
   } else if (viewId === "home") {
     // Signed-out visitors: Home is the welcome page (same as clicking the TalkCare logo).
     viewId = "welcome";
+  } else if (viewId === "services") {
+    // Services is for signed-in users only.
+    viewId = "login";
   }
 
   // Hide all screens
