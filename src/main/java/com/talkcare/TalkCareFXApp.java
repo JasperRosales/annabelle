@@ -13,11 +13,11 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 
 public class TalkCareFXApp extends Application {
-    private static int port = 54321;
+    private static String startUrl = "http://localhost:54321/index.html";
     private static Runnable onShutdown;
 
-    public static void setPort(int p) {
-        port = p;
+    public static void setStartUrl(String url) {
+        startUrl = url;
     }
 
     public static void setOnShutdown(Runnable r) {
@@ -37,7 +37,7 @@ public class TalkCareFXApp extends Application {
                 }
             });
 
-            webEngine.load("http://localhost:" + port + "/index.html");
+            webEngine.load(startUrl);
 
             StackPane root = new StackPane(webView);
             Scene scene = new Scene(root, 1366, 768);

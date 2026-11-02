@@ -36,9 +36,9 @@
 
     <div class="nav-actions">
       <!-- Database Connection Status Badge -->
-      <div class="db-status-badge" onclick="openDbModal()" title="Click to view or configure PostgreSQL connection">
+      <div class="db-status-badge" onclick="openDbModal()" title="Click to view the TalkCare server connection">
         <span class="db-dot" id="db-status-dot"></span>
-        <span id="db-status-text">PostgreSQL</span>
+        <span id="db-status-text">Server</span>
       </div>
 
       <!-- Guest Login / Get Started buttons -->
@@ -1032,48 +1032,31 @@
     </div>
   </div>
 
-  <!-- DATABASE SETTINGS MODAL (PostgreSQL Connection Dialog) -->
+  <!-- SERVER CONNECTION MODAL (TalkCare API status) -->
   <div class="prof-modal-backdrop" id="db-modal" onclick="closeDbModal(event)">
     <div class="db-modal-card">
       <button class="btn-close-modal" onclick="closeDbModal()">&times;</button>
       <div class="db-modal-title">
-        <span style="font-size: 24px;">🐘</span> PostgreSQL Backend Settings
+        <span style="font-size: 24px;">&#127760;</span> TalkCare Server Connection
       </div>
       <div class="db-modal-subtitle">
-        Connect TalkCare desktop application to your local or remote PostgreSQL database instance.
+        This desktop app uses the TalkCare online service. Your data is stored on the TalkCare server, not on this computer.
       </div>
 
       <div class="db-status-box" id="db-dialog-status-box">
         <b>Status:</b> Checking connection...
       </div>
 
-      <form onsubmit="handleDbSave(event)">
-        <div class="auth-form-group">
-          <div class="auth-form-label">Host</div>
-          <input type="text" id="cfg-host" class="auth-form-input" value="localhost" required>
-        </div>
-        <div class="auth-form-group">
-          <div class="auth-form-label">Port</div>
-          <input type="number" id="cfg-port" class="auth-form-input" value="5432" required>
-        </div>
-        <div class="auth-form-group">
-          <div class="auth-form-label">Database</div>
-          <input type="text" id="cfg-dbname" class="auth-form-input" value="talkcare" required>
-        </div>
-        <div class="auth-form-group">
-          <div class="auth-form-label">User</div>
-          <input type="text" id="cfg-user" class="auth-form-input" value="postgres" required>
-        </div>
-        <div class="auth-form-group">
-          <div class="auth-form-label">Password</div>
-          <input type="password" id="cfg-pass" class="auth-form-input" placeholder="Enter postgres password">
-        </div>
+      <div class="auth-form-group">
+        <div class="auth-form-label">Server address</div>
+        <code id="api-base-url"></code>
+      </div>
 
-        <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">Test &amp; Connect to PostgreSQL</button>
-      </form>
+      <button type="button" class="btn-auth-submit" style="margin-top: 10px;" onclick="retryApiConnection()">Check connection again</button>
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

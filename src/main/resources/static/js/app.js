@@ -64,10 +64,10 @@ function navigateTo(viewId) {
   }
 
   if (currentSession) {
-    const roleHome = getRoleHomeView(currentSession.role);
+    const roleHome = getRoleHomeView();
     if (viewId === "home") viewId = roleHome;
-    if (viewId === "dashboard" && currentSession.role !== "USER") viewId = roleHome;
-    if (viewId === "admin" && currentSession.role !== "ADMIN") viewId = roleHome;
+    if (viewId === "dashboard" && currentSession.role !== "CLIENT") viewId = roleHome;
+    if (viewId === "admin" && roleHome !== "admin") viewId = roleHome;
   }
 
   // Hide all screens
@@ -115,19 +115,46 @@ function navigateTo(viewId) {
   }
 }
 
-function getRoleHomeView(role) {
-  if (role === "ADMIN") return "admin";
-  if (role === "THERAPIST") return "professional-dashboard";
-  if (role === "CASE_HANDLER") return "case-handler-dashboard";
-  return "home";
+// The desktop shell serves /config.js with the API location; fall back to a local API.
+const API_BASE_URL = ((window.TALKCARE_CONFIG && window.TALKCARE_CONFIG.apiBaseUrl) || "http://localhost:4000")
+  .replace(/\/+$/, "");
+
+// The server decides each account's home view (Account.dashboardView); this is only a fallback.
+function getRoleHomeView(session = currentSession) {
+  return (session && session.dashboardView) || "home";
 }
 
-function apiFetch(url, options = {}) {
+function isProfessionalSession(session = currentSession) {
+  return !!session && (session.role === "ATTORNEY" || session.role === "PSYCHIATRIST");
+}
+
+function apiFetch(path, options = {}) {
   const headers = { ...(options.headers || {}) };
-  if (currentSession && currentSession.token) {
-    headers["X-Session-Token"] = currentSession.token;
+  if (options.body !== undefined && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
   }
-  return fetch(url, { ...options, headers });
+  if (currentSession && currentSession.token) {
+    headers["Authorization"] = `Bearer ${currentSession.token}`;
+  }
+  return fetch(API_BASE_URL + path, { ...options, headers });
+}
+
+// Uploaded files live on the API server; bundled assets stay relative to the UI.
+function assetUrl(url) {
+  if (!url) return "";
+  return url.startsWith("/uploads/") ? API_BASE_URL + url : url;
+}
+
+function createSession(account) {
+  return {
+    id: account.id,
+    name: account.fullName || account.username,
+    role: account.role,
+    roleDisplayName: account.roleDisplayName,
+    dashboardView: account.dashboardView,
+    permissions: account.permissions || [],
+    token: account.sessionToken
+  };
 }
 
 // USER DROPDOWN (Page 2 & Page 5)
@@ -166,9 +193,10 @@ function updateAuthUI() {
     const displayName = (currentSession && currentSession.name) || currentUser.fullName || currentUser.username;
     document.getElementById("nav-user-name").textContent = displayName;
     document.getElementById("dropdown-user-name").textContent = displayName;
-    document.getElementById("dropdown-user-role").textContent = (currentSession && currentSession.role) || currentUser.role || "USER";
+    document.getElementById("dropdown-user-role").textContent =
+      (currentSession && currentSession.roleDisplayName) || currentUser.roleDisplayName || currentUser.role || "Client";
 
-    const avatarUrl = currentUser.profilePictureUrl || "assets/individual.svg";
+    const avatarUrl = assetUrl(currentUser.profilePictureUrl) || "assets/individual.svg";
     document.getElementById("nav-avatar-img").src = avatarUrl;
     document.getElementById("dropdown-avatar-img").src = avatarUrl;
   } else {
@@ -205,9 +233,8 @@ async function requestPasswordReset(e) {
   status.textContent = "Sending reset link…";
 
   try {
-    const res = await fetch("/api/auth/forgot-password", {
+    const res = await apiFetch("/api/auth/forgot-password", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
     const data = await res.json().catch(() => ({}));
@@ -236,9 +263,8 @@ async function handlePasswordReset(e) {
   submitButton.disabled = true;
   status.textContent = "Updating password…";
   try {
-    const res = await fetch("/api/auth/reset-password", {
+    const res = await apiFetch("/api/auth/reset-password", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         token: document.getElementById("password-reset-token").value,
         newPassword
@@ -271,29 +297,23 @@ async function handleLogin(e) {
   submitButton.textContent = "Signing in...";
 
   try {
-    const res = await fetch("/api/auth/login", {
+    const res = await apiFetch("/api/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
 
     if (res.ok) {
       currentUser = await res.json();
-      currentSession = {
-        id: currentUser.id,
-        name: currentUser.fullName || currentUser.username,
-        role: currentUser.role || "USER",
-        token: currentUser.sessionToken
-      };
+      currentSession = createSession(currentUser);
       updateAuthUI();
       document.getElementById("login-password").value = "";
-      navigateTo(getRoleHomeView(currentSession.role));
+      navigateTo(getRoleHomeView());
     } else {
       const err = await res.json().catch(() => ({}));
       status.textContent = err.error || "Invalid account name or password.";
     }
   } catch (err) {
-    status.textContent = "Could not reach TalkCare. Make sure the app is running, then try again.";
+    status.textContent = "Could not reach the TalkCare server. Check your internet connection, then try again.";
     console.error("Login request failed:", err);
   } finally {
     submitButton.disabled = false;
@@ -316,20 +336,14 @@ async function handleRegister(e) {
   submitButton.textContent = "Creating account...";
 
   try {
-    const res = await fetch("/api/auth/register", {
+    const res = await apiFetch("/api/auth/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fullName, username, address, contactNo, email, password })
     });
 
     if (res.ok) {
       currentUser = await res.json();
-      currentSession = {
-        id: currentUser.id,
-        name: currentUser.fullName || currentUser.username,
-        role: currentUser.role || "USER",
-        token: currentUser.sessionToken
-      };
+      currentSession = createSession(currentUser);
       updateAuthUI();
       document.getElementById("reg-password").value = "";
       document.getElementById("id-email").value = currentUser.email || email;
@@ -347,7 +361,7 @@ async function handleRegister(e) {
       status.textContent = err.error || "Please check your details and try again.";
     }
   } catch (err) {
-    status.textContent = "Could not reach TalkCare. Make sure the app is running, then try again.";
+    status.textContent = "Could not reach the TalkCare server. Check your internet connection, then try again.";
     console.error("Registration request failed:", err);
   } finally {
     submitButton.disabled = false;
@@ -356,13 +370,9 @@ async function handleRegister(e) {
 }
 
 async function logout() {
-  const token = currentSession && currentSession.token;
-  if (token) {
+  if (currentSession && currentSession.token) {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: { "X-Session-Token": token }
-      });
+      await apiFetch("/api/auth/logout", { method: "POST" });
     } catch (err) {
       console.error("Logout request failed:", err);
     }
@@ -378,7 +388,7 @@ function populateProfileFields() {
   if (!currentUser) return;
   document.getElementById("profile-username").value = currentUser.username || "";
   document.getElementById("profile-email").value = currentUser.email || "";
-  document.getElementById("profile-display-img").src = currentUser.profilePictureUrl || "assets/individual.svg";
+  document.getElementById("profile-display-img").src = assetUrl(currentUser.profilePictureUrl) || "assets/individual.svg";
 }
 
 async function handleProfilePhotoSelect(e) {
@@ -393,17 +403,19 @@ async function handleProfilePhotoSelect(e) {
     document.getElementById("dropdown-avatar-img").src = base64Data;
 
     try {
-      const res = await fetch("/api/profile/upload-photo", {
+      const res = await apiFetch("/api/profile/photo", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser.id, image: base64Data })
+        body: JSON.stringify({ image: base64Data })
       });
-      if (res.ok) {
-        const data = await res.json();
-        currentUser.profilePictureUrl = data.url;
-      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "The photo could not be uploaded.");
+      currentUser.profilePictureUrl = data.url;
+      updateAuthUI();
     } catch (err) {
       console.error("Upload photo error:", err);
+      alert("Could not upload the photo: " + err.message);
+      updateAuthUI();
+      populateProfileFields();
     }
   };
   reader.readAsDataURL(file);
@@ -415,23 +427,16 @@ async function updateProfileInfo() {
   const password = document.getElementById("profile-password").value.trim();
 
   try {
-    const res = await fetch("/api/profile/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: currentUser.id,
-        username,
-        email,
-        password,
-        profilePictureUrl: currentUser.profilePictureUrl || ""
-      })
+    const res = await apiFetch("/api/profile", {
+      method: "PATCH",
+      body: JSON.stringify({ username, email, password })
     });
-    if (res.ok) {
-      currentUser.username = username;
-      currentUser.email = email;
-      updateAuthUI();
-      alert("Profile updated successfully!");
-    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "The profile could not be updated.");
+    currentUser = { ...data, sessionToken: currentSession.token };
+    document.getElementById("profile-password").value = "";
+    updateAuthUI();
+    alert("Profile updated successfully!");
   } catch (err) {
     alert("Error updating profile: " + err.message);
   }
@@ -478,11 +483,9 @@ async function handleIdVerification(e) {
   }
 
   try {
-    const res = await fetch("/api/verification/submit-id", {
+    const res = await apiFetch("/api/verifications", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: currentUser.id,
         idType,
         idNumber,
         address,
@@ -648,13 +651,20 @@ async function selectConversation(serviceType) {
   thread.onclick = () => loadConversationMessages();
   document.getElementById("chat-thread-list").replaceChildren(thread);
 
-  const res = await apiFetch(`/api/conversations?serviceType=${encodeURIComponent(serviceType)}`);
+  const res = await apiFetch("/api/conversations", {
+    method: "POST",
+    body: JSON.stringify({ serviceType })
+  });
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
     throw new Error(error.error || "The conversation could not be loaded.");
   }
   const conversation = await res.json();
   currentConversationId = conversation.id;
+  if (conversation.professionalName) {
+    document.getElementById("chat-header-name").textContent = conversation.professionalName;
+    thread.querySelector(".chat-thread-name").textContent = conversation.professionalName;
+  }
   await loadConversationMessages();
   messageRefreshTimer = setInterval(() => loadConversationMessages(true), 4000);
 }
@@ -663,7 +673,7 @@ async function loadConversationMessages(silent = false) {
   if (currentConversationId === null) return;
 
   try {
-    const res = await apiFetch(`/api/messages?conversationId=${currentConversationId}`);
+    const res = await apiFetch(`/api/conversations/${currentConversationId}/messages`);
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
       throw new Error(error.error || "Messages could not be loaded.");
@@ -699,8 +709,7 @@ function renderChatMessages(messages, container = document.getElementById("chat-
 
   messages.forEach(m => {
     const row = document.createElement("div");
-    const isProfessional = currentSession
-      && (currentSession.role === "THERAPIST" || currentSession.role === "CASE_HANDLER");
+    const isProfessional = isProfessionalSession();
     const isOwnMessage = m.senderRole === "SYSTEM"
       ? false
       : (isProfessional ? m.senderRole === "PROFESSIONAL" : m.senderRole === "CLIENT");
@@ -709,7 +718,7 @@ function renderChatMessages(messages, container = document.getElementById("chat-
 
     const service = chatServices[currentService];
     const avatarImg = m.senderRole === "CLIENT"
-      ? ((currentUser && currentUser.profilePictureUrl) || "assets/individual.svg")
+      ? ((!isProfessional && currentUser && assetUrl(currentUser.profilePictureUrl)) || "assets/individual.svg")
       : service.avatar;
 
     const timeStr = formatTime(m.createdAt);
@@ -725,9 +734,9 @@ function renderChatMessages(messages, container = document.getElementById("chat-
       text.textContent = m.messageText;
       bubble.appendChild(text);
     }
-    if (m.attachmentUrl && m.attachmentUrl.startsWith("/uploads/")) {
+    if (m.attachmentUrl) {
       const attachment = document.createElement("img");
-      attachment.src = m.attachmentUrl;
+      attachment.src = assetUrl(m.attachmentUrl);
       attachment.alt = "Photo attached to this message";
       attachment.className = "message-attachment";
       bubble.appendChild(attachment);
@@ -763,11 +772,9 @@ async function handleSendMessage(e) {
   submitButton.disabled = true;
   document.getElementById("chat-send-status").textContent = "";
   try {
-    const res = await apiFetch("/api/messages/send", {
+    const res = await apiFetch(`/api/conversations/${currentConversationId}/messages`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        conversationId: currentConversationId,
         messageText: text,
         attachmentData: pendingChatAttachment ? pendingChatAttachment.dataUrl : ""
       })
@@ -792,7 +799,7 @@ async function handleSendMessage(e) {
 
 function getProfessionalInbox() {
   if (!currentSession) return null;
-  const viewId = getRoleHomeView(currentSession.role);
+  const viewId = getRoleHomeView();
   return document.querySelector(`#view-${viewId} .professional-inbox`);
 }
 
@@ -802,7 +809,7 @@ async function loadProfessionalInbox() {
 
   const status = inbox.querySelector(".professional-inbox-status");
   try {
-    const res = await apiFetch("/api/professional/conversations");
+    const res = await apiFetch("/api/conversations/assigned");
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
       throw new Error(error.error || "Assigned conversations could not be loaded.");
@@ -852,7 +859,7 @@ function renderProfessionalConversationList(inbox = getProfessionalInbox()) {
     button.className = "professional-conversation-button";
     if (conversation.id === professionalConversationId) button.classList.add("active");
     const client = document.createElement("strong");
-    client.textContent = `Client #${conversation.clientId}`;
+    client.textContent = conversation.clientName || `Client #${conversation.clientId}`;
     const serviceLabel = document.createElement("span");
     serviceLabel.textContent = service ? service.name : conversation.serviceType;
     button.append(client, serviceLabel);
@@ -869,7 +876,7 @@ async function selectProfessionalConversation(conversationId) {
   professionalConversationId = conversation.id;
   currentService = chatServices[conversation.serviceType] ? conversation.serviceType : "JUSTICE_CARE";
   inbox.querySelector(".professional-active-title").textContent =
-    `${chatServices[currentService].name} · Client #${conversation.clientId}`;
+    `${chatServices[currentService].name} · ${conversation.clientName || `Client #${conversation.clientId}`}`;
   inbox.querySelector(".professional-reply-input").disabled = false;
   inbox.querySelector(".professional-reply-send").disabled = false;
   renderProfessionalConversationList(inbox);
@@ -882,7 +889,7 @@ async function loadProfessionalConversationMessages(silent = false) {
   if (!inbox) return;
 
   try {
-    const res = await apiFetch(`/api/messages?conversationId=${professionalConversationId}`);
+    const res = await apiFetch(`/api/conversations/${professionalConversationId}/messages`);
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
       throw new Error(error.error || "Messages could not be loaded.");
@@ -909,10 +916,9 @@ async function handleProfessionalReply(e) {
   button.disabled = true;
   inbox.querySelector(".professional-inbox-status").textContent = "";
   try {
-    const res = await apiFetch("/api/messages/reply", {
+    const res = await apiFetch(`/api/conversations/${professionalConversationId}/replies`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ conversationId: professionalConversationId, messageText })
+      body: JSON.stringify({ messageText })
     });
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
@@ -955,7 +961,7 @@ function closeProfessionalModal(e) {
 // REPORTS & ACTIVITY HISTORY (Page 8 & Page 9)
 async function loadReports() {
   try {
-    const res = await apiFetch(`/api/reports/list?filter=${encodeURIComponent(currentReportsFilter)}`);
+    const res = await apiFetch(`/api/reports?status=${encodeURIComponent(currentReportsFilter)}`);
     if (res.ok) {
       reportsCache = await res.json();
       renderReportsList(reportsCache);
@@ -984,19 +990,19 @@ function renderReportsList(list) {
     row.onclick = () => viewReportDetails(r);
 
     let badgeClass = "under-review";
-    if (r.status === "In Progress") badgeClass = "in-progress";
-    if (r.status === "Resolved") badgeClass = "resolved";
+    if (r.status === "IN_PROGRESS") badgeClass = "in-progress";
+    if (r.status === "RESOLVED") badgeClass = "resolved";
 
     row.innerHTML = `
       <div class="activity-item-left">
         <span class="activity-doc-icon">&#128196;</span>
         <div>
           <div class="activity-item-code">${r.reportCode || "Report"}</div>
-          <div class="activity-item-status">${r.status || "Under Review"}.</div>
+          <div class="activity-item-status">${r.statusLabel || "Under Review"}.</div>
         </div>
       </div>
       <div>
-        <span class="status-badge ${badgeClass}">${r.status}</span>
+        <span class="status-badge ${badgeClass}">${r.statusLabel}</span>
       </div>
     `;
     container.appendChild(row);
@@ -1004,14 +1010,14 @@ function renderReportsList(list) {
 }
 
 function updateReportPillCounts() {
-  apiFetch("/api/reports/list?filter=All").then(r => {
+  apiFetch("/api/reports").then(r => {
     if (!r.ok) throw new Error("Report counts could not be loaded.");
     return r.json();
   }).then(all => {
     const allCount = all.length;
-    const reviewCount = all.filter(x => x.status === "Under Review").length;
-    const progCount = all.filter(x => x.status === "In Progress").length;
-    const resCount = all.filter(x => x.status === "Resolved").length;
+    const reviewCount = all.filter(x => x.status === "UNDER_REVIEW").length;
+    const progCount = all.filter(x => x.status === "IN_PROGRESS").length;
+    const resCount = all.filter(x => x.status === "RESOLVED").length;
 
     document.getElementById("pill-all").textContent = `All (${allCount})`;
     document.getElementById("pill-review").textContent = `Under Review (${reviewCount})`;
@@ -1030,7 +1036,7 @@ function filterActivityHistory(statusFilter, e) {
 }
 
 function viewReportDetails(r) {
-  alert(`Report: ${r.reportCode}\nClient: ${r.fullName}\nConcern: ${r.concernType}\nStatus: ${r.status}\nDetails: ${r.concernDetails}`);
+  alert(`Report: ${r.reportCode}\nClient: ${r.fullName}\nConcern: ${r.concernType}\nStatus: ${r.statusLabel}\nDetails: ${r.concernDetails}${r.remarks ? `\nRemarks: ${r.remarks}` : ""}`);
 }
 
 // REPORT CONCERN SUBMISSION (Page 9)
@@ -1060,11 +1066,8 @@ async function handleReportSubmit(e) {
       concernType,
       involvedWitness
     };
-    if (currentUser && currentUser.id) report.userId = currentUser.id;
-
-    const res = await apiFetch("/api/reports/submit", {
+    const res = await apiFetch("/api/reports", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(report)
     });
 
@@ -1154,7 +1157,7 @@ async function loadAdminPendingRequests() {
       if (request.type === "VERIFICATION" && request.imageUrl) {
         const image = document.createElement("img");
         image.className = "admin-request-image";
-        image.src = request.imageUrl;
+        image.src = assetUrl(request.imageUrl);
         image.alt = "Submitted ID document";
         info.appendChild(image);
       }
@@ -1205,7 +1208,7 @@ function openAdminReviewModal(request) {
 
   const image = document.getElementById("review-image");
   image.hidden = isVerification ? !request.imageUrl : true;
-  if (!image.hidden) image.src = request.imageUrl;
+  if (!image.hidden) image.src = assetUrl(request.imageUrl);
   document.getElementById("review-verification-actions").hidden = !isVerification;
   document.getElementById("review-report-actions").hidden = isVerification;
   document.getElementById("review-reason-label").hidden = true;
@@ -1260,7 +1263,6 @@ async function submitAdminReviewAction(action) {
   try {
     const res = await apiFetch("/api/admin/pending-requests/action", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         type: currentAdminRequest.type,
         id: currentAdminRequest.id,
@@ -1329,8 +1331,8 @@ function formatAdminDate(value) {
 }
 
 async function readAdminError(response) {
-  const message = await response.text();
-  return message || `Request failed (${response.status})`;
+  const data = await response.json().catch(() => ({}));
+  return data.error || `Request failed (${response.status})`;
 }
 
 function showAdminLoadError(elementId, message) {
@@ -1353,12 +1355,14 @@ async function loadAdminUsers() {
       users.forEach(u => {
         const row = document.createElement("div");
         row.className = "admin-user-row";
-        const avatar = u.profilePictureUrl || (u.role === "PROFESSIONAL" ? "assets/avatar-case-handler.svg" : "assets/individual.svg");
+        const fallbackAvatar = u.role === "ATTORNEY" ? "assets/avatar-case-handler.svg"
+          : (u.role === "PSYCHIATRIST" ? "assets/avatar-therapist.svg" : "assets/individual.svg");
+        const avatar = assetUrl(u.profilePictureUrl) || fallbackAvatar;
         row.innerHTML = `
           <img src="${avatar}" alt="Avatar" class="admin-user-thumb">
           <div style="flex: 1;">
             <div style="font-weight: 800; font-size: 15px;">${u.fullName || u.username}</div>
-            <div style="font-size: 12px; color: #557053;">${u.email} &bull; <b>${u.role}</b> &bull; Status: ${u.status || "VERIFIED"}</div>
+            <div style="font-size: 12px; color: #557053;">${u.email} &bull; <b>${u.roleDisplayName || u.role}</b> &bull; Status: ${u.status || "VERIFIED"}</div>
           </div>
         `;
         container.appendChild(row);
@@ -1402,34 +1406,32 @@ function renderCalendar() {
   }
 }
 
-// DATABASE CONNECTION MANAGEMENT
+// API CONNECTION STATUS
+// The desktop app never connects to the database itself; it only reports whether the
+// TalkCare API (and the database behind it) is reachable.
 async function checkDatabaseStatus() {
+  const dot = document.getElementById("db-status-dot");
+  const text = document.getElementById("db-status-text");
+  const box = document.getElementById("db-dialog-status-box");
+  document.getElementById("api-base-url").textContent = API_BASE_URL;
+  let message;
+  let connected = false;
   try {
-    const res = await fetch("/api/db/status");
-    if (res.ok) {
-      const data = await res.json();
-      const dot = document.getElementById("db-status-dot");
-      const text = document.getElementById("db-status-text");
-
-      if (data.connected) {
-        dot.className = "db-dot";
-        text.textContent = "PostgreSQL Connected";
-      } else {
-        dot.className = "db-dot disconnected";
-        text.textContent = "PostgreSQL (Setup)";
-      }
-
-      document.getElementById("cfg-host").value = data.host || "localhost";
-      document.getElementById("cfg-port").value = data.port || 5432;
-      document.getElementById("cfg-dbname").value = data.dbName || "talkcare";
-      document.getElementById("cfg-user").value = data.user || "postgres";
-
-      const box = document.getElementById("db-dialog-status-box");
-      box.innerHTML = `<b>Status:</b> ${data.message}`;
-    }
+    const res = await fetch(API_BASE_URL + "/api/health");
+    const data = await res.json().catch(() => ({}));
+    connected = res.ok && data.ok;
+    message = data.message || (connected ? "Connected." : `The server answered with status ${res.status}.`);
   } catch (err) {
-    console.error("DB status error:", err);
+    message = "The TalkCare server could not be reached. Check your internet connection or the API address.";
+    console.error("API status error:", err);
   }
+  dot.className = connected ? "db-dot" : "db-dot disconnected";
+  text.textContent = connected ? "Online" : "Offline";
+  box.textContent = "";
+  const label = document.createElement("b");
+  label.textContent = "Status: ";
+  box.append(label, message);
+  return connected;
 }
 
 function openDbModal() {
@@ -1444,37 +1446,9 @@ function closeDbModal(e) {
   document.getElementById("db-modal").classList.remove("show");
 }
 
-async function handleDbSave(e) {
-  e.preventDefault();
-  const host = document.getElementById("cfg-host").value.trim();
-  const port = document.getElementById("cfg-port").value.trim();
-  const name = document.getElementById("cfg-dbname").value.trim();
-  const user = document.getElementById("cfg-user").value.trim();
-  const pass = document.getElementById("cfg-pass").value;
-
-  const box = document.getElementById("db-dialog-status-box");
-  box.innerHTML = `<i>Connecting to PostgreSQL...</i>`;
-
-  try {
-    const res = await fetch("/api/db/reconnect", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ host, port, name, user, password: pass })
-    });
-
-    if (res.ok) {
-      const result = await res.json();
-      box.innerHTML = `<b>Result:</b> ${result.message}`;
-      await checkDatabaseStatus();
-      if (result.connected) {
-        alert("Successfully connected to PostgreSQL database!");
-        closeDbModal();
-        loadReports();
-        loadAdminDashboard();
-      }
-    }
-  } catch (err) {
-    box.innerHTML = `<b style="color:red">Error:</b> ${err.message}`;
+async function retryApiConnection() {
+  if (await checkDatabaseStatus() && currentSession) {
+    navigateTo(getRoleHomeView());
   }
 }
 
