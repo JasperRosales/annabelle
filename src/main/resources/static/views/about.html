@@ -5,26 +5,40 @@
 
     <!-- Subnav tabs: About us, Career, Social Impact, Client Impact, Articles -->
     <div class="about-nav-tabs">
-      <button class="about-tab-btn active" onclick="switchAboutTab(event, 'about-us')">About us</button>
-      <button class="about-tab-btn" onclick="switchAboutTab(event, 'career')">Career</button>
-      <button class="about-tab-btn" onclick="switchAboutTab(event, 'social-impact')">Social Impact</button>
-      <button class="about-tab-btn" onclick="switchAboutTab(event, 'client-impact')">Client Impact</button>
-      <button class="about-tab-btn" onclick="switchAboutTab(event, 'articles')">Articles</button>
+      <button class="about-tab-btn active" data-action="about-tab" data-arg="about-us">About us</button>
+      <button class="about-tab-btn" data-action="about-tab" data-arg="career">Career</button>
+      <button class="about-tab-btn" data-action="about-tab" data-arg="social-impact">Social Impact</button>
+      <button class="about-tab-btn" data-action="about-tab" data-arg="client-impact">Client Impact</button>
+      <button class="about-tab-btn" data-action="about-tab" data-arg="articles">Articles</button>
     </div>
 
     <div class="about-content-card">
       <div class="about-text-column" id="about-tab-text">
-        <h3 class="about-subheading">High-quality therapy that drives client outcomes</h3>
-        <p class="about-paragraph">
-          The Mental Health and Justice web application aims to create a safe, accessible, and supportive
-          environment where individuals can openly express their emotions, concerns, and experiences without
-          fear of judgment or discrimination.
-        </p>
-        <p class="about-paragraph">
-          It provides users with access to appropriate mental health resources, guidance, and information
-          about their rights. By connecting mental well-being with fairness and justice, the application empowers
-          clients to seek help, understand their rights, feel heard, and receive respectful and appropriate support.
-        </p>
+        <div class="about-tab-panel" data-tab="about-us" data-image="assets/about-us-therapy.jpg" data-image-alt="A therapist talking with a client">
+          <h3 class="about-subheading">High-quality therapy that drives client outcomes</h3>
+          <p class="about-paragraph">Talkcare is a mental health and justice-support focused web application built on the belief that every person has the right to feel safe, heard, and respected no matter who they are or where they come from.</p>
+          <p class="about-paragraph">We exist to bridge the gap between people and quality mental health support. Our platform creates a judgment-free, inclusive space where anyone can freely express their thoughts, emotions, and experiences without fear of discrimination. We combine compassionate care with clear information helping individuals not only nurture their mental well-being but also understand and stand firm in their rights.</p>
+        </div>
+        <div class="about-tab-panel" data-tab="career" data-image="assets/career-team-cutout.png" data-image-alt="A team collaborating around a table" hidden>
+          <h3 class="about-subheading">Build a Movement for Fair & Compassionate Care</h3>
+          <p class="about-paragraph">At Talkcare, we don’t just build services — we build a movement for compassionate, fair, and inclusive mental health care. We are always looking for passionate, purpose-driven individuals who believe that everyone deserves to feel heard, supported, and valued.</p>
+          <p class="about-paragraph">Help us empower more lives, break barriers, and build a future where no one seeks support alone. Together, we make a real difference — one life, one community at a time.</p>
+        </div>
+        <div class="about-tab-panel" data-tab="social-impact" data-image="assets/social-impact-cutout.png" data-image-alt="A counselor speaking with a student" hidden>
+          <h3 class="about-subheading">Dignity, Equity, and Individual Empowerment</h3>
+          <p class="about-paragraph">Talkcare puts clients’ well-being, dignity, and rights at the center of every service. Users gain a trusted, judgment-free space to share their thoughts and feelings, helping them feel validated, understood, and less alone. Clients receive personalized guidance, reliable resources, and clear information on their rights, equipping them to make informed decisions and advocate for themselves with confidence.</p>
+          <p class="about-paragraph">Every interaction is designed to respect individuality, privacy, and fairness. Clients experience consistent, respectful care that honors their unique stories and circumstances. Over time, they build greater self-awareness, emotional resilience, and a stronger sense of agency knowing they deserve support, they have rights, and their well-being truly matters.</p>
+        </div>
+        <div class="about-tab-panel" data-tab="client-impact" data-image="assets/client-impact-cutout.png" data-image-alt="A client talking with a mental health professional" hidden>
+          <h3 class="about-subheading">Empowering Clients to Advocate for Themselves</h3>
+          <p class="about-paragraph">Knowledge, understanding, and awareness are powerful tools for mental well-being. Articles and tools are crafted to inform, inspire, and empower making mental health information clear, relatable, and accessible to everyone.</p>
+          <p class="about-paragraph">By connecting mental well-being with fairness and justice, the application empowers clients to seek help, understand their rights, feel heard, and receive respectful and appropriate support.</p>
+        </div>
+        <div class="about-tab-panel" data-tab="articles" data-image="assets/articles-mental-health-cutout.png" data-image-alt="Mental health definition illustration" hidden>
+          <h3 class="about-subheading">Mental Health Rights & Coping Strategies</h3>
+          <p class="about-paragraph">Here, you’ll find trusted content covering practical coping strategies, emotional care, and insights on mental health rights and fairness. We break down important topics from managing stress and building resilience to recognizing when to seek help and understanding your rights as someone seeking care. Our goal is to remove stigma, answer your questions, and guide you with kindness and accuracy.</p>
+          <p class="about-paragraph">Articles are updated weekly by certified practitioners and human rights advocates to ensure complete relevance and accuracy.</p>
+        </div>
       </div>
 
       <div class="about-image-column">
@@ -39,8 +53,8 @@
   <div class="about-dedicated-wrap">
     <h2 class="about-header-title">About</h2>
     <div class="about-toggle-pills">
-      <button class="about-toggle-btn active" onclick="navigateTo('about-thomatt')">About Thomatt</button>
-      <button class="about-toggle-btn" onclick="navigateTo('about-justicecare')">About Justicecare</button>
+      <button class="about-toggle-btn active" data-action="navigate" data-arg="about-thomatt">About Thomatt</button>
+      <button class="about-toggle-btn" data-action="navigate" data-arg="about-justicecare">About Justicecare</button>
     </div>
     <div class="about-text-box">
       <p>
@@ -57,8 +71,8 @@
   <div class="about-dedicated-wrap">
     <h2 class="about-header-title">About</h2>
     <div class="about-toggle-pills">
-      <button class="about-toggle-btn" onclick="navigateTo('about-thomatt')">About Thomatt</button>
-      <button class="about-toggle-btn active" onclick="navigateTo('about-justicecare')">About Justicecare</button>
+      <button class="about-toggle-btn" data-action="navigate" data-arg="about-thomatt">About Thomatt</button>
+      <button class="about-toggle-btn active" data-action="navigate" data-arg="about-justicecare">About Justicecare</button>
     </div>
     <div class="about-text-box">
       <p>

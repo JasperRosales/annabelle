@@ -11,7 +11,7 @@
       </div>
 
       <div class="auth-card">
-        <form onsubmit="handleLogin(event)">
+        <form data-submit="login">
           <div class="auth-form-group">
             <div class="auth-form-label">Account</div>
             <input type="text" id="login-username" class="auth-form-input" placeholder="Username, email, or full name" autocomplete="username" required>
@@ -22,11 +22,11 @@
             <input type="password" id="login-password" class="auth-form-input" placeholder="Enter password" autocomplete="current-password" required>
           </div>
 
-          <button type="button" class="auth-forgot-link" onclick="handleForgotPassword()">Forgot Password</button>
+          <button type="button" class="auth-forgot-link" data-action="forgot-password">Forgot Password</button>
           <p class="auth-form-status" id="login-status" role="status" aria-live="polite"></p>
 
           <button type="submit" class="btn-auth-submit">SUBMIT</button>
-          <div class="auth-switch-link" onclick="navigateTo('register')">Create Account</div>
+          <div class="auth-switch-link" data-action="navigate" data-arg="register">Create Account</div>
         </form>
       </div>
     </div>
@@ -39,7 +39,7 @@
     <div class="auth-card password-reset-card">
       <h2>Reset your password</h2>
       <p>Choose a new password with at least 8 characters.</p>
-      <form onsubmit="handlePasswordReset(event)">
+      <form data-submit="reset-password">
         <input type="hidden" id="password-reset-token">
         <div class="auth-form-group">
           <label class="auth-form-label" for="reset-new-password">New password</label>
@@ -70,7 +70,7 @@
 
       <div class="auth-card" style="width: 460px;">
         <h2 style="text-align: center; color: #17331b; font-size: 22px; font-weight: 800; margin-bottom: 20px;">Create Account</h2>
-        <form onsubmit="handleRegister(event)">
+        <form data-submit="register">
           <div class="auth-form-group">
             <div class="auth-form-label">Name</div>
             <input type="text" id="reg-name" class="auth-form-input" placeholder="Full Name" required>
@@ -98,7 +98,7 @@
 
           <p class="auth-form-status" id="register-status" role="status" aria-live="polite"></p>
           <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">Create Account</button>
-          <div class="auth-switch-link" onclick="navigateTo('login')">Already have an account? Log in</div>
+          <div class="auth-switch-link" data-action="navigate" data-arg="login">Already have an account? Log in</div>
         </form>
       </div>
     </div>
@@ -109,7 +109,7 @@
 <section class="view-screen" id="view-id-verify">
   <div style="padding: 40px 20px;">
     <div class="id-verify-card">
-      <form onsubmit="handleIdVerification(event)">
+      <form data-submit="submit-verification">
         <div class="id-field-row">
           <select id="id-type-select" class="id-select" required>
             <option value="" disabled selected>Select ID</option>
@@ -139,8 +139,7 @@
         </div>
 
         <!-- Upload ID document file picker -->
-        <div class="id-upload-preview" onclick="document.getElementById('id-doc-file-input').click()">
-          <input type="file" id="id-doc-file-input" accept="image/*" style="display: none;" onchange="handleIdFileSelect(event)">
+        <div class="id-upload-preview" data-action="pick-id-photo">
           <div id="id-upload-prompt">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#23492d" stroke-width="2" style="margin-bottom: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
             <div style="font-size: 13px; font-weight: 700; color: #23492d;">Click to Select & Upload Valid ID Document</div>
@@ -167,6 +166,6 @@
       order to provide you with the best possible service.
       We appreciate your patience and understanding.
     </p>
-    <button class="btn-pending-okay" onclick="navigateTo('home')">Okay</button>
+    <button class="btn-pending-okay" data-action="navigate" data-arg="home">Okay</button>
   </div>
 </section>
