@@ -83,10 +83,10 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
 - Isang tumatakbong **TalkCare API** (`talkcare-api` repository), lokal man o naka-deploy
 
 ### Saan kumokonekta ang app
-Ang API address ay nasa [`src/main/resources/config.properties`](src/main/resources/config.properties) (`api.baseUrl`, default `http://localhost:4000`). Maaari rin itong palitan sa paglunsad:
+Ang API address ay nasa [`src/main/resources/config.properties`](src/main/resources/config.properties) (`api.baseUrl`, default ang naka-deploy na API sa Render: `https://talkcare-api.onrender.com`). Para sa lokal na API, palitan ito sa paglunsad:
 
 ```powershell
-$env:TALKCARE_API_URL = "https://your-talkcare-api.example.com"
+$env:TALKCARE_API_URL = "http://localhost:4000"
 .\run.bat
 ```
 
