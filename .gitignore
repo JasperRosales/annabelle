@@ -1,0 +1,9 @@
+# Build output
+target/
+
+# Local secrets / machine config
+talkcare_db.properties
+.env
+
+# Runtime uploads (user documents must not be committed)
+uploads/

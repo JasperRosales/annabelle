@@ -21,15 +21,10 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
      * Adult Mental Health First Aid USA Certificate sa profile modal
      * 1..31 Interactive Calendar Grid sa Admin Dashboard
 
-2. **Backend & Database**:
-   - **PostgreSQL** database backend gamit ang official PostgreSQL JDBC Driver (`org.postgresql.Driver`).
-   - Binuo ang kumpletong schema sa [`src/main/resources/schema.sql`](src/main/resources/schema.sql):
-     * `users` (id, username, full_name, email, password, contact_no, address, role, profile_picture_url, id_type, id_number, id_document_url, status)
-     * `reports` (id, report_code, user_id, full_name, email, address, contact_no, concern_type, involved_witness, concern_details, status)
-     * `conversations` (id, client_id, professional_id, service_type, title)
-     * `messages` (id, conversation_id, sender_id, sender_name, sender_role, message_text, is_auto_reply, attachment_url)
-     * `appointments` (id, user_id, professional_id, session_date, session_time, status)
-   - May kasamang **In-App PostgreSQL Connection Manager** (`db-status-badge` sa Navbar). Kung kailangang ilagay o baguhin ang password ng PostgreSQL (hal. `postgres`), i-click lamang ang status badge sa itaas upang mag-reconnect at mag-migrate sa isang pindot lang!
+2. **Backend (hiwalay na repository: `talkcare-api`)**:
+   - Ang desktop app ay **UI lamang**. Lahat ng data ay dumadaan sa **TalkCare API** (Express + Neon PostgreSQL), na nasa hiwalay na repository na `talkcare-api`.
+   - Walang database password o JDBC connection sa desktop app. Ang schema at migrations ay nasa API repository (`docs/schema.md`, `db/migrations/`).
+   - Ang badge sa Navbar ay nagpapakita kung **Online/Offline** ang TalkCare server; i-click ito para makita ang server address.
 
 3. **Messenger / Chatbot na may Auto-Reply at Professional Reply**:
    - Dalawang dedikadong channels alinsunod sa PDF:
@@ -61,12 +56,18 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
    - **Page 10**: TalkCare Admin Dashboard na may Pending Requests list (`Review` buttons para mag-update ng status), Recent Activity timeline, Interactive Schedule Overview calendar, at Active User Profiles.
 
 6. **Role-Based Login**:
-   - `USER` accounts open the existing client Home; `THERAPIST`, `CASE_HANDLER`, and `ADMIN` accounts open their respective dashboards.
-   - Login creates a server-side session. Users can read only their own reports; only admins can view all reports, update report status, and access admin data.
-   - Startup creates the following test accounts only if the username and email are not already present. Passwords are stored as BCrypt hashes:
+   - Ang server ang nagpapasya ng home view ng bawat account (`dashboardView`): `CLIENT` → Home, `ATTORNEY` → Case Handler dashboard, `PSYCHIATRIST` → Professional dashboard, `ADMIN` → Admin dashboard.
+   - Role names were renamed: `USER → CLIENT`, `CASE_HANDLER → ATTORNEY`, `THERAPIST → PSYCHIATRIST`.
+   - Test accounts are created on the API side with `npm run db:seed` (see the `talkcare-api` README):
 
-     | Role | Email | Password |
+     | Role | Username | Password |
      | --- | --- | --- |
+     | CLIENT | `test.user` | `TalkCareUser#2026` |
+     | ATTORNEY | `test.attorney` | `TalkCareCaseHandler#2026` |
+     | PSYCHIATRIST | `test.psychiatrist` | `TalkCareTherapist#2026` |
+     | ADMIN | `test.admin` | `TalkCareAdmin#2026` |
+
+--- | --- | --- |
      | USER | `test.user@talkcare.com` | `TalkCareUser#2026` |
      | THERAPIST | `test.therapist@talkcare.com` | `TalkCareTherapist#2026` |
      | CASE_HANDLER | `test.casehandler@talkcare.com` | `TalkCareCaseHandler#2026` |
@@ -78,44 +79,30 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
 
 ### Kinakailangan:
 - Java JDK 25 (LTS)
-- PostgreSQL (Tumatakbo sa `localhost:5432`)
-- Maven (Naka-install na sa sistema)
+- Maven
+- Isang tumatakbong **TalkCare API** (`talkcare-api` repository), lokal man o naka-deploy
+
+### Saan kumokonekta ang app
+Ang API address ay nasa [`src/main/resources/config.properties`](src/main/resources/config.properties) (`api.baseUrl`, default `http://localhost:4000`). Maaari rin itong palitan sa paglunsad:
+
+```powershell
+$env:TALKCARE_API_URL = "https://your-talkcare-api.example.com"
+.\run.bat
+```
+
+Ang desktop app ay nagse-serve ng UI sa `http://localhost:54321` (`ui.port`) para sa WebView. Siguraduhing kasama ang origin na ito sa `CORS_ORIGIN` ng API.
 
 ### Paraan 1: Gamit ang Batch Launcher (Pinakamadali)
 I-double click lamang ang:
 ```cmd
 run.bat
 ```
-Awtomatiko nitong iko-compile ang mga binagong files at bubuksan ang desktop window ng TalkCare!
 
 ### Paraan 2: Gamit ang Maven
-Buksan ang terminal sa folder ng TalkCare at patakbuhin:
 ```cmd
 mvn javafx:run
 ```
 
----
-
-## 🗄️ Pagsasaayos ng PostgreSQL Database
-
-Ang database credentials ay matatagpuan sa [`src/main/resources/config.properties`](src/main/resources/config.properties) o maaaring i-configure nang direkta sa loob ng app:
-1. Sa bandang itaas ng Navbar, i-click ang badge na nagsasabing **"PostgreSQL"**.
-2. Ilagay ang iyong PostgreSQL password (karaniwan ay `postgres`, `admin`, o ang napiling password noong nag-install ng PostgreSQL 18).
-3. I-click ang **"Test & Connect to PostgreSQL"**.
-4. Awtomatikong lilikhain at i-a-apply ng application ang buong schema mula sa `schema.sql`.
-
 ## Password recovery email
 
-The **Forgot Password** link sends a one-time reset link to the account email. Reset links expire after 30 minutes and can only be used once. Configure SMTP before starting TalkCare; credentials are read from environment variables and must not be committed to the project:
-
-```powershell
-$env:TALKCARE_SMTP_HOST = "smtp.gmail.com"
-$env:TALKCARE_SMTP_PORT = "587"
-$env:TALKCARE_SMTP_USERNAME = "your-sender@gmail.com"
-$env:TALKCARE_SMTP_PASSWORD = "your-provider-app-password"
-$env:TALKCARE_SMTP_FROM = "your-sender@gmail.com"
-$env:TALKCARE_RESET_URL = "http://localhost:54321"
-.\run.bat
-```
-
-Use an SMTP app password or provider-issued credential, not an email account's normal sign-in password. The reset email link works while TalkCare is running on the same computer. Without SMTP configuration, the application reports that email recovery is unavailable rather than claiming that an email was sent.
+Password reset emails are sent by the API, so SMTP is configured on the server (`TALKCARE_SMTP_*` and `TALKCARE_RESET_URL` in the `talkcare-api` `.env`), not on this computer. The reset link opens this desktop UI at `http://localhost:54321/?resetToken=...`.

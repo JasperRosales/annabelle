@@ -4,58 +4,50 @@ import java.awt.Desktop;
 import java.net.URI;
 
 public class App {
-    private static final int PORT = 54321;
-    private static TalkCareServer server;
+    private static StaticUiServer uiServer;
 
     public static void main(String[] args) {
+        AppConfig config = AppConfig.load();
         System.out.println("=================================================");
         System.out.println("Starting TalkCare Desktop Application...");
-        System.out.println("Backend: PostgreSQL (Port 5432)");
-        System.out.println("Local Server: http://localhost:" + PORT + "/");
+        System.out.println("API:      " + config.apiBaseUrl());
+        System.out.println("Local UI: http://localhost:" + config.uiPort() + "/");
         System.out.println("=================================================");
 
-        // Initialize embedded server
         try {
-            server = new TalkCareServer(PORT);
-            server.start();
+            uiServer = new StaticUiServer(config);
+            uiServer.start();
         } catch (Exception e) {
-            System.err.println("Fatal: Failed to start TalkCare server: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Fatal: could not serve the TalkCare UI on port " + config.uiPort() + ": " + e.getMessage());
             return;
         }
 
-        // Add shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (server != null) {
-                server.stop();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(App::stopUiServer));
 
-        // Try launching JavaFX stage
         try {
-            TalkCareFXApp.setPort(PORT);
-            TalkCareFXApp.setOnShutdown(() -> {
-                if (server != null) {
-                    server.stop();
-                }
-            });
+            TalkCareFXApp.setStartUrl(uiServer.indexUrl());
+            TalkCareFXApp.setOnShutdown(App::stopUiServer);
             TalkCareFXApp.launchApp(args);
         } catch (Throwable t) {
             System.err.println("JavaFX runtime notice: " + t.getMessage());
-            System.out.println("Launching Desktop window at http://localhost:" + PORT + "/");
-            openBrowserFallback();
+            System.out.println("Opening TalkCare in the system browser at " + uiServer.indexUrl());
+            openBrowserFallback(uiServer.indexUrl());
             try {
-                // Keep server thread alive
                 Thread.currentThread().join();
             } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
             }
         }
     }
 
-    public static void openBrowserFallback() {
+    private static void stopUiServer() {
+        if (uiServer != null) uiServer.stop();
+    }
+
+    private static void openBrowserFallback(String url) {
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(new URI("http://localhost:" + PORT + "/index.html"));
+                Desktop.getDesktop().browse(new URI(url));
             }
         } catch (Exception ex) {
             System.err.println("Could not open desktop browser: " + ex.getMessage());
