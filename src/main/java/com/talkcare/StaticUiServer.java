@@ -59,8 +59,9 @@ public final class StaticUiServer {
 
         byte[] content = readResource("static" + path);
         String mime = mimeType(path);
-        if (content == null) {
-            // Single-page app: unknown routes (e.g. /?resetToken=...) load index.html.
+        if (content == null && !path.substring(path.lastIndexOf('/') + 1).contains(".")) {
+            // Single-page app: unknown page routes load index.html. Missing files (e.g. a
+            // views/*.html include) still get a 404 so the UI can report them.
             content = readResource("static/index.html");
             mime = "text/html; charset=UTF-8";
         }

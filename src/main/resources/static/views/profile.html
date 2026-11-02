@@ -1,0 +1,36 @@
+<!-- PAGE 4: PROFILE SCREEN (With Picture Upload) -->
+<section class="view-screen" id="view-profile">
+  <div class="profile-screen-container">
+    <h2 class="profile-title">PROFILE</h2>
+
+    <div class="profile-card">
+      <div class="profile-avatar-column">
+        <img src="assets/individual.svg" alt="Profile" class="profile-avatar-large" id="profile-display-img">
+        <button type="button" class="btn-upload-photo" onclick="document.getElementById('profile-photo-input').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          Upload Picture
+        </button>
+        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoSelect(event)">
+      </div>
+
+      <div class="profile-fields-column">
+        <div class="profile-field-row">
+          <div class="profile-field-label">User name:</div>
+          <input type="text" id="profile-username" class="profile-field-input" value="maxsmith">
+        </div>
+
+        <div class="profile-field-row">
+          <div class="profile-field-label">Email:</div>
+          <input type="email" id="profile-email" class="profile-field-input" value="max.smith@talkcare.com">
+        </div>
+
+        <div class="profile-field-row">
+          <div class="profile-field-label">Password:</div>
+          <input type="password" id="profile-password" class="profile-field-input" value="max123">
+        </div>
+
+        <button type="button" class="btn-update-profile" onclick="updateProfileInfo()">Update Information</button>
+      </div>
+    </div>
+  </div>
+</section>

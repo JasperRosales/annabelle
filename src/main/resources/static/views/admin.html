@@ -1,0 +1,83 @@
+<!-- PAGE 10: TALKCARE ADMIN DASHBOARD -->
+<section class="view-screen" id="view-admin">
+  <div class="admin-container">
+    <h1 class="admin-title">TalkCare Admin</h1>
+
+    <!-- Pending Requests -->
+    <div class="admin-pending-card">
+      <h3 class="admin-section-heading">Pending Requests</h3>
+      <div id="admin-pending-requests-list"></div>
+    </div>
+
+    <div class="admin-two-cols">
+      <!-- Recent Activity -->
+      <div class="admin-activity-timeline">
+        <h3 class="admin-section-heading">Recent Activity</h3>
+        <div id="admin-timeline-list"></div>
+      </div>
+
+      <!-- Schedule Overview -->
+      <div class="admin-calendar-card">
+        <h3 class="admin-section-heading">Schedule Overview</h3>
+        <div class="admin-calendar-month" id="admin-calendar-month"></div>
+        <div class="calendar-grid" id="admin-calendar-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Active User Profiles -->
+    <div class="admin-profiles-card">
+      <h3 class="admin-section-heading" style="color: #ffffff;">Active User Profiles</h3>
+      <div class="admin-profiles-list" id="admin-active-users-list">
+        <!-- Dynamically populated from DB -->
+      </div>
+    </div>
+
+    <!-- Bottom Stats Bar (Page 10) -->
+    <div class="admin-bottom-stats">
+      <span>Total Users <b id="stat-total-users">—</b></span>
+      <span>Pending Approvals <b id="stat-pending-approvals">—</b></span>
+      <span>Session Today <b id="stat-session-today">—</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="admin-review-backdrop" id="admin-review-modal" aria-hidden="true">
+  <section class="admin-review-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-review-title">
+    <button type="button" class="admin-review-close" aria-label="Close review" onclick="closeAdminReviewModal()">&times;</button>
+    <h2 id="admin-review-title">Review Request</h2>
+    <div class="admin-review-content">
+      <div class="admin-review-fields">
+        <div><strong>Name:</strong> <span id="review-name"></span></div>
+        <div><strong>Email:</strong> <span id="review-email"></span></div>
+        <div><strong>Submitted:</strong> <span id="review-submitted"></span></div>
+        <div id="review-id-type-row"><strong>ID Type:</strong> <span id="review-id-type"></span></div>
+        <div id="review-id-number-row"><strong>ID Number:</strong> <span id="review-id-number"></span></div>
+        <div id="review-address-row"><strong>Address:</strong> <span id="review-address"></span></div>
+        <div id="review-contact-row"><strong>Contact:</strong> <span id="review-contact"></span></div>
+        <div id="review-report-code-row"><strong>Report:</strong> <span id="review-report-code"></span></div>
+        <div id="review-concern-type-row"><strong>Concern Type:</strong> <span id="review-concern-type"></span></div>
+        <div id="review-details-row"><strong>Details:</strong> <span id="review-details"></span></div>
+        <div id="review-witness-row"><strong>Involved / Witness:</strong> <span id="review-witness"></span></div>
+        <div id="review-existing-remarks-row"><strong>Existing Remarks:</strong> <span id="review-existing-remarks"></span></div>
+      </div>
+      <img class="admin-review-image" id="review-image" alt="Submitted ID document" hidden>
+    </div>
+    <label class="admin-review-input-label" id="review-reason-label" for="review-reason" hidden>Rejection reason (required)</label>
+    <textarea class="admin-review-textarea" id="review-reason" rows="3" hidden></textarea>
+    <label class="admin-review-input-label" id="review-remarks-label" for="review-remarks" hidden>Remarks</label>
+    <textarea class="admin-review-textarea" id="review-remarks" rows="3" hidden></textarea>
+    <div class="admin-review-actions" id="review-verification-actions" hidden>
+      <button type="button" class="admin-action-button approve" onclick="submitAdminReviewAction('APPROVE')">Approve</button>
+      <button type="button" class="admin-action-button reject" onclick="showAdminRejectReason()">Reject</button>
+      <button type="button" class="admin-action-button reject" id="review-confirm-reject" onclick="submitAdminReviewAction('REJECT')" hidden>Confirm Reject</button>
+    </div>
+    <div class="admin-review-actions" id="review-report-actions" hidden>
+      <button type="button" class="admin-action-button" onclick="submitAdminReviewAction('IN_PROGRESS')">Mark In Progress</button>
+      <button type="button" class="admin-action-button approve" onclick="submitAdminReviewAction('RESOLVED')">Mark Resolved</button>
+      <button type="button" class="admin-action-button" onclick="showAdminRemarks()">Add Remarks</button>
+      <button type="button" class="admin-action-button" id="review-save-remarks" onclick="submitAdminReviewAction('ADD_REMARKS')" hidden>Save Remarks</button>
+    </div>
+  </section>
+</div>
