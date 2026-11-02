@@ -58,6 +58,8 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
 6. **Role-Based Login**:
    - Ang server ang nagpapasya ng home view ng bawat account (`dashboardView`): `CLIENT` → Home, `ATTORNEY` → Case Handler dashboard, `PSYCHIATRIST` → Professional dashboard, `ADMIN` → Admin dashboard.
    - Role names were renamed: `USER → CLIENT`, `CASE_HANDLER → ATTORNEY`, `THERAPIST → PSYCHIATRIST`.
+   - **Hiwalay na sign-in page bawat role**: ang "Log in" ay nagbubukas ng portal chooser (Client, Attorney, Psychiatrist, Administrator). Ipinapadala ng bawat page ang `role` sa `/api/auth/login`, kaya tinatanggihan ang account na iba ang role.
+   - **Hiwalay na register page**: Client, Attorney (Roll of Attorneys no.), at Psychiatrist (PRC license no.). Pagkatapos mag-register, mag-a-upload ng ID; ang bagong attorney/psychiatrist ay walang client hangga't hindi ina-approve ng admin. Walang public na register page para sa Administrator.
    - Test accounts are created on the API side with `npm run db:seed` (see the `talkcare-api` README):
 
      | Role | Username | Password |

@@ -1,6 +1,5 @@
 package com.talkcare.ui.controller;
 
-import com.talkcare.api.AuthApi;
 import com.talkcare.api.ProfileApi;
 import com.talkcare.model.Account;
 import com.talkcare.ui.ActionRouter;
@@ -23,10 +22,10 @@ public final class VerificationController extends Controller {
     }
 
     /** Pre-fills the form for a newly registered account. */
-    public void prepare(Account account, AuthApi.Registration registration) {
+    public void prepare(Account account, String email, String address) {
         idDocument = null;
-        byId("id-email").value(orDefault(account.email(), registration.email()));
-        byId("id-address").value(orDefault(account.address(), registration.address()));
+        byId("id-email").value(orDefault(account.email(), email));
+        byId("id-address").value(orDefault(account.address(), address));
         byId("id-type-select").value("");
         byId("id-number").value("");
         byId("id-preview-img").removeAttr("src").display("none");

@@ -2,11 +2,14 @@ package com.talkcare.ui.controller;
 
 import com.talkcare.api.ApiException;
 import com.talkcare.api.AuthApi;
+import com.talkcare.model.Account;
 import com.talkcare.ui.ActionRouter;
 import com.talkcare.ui.UiCall;
 import com.talkcare.ui.dom.El;
 
-/** Sign in, create account, sign out, and the two password-reset steps. */
+import java.util.concurrent.CompletableFuture;
+
+/** Role-specific sign in and registration, sign out, and the two password-reset steps. */
 public final class AuthController extends Controller {
     private final VerificationController verification;
 
@@ -17,50 +20,57 @@ public final class AuthController extends Controller {
 
     @Override
     public void bind(ActionRouter router) {
-        router.onSubmit("login", action -> login(action.source()));
-        router.onSubmit("register", action -> register(action.source()));
+        router.onSubmit("login", action -> login(action.source(), action.arg()));
+        router.onSubmit("register", action -> register(action.source(), action.arg()));
         router.onClick("logout", action -> logout());
-        router.onClick("forgot-password", action -> openForgotPassword());
+        router.onClick("forgot-password", action -> openForgotPassword(action.source()));
         router.onClick("close-forgot-password", action -> closeForgotPassword());
         router.onSubmit("request-password-reset", action -> requestPasswordReset(action.source()));
         router.onSubmit("reset-password", action -> resetPassword(action.source()));
     }
 
-    private void login(El form) {
-        El status = byId("login-status").text("");
+    /** Every role has its own sign-in form; {@code data-arg} is the role the API must match. */
+    private void login(El form, String role) {
+        El status = form.firstByClass("auth-form-status").text("");
         El button = submitButton(form).disabled(true).text("Signing in...");
+        El password = field(form, "password");
 
-        UiCall.of(api().auth().login(byId("login-username").trimmedValue(), byId("login-password").value()))
+        UiCall.of(api().auth().login(field(form, "username").trimmedValue(), password.value(), role))
                 .onSuccess(account -> {
                     session().signIn(account);
-                    byId("login-password").value("");
+                    password.value("");
                     navigator().goHome();
                 })
                 .onError(error -> status.text(message(error, "Invalid account name or password.")))
-                .always(() -> button.disabled(false).text("SUBMIT"))
+                .always(() -> button.disabled(false).text("Sign in"))
                 .start();
     }
 
-    private void register(El form) {
-        AuthApi.Registration registration = new AuthApi.Registration(
-                byId("reg-name").trimmedValue(),
-                byId("reg-username").trimmedValue(),
-                byId("reg-address").trimmedValue(),
-                byId("reg-contact").trimmedValue(),
-                byId("reg-email").trimmedValue(),
-                byId("reg-password").value());
-        El status = byId("register-status").text("");
-        El button = submitButton(form).disabled(true).text("Creating account...");
+    /** Client, attorney and psychiatrist registration; all continue to ID verification. */
+    private void register(El form, String role) {
+        String fullName = field(form, "fullName").trimmedValue();
+        String username = field(form, "username").trimmedValue();
+        String address = field(form, "address").trimmedValue();
+        String contactNo = field(form, "contactNo").trimmedValue();
+        String email = field(form, "email").trimmedValue();
+        String password = field(form, "password").value();
+        CompletableFuture<Account> request = Account.ROLE_CLIENT.equals(role)
+                ? api().auth().register(new AuthApi.Registration(fullName, username, address, contactNo, email, password))
+                : api().auth().registerProfessional(role, new AuthApi.ProfessionalRegistration(
+                        fullName, username, address, contactNo, email, password,
+                        field(form, "licenseNo").trimmedValue(), field(form, "affiliation").trimmedValue()));
 
-        UiCall.of(api().auth().register(registration))
+        El status = form.firstByClass("auth-form-status").text("");
+        El button = submitButton(form).disabled(true).text("Creating account...");
+        UiCall.of(request)
                 .onSuccess(account -> {
                     session().signIn(account);
-                    byId("reg-password").value("");
-                    verification.prepare(account, registration);
+                    form.resetForm();
+                    verification.prepare(account, email, address);
                     navigator().navigate("id-verify");
                 })
                 .onError(error -> status.text(message(error, "Please check your details and try again.")))
-                .always(() -> button.disabled(false).text("Create Account"))
+                .always(() -> button.disabled(false).text("Create account"))
                 .start();
     }
 
@@ -73,8 +83,10 @@ public final class AuthController extends Controller {
         navigator().navigate("welcome");
     }
 
-    private void openForgotPassword() {
-        String login = byId("login-username").trimmedValue();
+    /** Pre-fills the email when the sign-in form it was opened from already holds one. */
+    private void openForgotPassword(El link) {
+        String login = link.closest(el -> el.hasAttr("data-submit"))
+                .map(form -> field(form, "username").trimmedValue()).orElse("");
         El email = byId("forgot-password-email").value(login.contains("@") ? login : "");
         byId("forgot-password-status").text("");
         byId("forgot-password-modal").addClass("show").attr("aria-hidden", "false");
@@ -113,8 +125,7 @@ public final class AuthController extends Controller {
         status.text("Updating password…");
         UiCall.of(api().auth().resetPassword(byId("password-reset-token").value(), newPassword))
                 .onSuccess(answer -> {
-                    byId("login-username").value("");
-                    byId("login-password").value("");
+                    dom().all(el -> "login".equals(el.data("submit"))).forEach(El::resetForm);
                     navigator().navigate("login");
                     dialogs().info(answer.message());
                 })

@@ -46,6 +46,11 @@ public abstract class Controller {
                 && "BUTTON".equalsIgnoreCase(el.raw().getTagName())).getFirst();
     }
 
+    /** The input with {@code name="..."} inside a form (forms repeat per role, so ids are not used). */
+    protected static El field(El form, String name) {
+        return form.descendants(el -> name.equals(el.attr("name"))).getFirst();
+    }
+
     protected static String orDefault(String value, String fallback) {
         return value == null || value.isBlank() ? fallback : value;
     }
