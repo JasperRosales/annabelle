@@ -1,0 +1,55 @@
+<section class="view-screen" id="view-professional-dashboard">
+  <div class="role-dashboard-wrap">
+    <div class="role-dashboard-card role-dashboard-content">
+      <div class="role-dashboard-heading">
+        <div>
+          <h1>Professional Dashboard</h1>
+          <p>Welcome, <strong class="role-dashboard-user-name">Professional</strong>. You are signed in with the Therapist role.</p>
+        </div>
+      </div>
+      <section class="professional-inbox" aria-label="Assigned client messages">
+        <h2>Assigned conversations</h2>
+        <p class="professional-inbox-status" role="status"></p>
+        <div class="professional-inbox-layout">
+          <div class="professional-conversation-list" aria-label="Conversation list"></div>
+          <div class="professional-chat-panel">
+            <h3 class="professional-active-title">Select a conversation</h3>
+            <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
+            <form class="professional-reply-form" onsubmit="handleProfessionalReply(event)">
+              <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
+              <button class="professional-reply-send" type="submit" disabled>Send reply</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="view-screen" id="view-case-handler-dashboard">
+  <div class="role-dashboard-wrap">
+    <div class="role-dashboard-card role-dashboard-content">
+      <div class="role-dashboard-heading">
+        <div>
+          <h1>Case Handler Dashboard</h1>
+          <p>Welcome, <strong class="role-dashboard-user-name">Case Handler</strong>. You are signed in with the Case Handler role.</p>
+        </div>
+      </div>
+      <section class="professional-inbox" aria-label="Assigned client messages">
+        <h2>Assigned conversations</h2>
+        <p class="professional-inbox-status" role="status"></p>
+        <div class="professional-inbox-layout">
+          <div class="professional-conversation-list" aria-label="Conversation list"></div>
+          <div class="professional-chat-panel">
+            <h3 class="professional-active-title">Select a conversation</h3>
+            <div class="professional-message-list chat-messages-container" aria-live="polite"></div>
+            <form class="professional-reply-form" onsubmit="handleProfessionalReply(event)">
+              <input class="professional-reply-input" type="text" placeholder="Write a reply..." autocomplete="off" disabled>
+              <button class="professional-reply-send" type="submit" disabled>Send reply</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

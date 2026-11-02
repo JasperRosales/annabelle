@@ -1,0 +1,62 @@
+<div class="password-reset-backdrop" id="forgot-password-modal" aria-hidden="true">
+  <div class="password-reset-dialog" role="dialog" aria-modal="true" aria-labelledby="forgot-password-title">
+    <button type="button" class="btn-close-modal" aria-label="Close" onclick="closeForgotPassword()">&times;</button>
+    <h2 id="forgot-password-title">Forgot Password</h2>
+    <p>Enter the email address linked to your account. If it exists, we’ll send a one-time reset link that expires in 30 minutes.</p>
+    <form onsubmit="requestPasswordReset(event)">
+      <label for="forgot-password-email">Account email</label>
+      <input type="email" id="forgot-password-email" class="auth-form-input" autocomplete="email" required>
+      <p class="password-reset-status" id="forgot-password-status" aria-live="polite"></p>
+      <button type="submit" class="btn-auth-submit">Send reset link</button>
+    </form>
+  </div>
+</div>
+
+<!-- PROFESSIONAL CREDENTIALS MODAL (Page 6 & Page 7) -->
+<div class="prof-modal-backdrop" id="prof-modal" onclick="closeProfessionalModal(event)">
+  <div class="prof-modal-card">
+    <button class="btn-close-modal" onclick="closeProfessionalModal()">&times;</button>
+    <img src="assets/avatar-case-handler.svg" alt="Professional" class="prof-modal-avatar" id="prof-modal-img">
+    <div class="prof-modal-name">
+      <span id="prof-modal-title-name">Atty. Sofia Ramos</span>
+      <span class="verified-icon">&#10004;</span>
+    </div>
+    <div class="prof-modal-tag" id="prof-modal-subtag">Licensed Case Handler &amp; Legal Specialist</div>
+
+    <div class="prof-modal-about-box">
+      <div class="prof-modal-about-title">About</div>
+      <div class="prof-modal-about-text" id="prof-modal-description">
+        Licensed &amp; Verified Mental Health Professional with professional training and experience in providing ethical, confidential, and client-centered mental health services. With professional training and experience in mental health care, TalkCare provides individuals with a safe and confidential environment where they can openly discuss their thoughts, emotions, experiences, and personal concerns.
+      </div>
+    </div>
+
+    <div id="prof-cert-wrap" style="display: none;">
+      <div style="font-size: 11px; font-weight: 700; color: #557053; margin-bottom: 4px; text-transform: uppercase;">Verified Credential</div>
+      <img src="assets/certificate.svg" alt="Certificate" class="prof-modal-cert-img">
+    </div>
+  </div>
+</div>
+
+<!-- SERVER CONNECTION MODAL (TalkCare API status) -->
+<div class="prof-modal-backdrop" id="db-modal" onclick="closeDbModal(event)">
+  <div class="db-modal-card">
+    <button class="btn-close-modal" onclick="closeDbModal()">&times;</button>
+    <div class="db-modal-title">
+      <span style="font-size: 24px;">&#127760;</span> TalkCare Server Connection
+    </div>
+    <div class="db-modal-subtitle">
+      This desktop app uses the TalkCare online service. Your data is stored on the TalkCare server, not on this computer.
+    </div>
+
+    <div class="db-status-box" id="db-dialog-status-box">
+      <b>Status:</b> Checking connection...
+    </div>
+
+    <div class="auth-form-group">
+      <div class="auth-form-label">Server address</div>
+      <code id="api-base-url"></code>
+    </div>
+
+    <button type="button" class="btn-auth-submit" style="margin-top: 10px;" onclick="retryApiConnection()">Check connection again</button>
+  </div>
+</div>

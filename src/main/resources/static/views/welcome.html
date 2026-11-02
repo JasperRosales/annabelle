@@ -1,0 +1,132 @@
+<!-- PAGE 1: WELCOME / LANDING SCREEN -->
+<section class="view-screen active" id="view-welcome">
+  <div class="hero-container">
+    <h1 class="hero-title">WELCOME TO TALKCARE</h1>
+    <p class="hero-desc">
+      Welcome to our Mental Health and Justice platform, where we bridge the gap
+      between wellness and fairness, empowering individuals with resources and
+      support for a healthier, more just society.
+    </p>
+
+    <div class="hero-subheading">What are you looking for?</div>
+
+    <div class="hero-cards">
+      <!-- Card 1: Justice -->
+      <div class="choice-card card-justice" onclick="navigateTo('pathway-justice')">
+        <div class="choice-card-title">Justice</div>
+        <div class="choice-card-subtitle">
+          For my rights
+          <span class="choice-card-arrow">&rarr;</span>
+        </div>
+        <div class="choice-card-img-wrap">
+          <img src="assets/card-justice.png" alt="Justice">
+        </div>
+      </div>
+
+      <!-- Card 2: Individual -->
+      <div class="choice-card card-individual" onclick="navigateTo('pathway-individual')">
+        <div class="choice-card-title">Individual</div>
+        <div class="choice-card-subtitle">
+          For myself
+          <span class="choice-card-arrow">&rarr;</span>
+        </div>
+        <div class="choice-card-img-wrap">
+          <img src="assets/card-individual.png" alt="Individual">
+        </div>
+      </div>
+
+      <!-- Card 3: Peers -->
+      <div class="choice-card card-peers dark" onclick="navigateTo('pathway-peers')">
+        <div class="choice-card-title">Peers</div>
+        <div class="choice-card-subtitle">
+          For others
+          <span class="choice-card-arrow">&rarr;</span>
+        </div>
+        <div class="choice-card-img-wrap">
+          <img src="assets/card-peers.png" alt="Peers">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave decoration at the bottom -->
+  <div class="hero-waves">
+    <svg viewBox="0 0 1440 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <!-- Back wave: medium dark green -->
+      <path d="M0,100 C180,40 360,140 540,90 C720,40 900,130 1080,80 C1260,30 1380,100 1440,70 L1440,180 L0,180 Z" fill="#2d5a35" opacity="0.7"/>
+      <!-- Middle wave: light mint/sage -->
+      <path d="M0,130 C120,80 300,160 500,110 C700,60 860,150 1080,105 C1260,65 1380,130 1440,100 L1440,180 L0,180 Z" fill="#c8dfc4" opacity="0.55"/>
+      <!-- Front wave: darkest green -->
+      <path d="M0,155 C200,115 380,175 600,145 C820,115 1000,165 1200,138 C1350,118 1420,155 1440,145 L1440,180 L0,180 Z" fill="#1a3d20" opacity="0.9"/>
+    </svg>
+  </div>
+</section>
+
+<section class="view-screen pathway-screen" id="view-pathway-justice">
+  <div class="pathway-main">
+    <div class="pathway-intro">
+      <p class="pathway-eyebrow">JUSTICE · FOR MY RIGHTS</p>
+      <h1>Understand your options.</h1>
+      <p>You deserve to be treated with dignity. Start by identifying what happened, what outcome you hope for, and which trusted local service can explain your rights.</p>
+    </div>
+    <aside class="pathway-step">
+      <h2>A practical first step</h2>
+      <p>Write down the key facts for yourself, including dates and any questions you want answered. If you need legal guidance or wish to raise a concern, contact a qualified local legal-aid or advocacy service. You can choose how much to share.</p>
+    </aside>
+    <button class="pathway-back" type="button" onclick="navigateTo('welcome')">&larr; Explore another pathway</button>
+  </div>
+  <div class="pathway-support">
+    <div>
+      <h2>Care and fairness belong together.</h2>
+      <p>TalkCare brings together approachable mental health and justice-support information. It is designed to help you consider your next step with clarity, compassion, and respect for your privacy.</p>
+    </div>
+    <p class="pathway-notice">TalkCare provides general information, not emergency support, professional mental health care, or legal advice. If someone is in immediate danger, contact local emergency services or a qualified crisis professional.</p>
+  </div>
+  <footer class="pathway-footer">TalkCare · A gentler place to begin.</footer>
+</section>
+
+<section class="view-screen pathway-screen" id="view-pathway-individual">
+  <div class="pathway-main">
+    <div class="pathway-intro">
+      <p class="pathway-eyebrow">INDIVIDUAL · FOR MYSELF</p>
+      <h1>Make room for yourself.</h1>
+      <p>You do not have to have everything figured out. A small pause can help you notice what you need and decide on one manageable next step.</p>
+    </div>
+    <aside class="pathway-step">
+      <h2>Try a gentle grounding moment</h2>
+      <p>Feel your feet on the ground. Notice three things you can see, two things you can hear, and one thing you can feel. Breathe at a comfortable pace. If you would like more support, consider reaching out to a trusted person or qualified mental health professional.</p>
+    </aside>
+    <button class="pathway-back" type="button" onclick="navigateTo('welcome')">&larr; Explore another pathway</button>
+  </div>
+  <div class="pathway-support">
+    <div>
+      <h2>Care and fairness belong together.</h2>
+      <p>TalkCare brings together approachable mental health and justice-support information. It is designed to help you consider your next step with clarity, compassion, and respect for your privacy.</p>
+    </div>
+    <p class="pathway-notice">TalkCare provides general information, not emergency support, professional mental health care, or legal advice. If someone is in immediate danger, contact local emergency services or a qualified crisis professional.</p>
+  </div>
+  <footer class="pathway-footer">TalkCare · A gentler place to begin.</footer>
+</section>
+
+<section class="view-screen pathway-screen" id="view-pathway-peers">
+  <div class="pathway-main">
+    <div class="pathway-intro">
+      <p class="pathway-eyebrow">PEERS · FOR OTHERS</p>
+      <h1>Be there, without carrying it alone.</h1>
+      <p>Showing up for someone can start with listening. Respect their choices, avoid pressure, and remember that your own well-being matters too.</p>
+    </div>
+    <aside class="pathway-step">
+      <h2>A caring way to begin</h2>
+      <p>Ask, “Would you like me to listen, help you find information, or sit with you?” Let them set the pace. If they may be in immediate danger, contact local emergency services or an appropriate crisis professional.</p>
+    </aside>
+    <button class="pathway-back" type="button" onclick="navigateTo('welcome')">&larr; Explore another pathway</button>
+  </div>
+  <div class="pathway-support">
+    <div>
+      <h2>Care and fairness belong together.</h2>
+      <p>TalkCare brings together approachable mental health and justice-support information. It is designed to help you consider your next step with clarity, compassion, and respect for your privacy.</p>
+    </div>
+    <p class="pathway-notice">TalkCare provides general information, not emergency support, professional mental health care, or legal advice. If someone is in immediate danger, contact local emergency services or a qualified crisis professional.</p>
+  </div>
+  <footer class="pathway-footer">TalkCare · A gentler place to begin.</footer>
+</section>

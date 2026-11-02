@@ -1,0 +1,161 @@
+<!-- PAGE 8: DASHBOARD & ACTIVITY HISTORY VIEW -->
+<section class="view-screen" id="view-dashboard">
+  <div class="dashboard-container">
+    <div class="dash-header-card">
+      <h2 class="dash-title">Dashboard</h2>
+      <div class="dash-subtitle">A safe space to speak, seek support and find justice.</div>
+    </div>
+
+    <div class="dash-main-grid">
+      <!-- Left: 6 Action Tiles (matching Page 8) -->
+      <div class="dash-actions-grid">
+        <div class="dash-tile" onclick="navigateTo('report-form')">
+          <div class="dash-tile-icon">&#128196;</div>
+          <div>
+            <div class="dash-tile-title">Report a Concern</div>
+            <div class="dash-tile-desc">Submit your concern</div>
+          </div>
+        </div>
+
+        <div class="dash-tile" onclick="filterActivityHistory('Resolved')">
+          <div class="dash-tile-icon">&#9989;</div>
+          <div>
+            <div class="dash-tile-title">Resolved</div>
+            <div class="dash-tile-desc">Completed concerns</div>
+          </div>
+        </div>
+
+        <div class="dash-tile" onclick="filterActivityHistory('All')">
+          <div class="dash-tile-icon">&#128233;</div>
+          <div>
+            <div class="dash-tile-title">New Notifications</div>
+            <div class="dash-tile-desc">Check latest updates</div>
+          </div>
+        </div>
+
+        <div class="dash-tile" onclick="navigateTo('admin')">
+          <div class="dash-tile-icon">&#128197;</div>
+          <div>
+            <div class="dash-tile-title">Book a Session</div>
+            <div class="dash-tile-desc">Request an available session</div>
+          </div>
+        </div>
+
+        <div class="dash-tile" onclick="navigateTo('services')">
+          <div class="dash-tile-icon">&#128172;</div>
+          <div>
+            <div class="dash-tile-title">Message</div>
+            <div class="dash-tile-desc">Direct chat & consultation</div>
+          </div>
+        </div>
+
+        <div class="dash-tile" onclick="filterActivityHistory('Under Review')">
+          <div class="dash-tile-icon">&#128193;</div>
+          <div>
+            <div class="dash-tile-title">Reports</div>
+            <div class="dash-tile-desc">(Go to Under review)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: JusticeCare and ThoMatCare descriptions -->
+      <div>
+        <div class="dash-info-card">
+          <div class="dash-info-title">JusticeCare</div>
+          <div class="dash-info-text">
+            JusticeCare providing fair treatment and compassionate support while helping people to address their concerns and protect their rights.
+          </div>
+        </div>
+
+        <div class="dash-info-card">
+          <div class="dash-info-title">ThomatCare</div>
+          <div class="dash-info-text">
+            ThoMatt (Thought Matters) is an anonymous mental health support app that allows users, especially students, to chat or call mental health professionals privately and without judgment, encouraging them to seek help and remember that their thoughts and feelings matter.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity History & Notifications Section (Page 8 bottom & Page 9 top) -->
+    <div class="activity-card" id="activity-section">
+      <div class="activity-header-title" id="activity-card-title">Activity History</div>
+
+      <div class="activity-pills">
+        <button class="activity-pill active" onclick="filterActivityHistory('All', event)" id="pill-all">All (3)</button>
+        <button class="activity-pill" onclick="filterActivityHistory('Under Review', event)" id="pill-review">Under Review (1)</button>
+        <button class="activity-pill" onclick="filterActivityHistory('In Progress', event)" id="pill-progress">In Progress (1)</button>
+        <button class="activity-pill" onclick="filterActivityHistory('Resolved', event)" id="pill-resolved">Resolved (1)</button>
+      </div>
+
+      <div class="activity-list-box" id="activity-reports-list">
+        <!-- Dynamically populated from PostgreSQL -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 9: REPORT CONCERN FORM -->
+<section class="view-screen" id="view-report-form">
+  <div style="padding: 20px;">
+    <div class="report-form-container">
+      <h2 class="report-form-title">Report Concern</h2>
+      <form onsubmit="handleReportSubmit(event)">
+        <div class="report-field-row">
+          <div class="report-field-label">Full Name :</div>
+          <input type="text" id="report-name" class="report-field-input" value="Max Smith" required>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Email :</div>
+          <input type="email" id="report-email" class="report-field-input" value="max.smith@talkcare.com" required>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Address :</div>
+          <input type="text" id="report-address" class="report-field-input" value="Quezon City, Philippines" required>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Contact No. :</div>
+          <input type="text" id="report-contact" class="report-field-input" value="096364664286" required>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Concern / Details :</div>
+          <textarea id="report-details" class="report-field-textarea" placeholder="Describe the incident or concern..." required></textarea>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Type of Concern :</div>
+          <select id="report-type" class="report-field-input" style="cursor: pointer;" required>
+            <option value="Domestic Injustice">Domestic Injustice</option>
+            <option value="Mental Health Crisis">Mental Health Crisis</option>
+            <option value="Workplace Discrimination">Workplace Discrimination</option>
+            <option value="Student Mental Distress">Student Mental Distress</option>
+            <option value="Harassment / Abuse">Harassment / Abuse</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="report-field-row">
+          <div class="report-field-label">Involved / Witness :</div>
+          <input type="text" id="report-witness" class="report-field-input" placeholder="Names of involved parties or witnesses">
+        </div>
+
+        <button type="submit" class="btn-report-submit">SUBMIT</button>
+        <div class="report-submit-status" id="report-submit-status" role="alert" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 9: REPORT SUBMISSION SUCCESS VIEW -->
+<section class="view-screen" id="view-report-success">
+  <div class="report-success-screen" style="background-image: url('assets/bg-support.svg'); background-size: cover;">
+    <div class="report-success-card">
+      <img src="assets/talkcare-logo.png" alt="TalkCare Emblem" class="report-success-emblem">
+      <h2 class="report-success-title" id="report-success-title">Your Report has been successfully submitted!!!</h2>
+      <button class="btn-auth-submit" style="width: 220px; margin: 0 auto;" onclick="navigateTo('dashboard')">View in Dashboard</button>
+    </div>
+  </div>
+</section>

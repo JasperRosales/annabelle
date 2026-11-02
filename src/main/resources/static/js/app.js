@@ -36,7 +36,14 @@ const chatServices = {
 };
 
 // Init on Load
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await window.TALKCARE_VIEWS_READY; // views/*.html are injected by js/include.js
+  } catch (err) {
+    console.error("UI load error:", err);
+    document.body.textContent = "TalkCare could not load its screens. Please restart the app.";
+    return;
+  }
   initApp();
 });
 
@@ -69,6 +76,9 @@ function navigateTo(viewId) {
     if (viewId === "home") viewId = roleHome;
     if (viewId === "dashboard" && currentSession.role !== "CLIENT") viewId = roleHome;
     if (viewId === "admin" && roleHome !== "admin") viewId = roleHome;
+  } else if (viewId === "home") {
+    // Signed-out visitors: Home is the welcome page (same as clicking the TalkCare logo).
+    viewId = "welcome";
   }
 
   // Hide all screens

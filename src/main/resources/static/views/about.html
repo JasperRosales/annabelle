@@ -1,0 +1,72 @@
+<!-- PAGE 2 & 3: ABOUT US (With 5 interactive tabs) -->
+<section class="view-screen" id="view-about">
+  <div class="about-section">
+    <h2 class="about-header-title">About us</h2>
+
+    <!-- Subnav tabs: About us, Career, Social Impact, Client Impact, Articles -->
+    <div class="about-nav-tabs">
+      <button class="about-tab-btn active" onclick="switchAboutTab(event, 'about-us')">About us</button>
+      <button class="about-tab-btn" onclick="switchAboutTab(event, 'career')">Career</button>
+      <button class="about-tab-btn" onclick="switchAboutTab(event, 'social-impact')">Social Impact</button>
+      <button class="about-tab-btn" onclick="switchAboutTab(event, 'client-impact')">Client Impact</button>
+      <button class="about-tab-btn" onclick="switchAboutTab(event, 'articles')">Articles</button>
+    </div>
+
+    <div class="about-content-card">
+      <div class="about-text-column" id="about-tab-text">
+        <h3 class="about-subheading">High-quality therapy that drives client outcomes</h3>
+        <p class="about-paragraph">
+          The Mental Health and Justice web application aims to create a safe, accessible, and supportive
+          environment where individuals can openly express their emotions, concerns, and experiences without
+          fear of judgment or discrimination.
+        </p>
+        <p class="about-paragraph">
+          It provides users with access to appropriate mental health resources, guidance, and information
+          about their rights. By connecting mental well-being with fairness and justice, the application empowers
+          clients to seek help, understand their rights, feel heard, and receive respectful and appropriate support.
+        </p>
+      </div>
+
+      <div class="about-image-column">
+        <img src="assets/about-us-therapy.jpg" alt="A therapist talking with a client" class="about-thumb" id="about-tab-image">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 4: ABOUT THOMATT & ABOUT JUSTICECARE DEDICATED ARTICLES -->
+<section class="view-screen" id="view-about-thomatt">
+  <div class="about-dedicated-wrap">
+    <h2 class="about-header-title">About</h2>
+    <div class="about-toggle-pills">
+      <button class="about-toggle-btn active" onclick="navigateTo('about-thomatt')">About Thomatt</button>
+      <button class="about-toggle-btn" onclick="navigateTo('about-justicecare')">About Justicecare</button>
+    </div>
+    <div class="about-text-box">
+      <p>
+        According to Ma &amp; Tan, (2025) said that the main problem is the gap between students’ mental-health needs and their low use of professional support, largely because stigma, cultural expectations, limited awareness of services, doubts about service effectiveness, and unequal access discourage help-seeking; the findings indicate that students often turn first to friends or family rather than counselors, while students with greater mental-health literacy, stronger perceived need, or supportive peer networks are more likely to seek formal help, and culturally responsive services, peer-based outreach, clear information about available resources, and carefully designed digital tools may reduce these barriers, particularly for international, marginalized, and culturally diverse student groups.
+      </p>
+      <p>
+        Addition, Adolescent mental health disorders represent a growing public health concern globally, with a substantial proportion of young people experiencing unmet mental health needs. Despite this burden, help-seeking behavior among adolescents remains low, particularly in low- and middle-income countries (LMICs), where structural, social, and cultural barriers persist. In Tanzania, limited context-specific evidence exists on factors influencing mental health help-seeking among adolescents, particularly within school settings. Temba et. Al (2026)
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="view-screen" id="view-about-justicecare">
+  <div class="about-dedicated-wrap">
+    <h2 class="about-header-title">About</h2>
+    <div class="about-toggle-pills">
+      <button class="about-toggle-btn" onclick="navigateTo('about-thomatt')">About Thomatt</button>
+      <button class="about-toggle-btn active" onclick="navigateTo('about-justicecare')">About Justicecare</button>
+    </div>
+    <div class="about-text-box">
+      <p>
+        JusticeCare is a support network for those who have faced extreme situations such as partner abuse, sexual assault and other civil and domestic injustices. Often speaking out about these scenarios can be scary for victims. However, with this network we offer a supportive, non-judgmental and completely confidential place for survivors to speak about their experience, offering immediate emotional/social support and resources to help them.
+      </p>
+      <p>
+        Once you're safe and settled, we can help connect you with legal professionals, police and statutory bodies to ensure real justice is delivered. JusticeCare helps you to report any issues you may have faced, whether it be a personal grievance, act of violence or civil injustice. We can provide you with protection orders, legal advice and ongoing support with finding somewhere safe. There is no need for any victim to suffer in silence as JusticeCare can turn your reported violation into real legal protection and help you on your road to recovery.
+      </p>
+    </div>
+  </div>
+</section>

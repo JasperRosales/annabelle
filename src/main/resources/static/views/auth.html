@@ -1,0 +1,172 @@
+    <!-- PAGE 1: LOGIN VIEW (Mountain Background) -->
+<section class="view-screen" id="view-login">
+  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
+    <div class="login-split-overlay"></div>
+    <div class="login-split-container">
+      <div class="login-quote-box">
+        <div class="login-quote-text">
+          &#8220;Challenges May Shape You, But They Do Not Define Your Limits&#8221;
+        </div>
+        <div class="login-quote-author">TalkCare</div>
+      </div>
+
+      <div class="auth-card">
+        <form onsubmit="handleLogin(event)">
+          <div class="auth-form-group">
+            <div class="auth-form-label">Account</div>
+            <input type="text" id="login-username" class="auth-form-input" placeholder="Username, email, or full name" autocomplete="username" required>
+          </div>
+
+          <div class="auth-form-group">
+            <div class="auth-form-label">Password</div>
+            <input type="password" id="login-password" class="auth-form-input" placeholder="Enter password" autocomplete="current-password" required>
+          </div>
+
+          <button type="button" class="auth-forgot-link" onclick="handleForgotPassword()">Forgot Password</button>
+          <p class="auth-form-status" id="login-status" role="status" aria-live="polite"></p>
+
+          <button type="submit" class="btn-auth-submit">SUBMIT</button>
+          <div class="auth-switch-link" onclick="navigateTo('register')">Create Account</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view-screen" id="view-reset-password">
+  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
+    <div class="login-split-overlay"></div>
+    <div class="auth-card password-reset-card">
+      <h2>Reset your password</h2>
+      <p>Choose a new password with at least 8 characters.</p>
+      <form onsubmit="handlePasswordReset(event)">
+        <input type="hidden" id="password-reset-token">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="reset-new-password">New password</label>
+          <input type="password" id="reset-new-password" class="auth-form-input" autocomplete="new-password" minlength="8" required>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="reset-confirm-password">Confirm</label>
+          <input type="password" id="reset-confirm-password" class="auth-form-input" autocomplete="new-password" minlength="8" required>
+        </div>
+        <p class="password-reset-status" id="password-reset-status" aria-live="polite"></p>
+        <button type="submit" class="btn-auth-submit">Update Password</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+    <!-- PAGE 1: CREATE ACCOUNT / REGISTER VIEW -->
+<section class="view-screen" id="view-register">
+  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
+    <div class="login-split-overlay"></div>
+    <div class="login-split-container">
+      <div class="login-quote-box">
+        <div class="login-quote-text">
+          &#8220;Your journey to wellness starts with a single step.&#8221;
+        </div>
+        <div class="login-quote-author">TalkCare</div>
+      </div>
+
+      <div class="auth-card" style="width: 460px;">
+        <h2 style="text-align: center; color: #17331b; font-size: 22px; font-weight: 800; margin-bottom: 20px;">Create Account</h2>
+        <form onsubmit="handleRegister(event)">
+          <div class="auth-form-group">
+            <div class="auth-form-label">Name</div>
+            <input type="text" id="reg-name" class="auth-form-input" placeholder="Full Name" required>
+          </div>
+          <div class="auth-form-group">
+            <div class="auth-form-label">Username</div>
+            <input type="text" id="reg-username" class="auth-form-input" placeholder="Desired username" required>
+          </div>
+          <div class="auth-form-group">
+            <div class="auth-form-label">Address</div>
+            <input type="text" id="reg-address" class="auth-form-input" placeholder="Your Address" required>
+          </div>
+          <div class="auth-form-group">
+            <div class="auth-form-label">Contact</div>
+            <input type="text" id="reg-contact" class="auth-form-input" placeholder="Mobile Number" required>
+          </div>
+          <div class="auth-form-group">
+            <div class="auth-form-label">Email</div>
+            <input type="email" id="reg-email" class="auth-form-input" placeholder="email@address.com" required>
+          </div>
+          <div class="auth-form-group">
+            <div class="auth-form-label">Password</div>
+            <input type="password" id="reg-password" class="auth-form-input" placeholder="Secure Password" autocomplete="new-password" required>
+          </div>
+
+          <p class="auth-form-status" id="register-status" role="status" aria-live="polite"></p>
+          <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">Create Account</button>
+          <div class="auth-switch-link" onclick="navigateTo('login')">Already have an account? Log in</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 1 & 2: ID VERIFICATION & UPLOAD VIEW -->
+<section class="view-screen" id="view-id-verify">
+  <div style="padding: 40px 20px;">
+    <div class="id-verify-card">
+      <form onsubmit="handleIdVerification(event)">
+        <div class="id-field-row">
+          <select id="id-type-select" class="id-select" required>
+            <option value="" disabled selected>Select ID</option>
+            <option value="Student ID">Student ID</option>
+            <option value="National ID (PhilSys)">National ID (PhilSys)</option>
+            <option value="Driver's License">Driver's License</option>
+            <option value="Passport">Passport</option>
+            <option value="Postal ID">Postal ID</option>
+            <option value="PRC ID">PRC ID</option>
+            <option value="UMID">UMID</option>
+          </select>
+        </div>
+
+        <div class="id-field-row">
+          <div class="id-field-label">ID Number:</div>
+          <input type="text" id="id-number" class="report-field-input" placeholder="Enter ID Number" required>
+        </div>
+
+        <div class="id-field-row">
+          <div class="id-field-label">Address :</div>
+          <input type="text" id="id-address" class="report-field-input" placeholder="Residential Address" required>
+        </div>
+
+        <div class="id-field-row">
+          <div class="id-field-label">Email :</div>
+          <input type="email" id="id-email" class="report-field-input" placeholder="client@email.com" required>
+        </div>
+
+        <!-- Upload ID document file picker -->
+        <div class="id-upload-preview" onclick="document.getElementById('id-doc-file-input').click()">
+          <input type="file" id="id-doc-file-input" accept="image/*" style="display: none;" onchange="handleIdFileSelect(event)">
+          <div id="id-upload-prompt">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#23492d" stroke-width="2" style="margin-bottom: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <div style="font-size: 13px; font-weight: 700; color: #23492d;">Click to Select & Upload Valid ID Document</div>
+            <div style="font-size: 11px; color: #5d755b;">Supports PNG, JPG, or Scanned Image</div>
+          </div>
+          <img id="id-preview-img" alt="ID Document Preview">
+        </div>
+
+        <button type="submit" class="btn-auth-submit">SUBMIT</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 2: PENDING REQUEST SCREEN -->
+<section class="view-screen" id="view-pending">
+  <div class="pending-request-modal">
+    <h2 class="pending-request-title">Pending request</h2>
+    <p class="pending-request-body">
+      Thank you for submitting your request. We wanted to
+      let you know that it will take approximately <b>24 hours</b>
+      for our team to review and verify your requirements.
+      During this time, we'll ensure that everything is in
+      order to provide you with the best possible service.
+      We appreciate your patience and understanding.
+    </p>
+    <button class="btn-pending-okay" onclick="navigateTo('home')">Okay</button>
+  </div>
+</section>
