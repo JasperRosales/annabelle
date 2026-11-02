@@ -29,6 +29,9 @@ public record Account(
     public static final String ROLE_CLIENT = "CLIENT";
     public static final String ROLE_ATTORNEY = "ATTORNEY";
     public static final String ROLE_PSYCHIATRIST = "PSYCHIATRIST";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String STATUS_VERIFIED = "VERIFIED";
+    public static final String STATUS_PENDING = "PENDING_VERIFICATION";
 
     public String displayName() {
         return isBlank(fullName) ? username : fullName;
@@ -45,6 +48,15 @@ public record Account(
 
     public boolean isProfessional() {
         return ROLE_ATTORNEY.equals(role) || ROLE_PSYCHIATRIST.equals(role);
+    }
+
+    public boolean isVerified() {
+        return STATUS_VERIFIED.equals(status);
+    }
+
+    /** An ID was submitted and is waiting for an administrator. */
+    public boolean isAwaitingReview() {
+        return STATUS_PENDING.equals(status) && !isBlank(idType);
     }
 
     /** The view the API assigns to this account (Account.dashboardView on the server). */
@@ -64,7 +76,7 @@ public record Account(
 
     public Account withVerification(String newIdType, String newIdNumber, String newAddress, String newEmail) {
         return new Account(id, username, newEmail, fullName, contactNo, newAddress, profilePictureUrl, role,
-                roleDisplayName, "PENDING_VERIFICATION", dashboardView, permissions, newIdType, newIdNumber,
+                roleDisplayName, STATUS_PENDING, dashboardView, permissions, newIdType, newIdNumber,
                 sessionToken);
     }
 

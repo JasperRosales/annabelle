@@ -14,8 +14,13 @@
             <input type="text" value="talkcare@gmail.com" readonly>
           </div>
           <input type="text" value="096364664286" readonly style="width: 100%; padding: 9px 12px; border-radius: 14px; border: 1.5px solid #23492d; margin-bottom: 14px;">
-          <textarea class="contact-textarea" placeholder="Message" id="contact-message-text"></textarea>
-          <button class="btn-auth-submit" style="width: 130px; float: right;" data-action="contact-submit">Done</button>
+          <div class="contact-inline-inputs">
+            <input type="text" id="contact-name" placeholder="Your name" maxlength="150">
+            <input type="email" id="contact-email" placeholder="Your email" maxlength="150">
+          </div>
+          <textarea class="contact-textarea" placeholder="Message" id="contact-message-text" maxlength="2000"></textarea>
+          <p class="contact-status" id="contact-status" role="status" aria-live="polite"></p>
+          <button class="btn-auth-submit" style="width: 130px; float: right;" data-action="contact-submit">Send</button>
         </div>
       </div>
     </div>

@@ -1,33 +1,207 @@
-    <!-- PAGE 1: LOGIN VIEW (Mountain Background) -->
-<section class="view-screen" id="view-login">
-  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
-    <div class="login-split-overlay"></div>
-    <div class="login-split-container">
-      <div class="login-quote-box">
-        <div class="login-quote-text">
-          &#8220;Challenges May Shape You, But They Do Not Define Your Limits&#8221;
-        </div>
-        <div class="login-quote-author">TalkCare</div>
+<!-- SIGN IN: choose a portal, then one sign-in page per role -->
+<section class="view-screen auth-screen" id="view-login">
+  <div class="auth-stage">
+    <div class="portal-wrap">
+      <div class="portal-head">
+        <p class="auth-eyebrow">Sign in</p>
+        <h1>Choose your portal</h1>
+        <p>Each TalkCare role has its own sign-in page. Pick the one that matches your account.</p>
       </div>
+      <div class="portal-grid four">
+      <button type="button" class="portal-card role-client" data-action="navigate" data-arg="login-client">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="portal-card-title">Client</span>
+        <span class="portal-card-tag">Client portal</span>
+        <span class="portal-card-desc">Talk privately with a professional, report a concern, and follow every update in one place.</span>
+        <span class="portal-card-cta">Client sign-in &rarr;</span>
+      </button>
+      <button type="button" class="portal-card role-attorney" data-action="navigate" data-arg="login-attorney">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/></svg></span>
+        <span class="portal-card-title">Attorney</span>
+        <span class="portal-card-tag">JusticeCare · Attorney portal</span>
+        <span class="portal-card-desc">Respond to the clients and legal concerns assigned to you through JusticeCare.</span>
+        <span class="portal-card-cta">Attorney sign-in &rarr;</span>
+      </button>
+      <button type="button" class="portal-card role-psychiatrist" data-action="navigate" data-arg="login-psychiatrist">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h4l2-3 3 6 2-3h6"/></svg></span>
+        <span class="portal-card-title">Psychiatrist</span>
+        <span class="portal-card-tag">ThoMatt · Psychiatrist portal</span>
+        <span class="portal-card-desc">Consult with the clients assigned to you through ThoMatt, privately and without judgment.</span>
+        <span class="portal-card-cta">Psychiatrist sign-in &rarr;</span>
+      </button>
+      <button type="button" class="portal-card role-admin" data-action="navigate" data-arg="login-admin">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span class="portal-card-title">Administrator</span>
+        <span class="portal-card-tag">Administration</span>
+        <span class="portal-card-desc">Review verifications and reports, oversee users, and manage the session schedule.</span>
+        <span class="portal-card-cta">Admin sign-in &rarr;</span>
+      </button>
+      </div>
+      <p class="portal-foot">Don&rsquo;t have an account yet? <a data-action="navigate" data-arg="register">Create one</a></p>
+    </div>
+  </div>
+</section>
 
-      <div class="auth-card">
-        <form data-submit="login">
-          <div class="auth-form-group">
-            <div class="auth-form-label">Account</div>
-            <input type="text" id="login-username" class="auth-form-input" placeholder="Username, email, or full name" autocomplete="username" required>
+<section class="view-screen auth-screen role-client" id="view-login-client">
+  <div class="auth-stage">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="login">&larr; All sign-in options</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <p class="auth-eyebrow">Client portal</p>
+          <h1>Welcome back.</h1>
+          <p>Talk privately with a professional, report a concern, and follow every update in one place.</p>
+          <ul class="auth-points">
+          <li>Confidential chat with JusticeCare and ThoMatt</li>
+          <li>Report concerns and track their status</li>
+          <li>Your identity is verified before cases open</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Sign in as a Client</h2>
+        <p class="auth-panel-sub">Use your username, email address, or full name.</p>
+        <form class="auth-form" data-submit="login" data-arg="CLIENT">
+          <label class="auth-field wide">
+            <span>Account</span>
+            <input type="text" name="username" class="auth-input" placeholder="Username, email, or full name" autocomplete="username" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="Enter your password" autocomplete="current-password" required>
+          </label>
+          <div class="auth-form-row">
+            <button type="button" class="auth-link" data-action="forgot-password">Forgot password?</button>
           </div>
-
-          <div class="auth-form-group">
-            <div class="auth-form-label">Password</div>
-            <input type="password" id="login-password" class="auth-form-input" placeholder="Enter password" autocomplete="current-password" required>
-          </div>
-
-          <button type="button" class="auth-forgot-link" data-action="forgot-password">Forgot Password</button>
-          <p class="auth-form-status" id="login-status" role="status" aria-live="polite"></p>
-
-          <button type="submit" class="btn-auth-submit">SUBMIT</button>
-          <div class="auth-switch-link" data-action="navigate" data-arg="register">Create Account</div>
+          <p class="auth-form-status" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit">Sign in</button>
         </form>
+        <p class="auth-alt">New to TalkCare? <a data-action="navigate" data-arg="register-client">Create a client account</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="view-screen auth-screen role-attorney" id="view-login-attorney">
+  <div class="auth-stage">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="login">&larr; All sign-in options</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/></svg></div>
+          <p class="auth-eyebrow">JusticeCare · Attorney portal</p>
+          <h1>Welcome back.</h1>
+          <p>Respond to the clients and legal concerns assigned to you through JusticeCare.</p>
+          <ul class="auth-points">
+          <li>Assigned client conversations</li>
+          <li>Legal concerns routed by case type</li>
+          <li>Accounts approved by a TalkCare administrator</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Sign in as an Attorney</h2>
+        <p class="auth-panel-sub">Use your username, email address, or full name.</p>
+        <form class="auth-form" data-submit="login" data-arg="ATTORNEY">
+          <label class="auth-field wide">
+            <span>Account</span>
+            <input type="text" name="username" class="auth-input" placeholder="Username, email, or full name" autocomplete="username" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="Enter your password" autocomplete="current-password" required>
+          </label>
+          <div class="auth-form-row">
+            <button type="button" class="auth-link" data-action="forgot-password">Forgot password?</button>
+          </div>
+          <p class="auth-form-status" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit">Sign in</button>
+        </form>
+        <p class="auth-alt">New to TalkCare? <a data-action="navigate" data-arg="register-attorney">Register as an attorney</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="view-screen auth-screen role-psychiatrist" id="view-login-psychiatrist">
+  <div class="auth-stage">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="login">&larr; All sign-in options</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h4l2-3 3 6 2-3h6"/></svg></div>
+          <p class="auth-eyebrow">ThoMatt · Psychiatrist portal</p>
+          <h1>Welcome back.</h1>
+          <p>Consult with the clients assigned to you through ThoMatt, privately and without judgment.</p>
+          <ul class="auth-points">
+          <li>Assigned client conversations</li>
+          <li>Mental health concerns routed to you</li>
+          <li>Accounts approved by a TalkCare administrator</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Sign in as a Psychiatrist</h2>
+        <p class="auth-panel-sub">Use your username, email address, or full name.</p>
+        <form class="auth-form" data-submit="login" data-arg="PSYCHIATRIST">
+          <label class="auth-field wide">
+            <span>Account</span>
+            <input type="text" name="username" class="auth-input" placeholder="Username, email, or full name" autocomplete="username" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="Enter your password" autocomplete="current-password" required>
+          </label>
+          <div class="auth-form-row">
+            <button type="button" class="auth-link" data-action="forgot-password">Forgot password?</button>
+          </div>
+          <p class="auth-form-status" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit">Sign in</button>
+        </form>
+        <p class="auth-alt">New to TalkCare? <a data-action="navigate" data-arg="register-psychiatrist">Register as a psychiatrist</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="view-screen auth-screen role-admin" id="view-login-admin">
+  <div class="auth-stage">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="login">&larr; All sign-in options</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <p class="auth-eyebrow">Administration</p>
+          <h1>Welcome back.</h1>
+          <p>Review verifications and reports, oversee users, and manage the session schedule.</p>
+          <ul class="auth-points">
+          <li>Approve identity and license verifications</li>
+          <li>Move reports through review</li>
+          <li>Restricted access: accounts are issued by TalkCare</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Sign in as an Administrator</h2>
+        <p class="auth-panel-sub">Use your username, email address, or full name.</p>
+        <form class="auth-form" data-submit="login" data-arg="ADMIN">
+          <label class="auth-field wide">
+            <span>Account</span>
+            <input type="text" name="username" class="auth-input" placeholder="Username, email, or full name" autocomplete="username" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="Enter your password" autocomplete="current-password" required>
+          </label>
+          <div class="auth-form-row">
+            <button type="button" class="auth-link" data-action="forgot-password">Forgot password?</button>
+          </div>
+          <p class="auth-form-status" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit">Sign in</button>
+        </form>
+        <p class="auth-alt">Administrator accounts are issued by TalkCare. Not an administrator? <a data-action="navigate" data-arg="login">Choose another portal</a></p>
       </div>
     </div>
   </div>
@@ -56,50 +230,219 @@
   </div>
 </section>
 
-    <!-- PAGE 1: CREATE ACCOUNT / REGISTER VIEW -->
-<section class="view-screen" id="view-register">
-  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
-    <div class="login-split-overlay"></div>
-    <div class="login-split-container">
-      <div class="login-quote-box">
-        <div class="login-quote-text">
-          &#8220;Your journey to wellness starts with a single step.&#8221;
-        </div>
-        <div class="login-quote-author">TalkCare</div>
+<!-- REGISTER: choose an account type, then one registration page per role -->
+<section class="view-screen auth-screen" id="view-register">
+  <div class="auth-stage">
+    <div class="portal-wrap">
+      <div class="portal-head">
+        <p class="auth-eyebrow">Create an account</p>
+        <h1>How will you use TalkCare?</h1>
+        <p>Clients can start right away. Attorneys and psychiatrists are verified by an administrator before clients are assigned.</p>
       </div>
+      <div class="portal-grid three">
+      <button type="button" class="portal-card role-client" data-action="navigate" data-arg="register-client">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="portal-card-title">Client</span>
+        <span class="portal-card-tag">Client portal</span>
+        <span class="portal-card-desc">Talk privately with a professional, report a concern, and follow every update in one place.</span>
+        <span class="portal-card-cta">Register as a client &rarr;</span>
+      </button>
+      <button type="button" class="portal-card role-attorney" data-action="navigate" data-arg="register-attorney">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/></svg></span>
+        <span class="portal-card-title">Attorney</span>
+        <span class="portal-card-tag">JusticeCare · Attorney portal</span>
+        <span class="portal-card-desc">Respond to the clients and legal concerns assigned to you through JusticeCare.</span>
+        <span class="portal-card-cta">Register as an attorney &rarr;</span>
+      </button>
+      <button type="button" class="portal-card role-psychiatrist" data-action="navigate" data-arg="register-psychiatrist">
+        <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h4l2-3 3 6 2-3h6"/></svg></span>
+        <span class="portal-card-title">Psychiatrist</span>
+        <span class="portal-card-tag">ThoMatt · Psychiatrist portal</span>
+        <span class="portal-card-desc">Consult with the clients assigned to you through ThoMatt, privately and without judgment.</span>
+        <span class="portal-card-cta">Register as a psychiatrist &rarr;</span>
+      </button>
+      </div>
+      <p class="portal-foot">Administrator accounts are issued by TalkCare. Already registered? <a data-action="navigate" data-arg="login">Sign in</a></p>
+    </div>
+  </div>
+</section>
 
-      <div class="auth-card" style="width: 460px;">
-        <h2 style="text-align: center; color: #17331b; font-size: 22px; font-weight: 800; margin-bottom: 20px;">Create Account</h2>
-        <form data-submit="register">
-          <div class="auth-form-group">
-            <div class="auth-form-label">Name</div>
-            <input type="text" id="reg-name" class="auth-form-input" placeholder="Full Name" required>
-          </div>
-          <div class="auth-form-group">
-            <div class="auth-form-label">Username</div>
-            <input type="text" id="reg-username" class="auth-form-input" placeholder="Desired username" required>
-          </div>
-          <div class="auth-form-group">
-            <div class="auth-form-label">Address</div>
-            <input type="text" id="reg-address" class="auth-form-input" placeholder="Your Address" required>
-          </div>
-          <div class="auth-form-group">
-            <div class="auth-form-label">Contact</div>
-            <input type="text" id="reg-contact" class="auth-form-input" placeholder="Mobile Number" required>
-          </div>
-          <div class="auth-form-group">
-            <div class="auth-form-label">Email</div>
-            <input type="email" id="reg-email" class="auth-form-input" placeholder="email@address.com" required>
-          </div>
-          <div class="auth-form-group">
-            <div class="auth-form-label">Password</div>
-            <input type="password" id="reg-password" class="auth-form-input" placeholder="Secure Password" autocomplete="new-password" required>
-          </div>
-
-          <p class="auth-form-status" id="register-status" role="status" aria-live="polite"></p>
-          <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">Create Account</button>
-          <div class="auth-switch-link" data-action="navigate" data-arg="login">Already have an account? Log in</div>
+<section class="view-screen auth-screen role-client" id="view-register-client">
+  <div class="auth-stage">
+    <div class="auth-shell wide">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="register">&larr; All account types</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <p class="auth-eyebrow">Client portal</p>
+          <h1>Get started.</h1>
+          <p>Talk privately with a professional, report a concern, and follow every update in one place.</p>
+          <ul class="auth-points">
+          <li>Confidential chat with JusticeCare and ThoMatt</li>
+          <li>Report concerns and track their status</li>
+          <li>Your identity is verified before cases open</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Create a client account</h2>
+        <p class="auth-panel-sub">For individuals looking for legal support, mental health care, or help for someone they know.</p>
+        <form class="auth-form auth-form-grid" data-submit="register" data-arg="CLIENT">
+          <label class="auth-field">
+            <span>Full name</span>
+            <input type="text" name="fullName" class="auth-input" placeholder="Juan Dela Cruz" autocomplete="name" required>
+          </label>
+          <label class="auth-field">
+            <span>Username</span>
+            <input type="text" name="username" class="auth-input" placeholder="Choose a username" autocomplete="username" required>
+          </label>
+          <label class="auth-field">
+            <span>Email</span>
+            <input type="email" name="email" class="auth-input" placeholder="name@example.com" autocomplete="email" required>
+          </label>
+          <label class="auth-field">
+            <span>Mobile number</span>
+            <input type="tel" name="contactNo" class="auth-input" placeholder="09XX XXX XXXX" autocomplete="tel" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Address</span>
+            <input type="text" name="address" class="auth-input" placeholder="City, Province" autocomplete="street-address" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          </label>
+          <p class="auth-form-status wide" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit wide">Create account</button>
         </form>
+        <p class="auth-alt">Already registered? <a data-action="navigate" data-arg="login-client">Sign in as a client</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="view-screen auth-screen role-attorney" id="view-register-attorney">
+  <div class="auth-stage">
+    <div class="auth-shell wide">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="register">&larr; All account types</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/></svg></div>
+          <p class="auth-eyebrow">JusticeCare · Attorney portal</p>
+          <h1>Get started.</h1>
+          <p>Respond to the clients and legal concerns assigned to you through JusticeCare.</p>
+          <ul class="auth-points">
+          <li>Assigned client conversations</li>
+          <li>Legal concerns routed by case type</li>
+          <li>Accounts approved by a TalkCare administrator</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Register as an attorney</h2>
+        <p class="auth-panel-sub">Join JusticeCare as a case handler. An administrator verifies your Roll of Attorneys number and ID before clients are assigned to you.</p>
+        <form class="auth-form auth-form-grid" data-submit="register" data-arg="ATTORNEY">
+          <label class="auth-field">
+            <span>Full name</span>
+            <input type="text" name="fullName" class="auth-input" placeholder="Atty. Juan Dela Cruz" autocomplete="name" required>
+          </label>
+          <label class="auth-field">
+            <span>Username</span>
+            <input type="text" name="username" class="auth-input" placeholder="Choose a username" autocomplete="username" required>
+          </label>
+          <label class="auth-field">
+            <span>Email</span>
+            <input type="email" name="email" class="auth-input" placeholder="name@example.com" autocomplete="email" required>
+          </label>
+          <label class="auth-field">
+            <span>Mobile number</span>
+            <input type="tel" name="contactNo" class="auth-input" placeholder="09XX XXX XXXX" autocomplete="tel" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Address</span>
+            <input type="text" name="address" class="auth-input" placeholder="City, Province" autocomplete="street-address" required>
+          </label>
+          <label class="auth-field">
+            <span>Roll of Attorneys no.</span>
+            <input type="text" name="licenseNo" class="auth-input" placeholder="e.g. 71234" required>
+          </label>
+          <label class="auth-field">
+            <span>Law firm / office <em>(optional)</em></span>
+            <input type="text" name="affiliation" class="auth-input" placeholder="Firm or legal-aid office">
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          </label>
+          <p class="auth-note">After you register, upload a valid ID. Your account is reviewed by an administrator, usually within 24 hours.</p>
+          <p class="auth-form-status wide" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit wide">Create account</button>
+        </form>
+        <p class="auth-alt">Already registered? <a data-action="navigate" data-arg="login-attorney">Sign in as an attorney</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="view-screen auth-screen role-psychiatrist" id="view-register-psychiatrist">
+  <div class="auth-stage">
+    <div class="auth-shell wide">
+      <aside class="auth-aside">
+        <button type="button" class="auth-back" data-action="navigate" data-arg="register">&larr; All account types</button>
+        <div class="auth-aside-body">
+          <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h4l2-3 3 6 2-3h6"/></svg></div>
+          <p class="auth-eyebrow">ThoMatt · Psychiatrist portal</p>
+          <h1>Get started.</h1>
+          <p>Consult with the clients assigned to you through ThoMatt, privately and without judgment.</p>
+          <ul class="auth-points">
+          <li>Assigned client conversations</li>
+          <li>Mental health concerns routed to you</li>
+          <li>Accounts approved by a TalkCare administrator</li>
+          </ul>
+        </div>
+        <p class="auth-aside-foot">TalkCare · Mental Health &amp; Justice</p>
+      </aside>
+      <div class="auth-panel">
+        <h2>Register as a psychiatrist</h2>
+        <p class="auth-panel-sub">Join ThoMatt as a mental health professional. An administrator verifies your PRC license and ID before clients are assigned to you.</p>
+        <form class="auth-form auth-form-grid" data-submit="register" data-arg="PSYCHIATRIST">
+          <label class="auth-field">
+            <span>Full name</span>
+            <input type="text" name="fullName" class="auth-input" placeholder="Dr. Juan Dela Cruz" autocomplete="name" required>
+          </label>
+          <label class="auth-field">
+            <span>Username</span>
+            <input type="text" name="username" class="auth-input" placeholder="Choose a username" autocomplete="username" required>
+          </label>
+          <label class="auth-field">
+            <span>Email</span>
+            <input type="email" name="email" class="auth-input" placeholder="name@example.com" autocomplete="email" required>
+          </label>
+          <label class="auth-field">
+            <span>Mobile number</span>
+            <input type="tel" name="contactNo" class="auth-input" placeholder="09XX XXX XXXX" autocomplete="tel" required>
+          </label>
+          <label class="auth-field wide">
+            <span>Address</span>
+            <input type="text" name="address" class="auth-input" placeholder="City, Province" autocomplete="street-address" required>
+          </label>
+          <label class="auth-field">
+            <span>PRC license no.</span>
+            <input type="text" name="licenseNo" class="auth-input" placeholder="e.g. 0123456" required>
+          </label>
+          <label class="auth-field">
+            <span>Clinic / hospital <em>(optional)</em></span>
+            <input type="text" name="affiliation" class="auth-input" placeholder="Where you practice">
+          </label>
+          <label class="auth-field wide">
+            <span>Password</span>
+            <input type="password" name="password" class="auth-input" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          </label>
+          <p class="auth-note">After you register, upload a valid ID. Your account is reviewed by an administrator, usually within 24 hours.</p>
+          <p class="auth-form-status wide" role="status" aria-live="polite"></p>
+          <button type="submit" class="auth-submit wide">Create account</button>
+        </form>
+        <p class="auth-alt">Already registered? <a data-action="navigate" data-arg="login-psychiatrist">Sign in as a psychiatrist</a></p>
       </div>
     </div>
   </div>
@@ -109,6 +452,8 @@
 <section class="view-screen" id="view-id-verify">
   <div style="padding: 40px 20px;">
     <div class="id-verify-card">
+      <h2 class="id-verify-title">Verify your identity</h2>
+      <p class="id-verify-sub">Upload a clear photo of a valid ID. Attorneys and psychiatrists may use their IBP or PRC ID.</p>
       <form data-submit="submit-verification">
         <div class="id-field-row">
           <select id="id-type-select" class="id-select" required>
@@ -135,7 +480,7 @@
 
         <div class="id-field-row">
           <div class="id-field-label">Email :</div>
-          <input type="email" id="id-email" class="report-field-input" placeholder="client@email.com" required>
+          <input type="email" id="id-email" class="report-field-input" placeholder="name@example.com" required>
         </div>
 
         <!-- Upload ID document file picker -->

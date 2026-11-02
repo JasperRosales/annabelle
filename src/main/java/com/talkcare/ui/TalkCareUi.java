@@ -2,6 +2,9 @@ package com.talkcare.ui;
 
 import com.talkcare.api.TalkCareApi;
 import com.talkcare.ui.controller.AdminController;
+import com.talkcare.ui.controller.AppointmentsController;
+import com.talkcare.ui.controller.NotificationsController;
+import com.talkcare.ui.controller.ReportDetailsController;
 import com.talkcare.ui.controller.AuthController;
 import com.talkcare.ui.controller.ChatController;
 import com.talkcare.ui.controller.ConnectionController;
@@ -38,10 +41,12 @@ public final class TalkCareUi {
         UiContext context = new UiContext(dom, api, session, navigator, dialogs, new ImagePicker(window, dialogs));
 
         VerificationController verification = new VerificationController(context);
+        AppointmentsController appointments = new AppointmentsController(context);
+        ReportDetailsController reportDetails = new ReportDetailsController(context);
         this.navbar = new NavbarController(context);
         this.connection = new ConnectionController(context);
         this.auth = new AuthController(context, verification);
-        this.admin = new AdminController(context);
+        this.admin = new AdminController(context, appointments);
         List<Controller> controllers = List.of(
                 navbar,
                 connection,
@@ -50,8 +55,11 @@ public final class TalkCareUi {
                 new ProfileController(context, navbar),
                 new InfoPagesController(context),
                 new ChatController(context),
-                new ProfessionalInboxController(context),
-                new ReportsController(context),
+                new ProfessionalInboxController(context, appointments, reportDetails),
+                new ReportsController(context, appointments, reportDetails),
+                appointments,
+                reportDetails,
+                new NotificationsController(context),
                 admin);
 
         ActionRouter router = new ActionRouter(error -> {

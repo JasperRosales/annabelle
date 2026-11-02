@@ -1,45 +1,100 @@
 <!-- PAGE 10: TALKCARE ADMIN DASHBOARD -->
-<section class="view-screen" id="view-admin">
-  <div class="admin-container">
-    <h1 class="admin-title">TalkCare Admin</h1>
+<section class="view-screen dsh" id="view-admin">
+  <div class="dsh-container">
+    <header class="dsh-header">
+      <div>
+        <p class="dsh-eyebrow">Administration</p>
+        <h1 class="dsh-title">TalkCare Admin</h1>
+        <p class="dsh-subtitle">Review verifications and reports, follow activity, and oversee accounts.</p>
+      </div>
+    </header>
 
-    <!-- Pending Requests -->
-    <div class="admin-pending-card">
-      <h3 class="admin-section-heading">Pending Requests</h3>
-      <div id="admin-pending-requests-list"></div>
+    <div class="kpi-grid">
+      <div class="kpi-card tone-neutral">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Total users</span>
+          <span class="kpi-value" id="stat-total-users">—</span>
+          <span class="kpi-hint">Clients, professionals and admins</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-amber">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Pending approvals</span>
+          <span class="kpi-value" id="stat-pending-approvals">—</span>
+          <span class="kpi-hint">Verifications and reports to review</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-blue">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Sessions today</span>
+          <span class="kpi-value" id="stat-session-today">—</span>
+          <span class="kpi-hint">Requested or confirmed sessions</span>
+        </span>
+      </div>
+      <div class="kpi-card tone-green">
+        <span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>
+        <span class="kpi-body">
+          <span class="kpi-label">Open reports</span>
+          <span class="kpi-value" id="stat-open-reports">—</span>
+          <span class="kpi-hint">Under review or in progress</span>
+        </span>
+      </div>
     </div>
 
-    <div class="admin-two-cols">
-      <!-- Recent Activity -->
-      <div class="admin-activity-timeline">
-        <h3 class="admin-section-heading">Recent Activity</h3>
-        <div id="admin-timeline-list"></div>
-      </div>
-
-      <!-- Schedule Overview -->
-      <div class="admin-calendar-card">
-        <h3 class="admin-section-heading">Schedule Overview</h3>
-        <div class="admin-calendar-month" id="admin-calendar-month"></div>
-        <div class="calendar-grid" id="admin-calendar-grid">
-          <!-- Rendered via JS -->
+    <section class="dsh-card">
+      <div class="dsh-card-head">
+        <div>
+          <h2 class="dsh-card-title">Pending requests <span class="count-chip" id="admin-pending-count">0</span></h2>
+          <p class="dsh-card-sub">Identity and license verifications, and reports waiting for review.</p>
         </div>
       </div>
+      <div class="admin-request-list" id="admin-pending-requests-list"></div>
+    </section>
+
+    <div class="dsh-grid even">
+      <section class="dsh-card">
+        <h2 class="dsh-card-title">Recent activity</h2>
+        <div class="admin-timeline" id="admin-timeline-list"></div>
+      </section>
+
+      <section class="dsh-card">
+        <div class="dsh-card-head">
+          <h2 class="dsh-card-title">Schedule</h2>
+          <div class="month-nav">
+            <button type="button" class="icon-btn" aria-label="Previous month" data-action="admin-calendar-prev">&lsaquo;</button>
+            <span class="admin-calendar-month" id="admin-calendar-month"></span>
+            <button type="button" class="icon-btn" aria-label="Next month" data-action="admin-calendar-next">&rsaquo;</button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="admin-calendar-grid"></div>
+        <div class="day-panel">
+          <h3 class="day-panel-title" id="admin-day-title">Select a day</h3>
+          <div class="session-list" id="admin-day-sessions"></div>
+        </div>
+      </section>
     </div>
 
-    <!-- Active User Profiles -->
-    <div class="admin-profiles-card">
-      <h3 class="admin-section-heading" style="color: #ffffff;">Active User Profiles</h3>
-      <div class="admin-profiles-list" id="admin-active-users-list">
-        <!-- Dynamically populated from DB -->
+    <section class="dsh-card">
+      <div class="dsh-card-head">
+        <div>
+          <h2 class="dsh-card-title">User accounts <span class="count-chip" id="admin-user-count">0</span></h2>
+          <p class="dsh-card-sub">Search by name or email and filter by role.</p>
+        </div>
+        <input type="search" class="auth-input search-input" placeholder="Search users" data-input="admin-user-search" aria-label="Search users">
       </div>
-    </div>
-
-    <!-- Bottom Stats Bar (Page 10) -->
-    <div class="admin-bottom-stats">
-      <span>Total Users <b id="stat-total-users">—</b></span>
-      <span>Pending Approvals <b id="stat-pending-approvals">—</b></span>
-      <span>Session Today <b id="stat-session-today">—</b></span>
-    </div>
+      <div class="segmented">
+        <button class="activity-pill admin-role-pill active" data-action="admin-user-role" data-arg="ALL">All</button>
+        <button class="activity-pill admin-role-pill" data-action="admin-user-role" data-arg="CLIENT">Clients</button>
+        <button class="activity-pill admin-role-pill" data-action="admin-user-role" data-arg="ATTORNEY">Attorneys</button>
+        <button class="activity-pill admin-role-pill" data-action="admin-user-role" data-arg="PSYCHIATRIST">Psychiatrists</button>
+        <button class="activity-pill admin-role-pill" data-action="admin-user-role" data-arg="ADMIN">Admins</button>
+      </div>
+      <div class="user-table-head"><span>User</span><span>Role</span><span>Status</span><span></span></div>
+      <div class="admin-profiles-list" id="admin-active-users-list"></div>
+    </section>
   </div>
 </section>
 
@@ -50,6 +105,8 @@
     <div class="admin-review-content">
       <div class="admin-review-fields">
         <div><strong>Name:</strong> <span id="review-name"></span></div>
+        <div id="review-role-row"><strong>Account type:</strong> <span id="review-role"></span></div>
+        <div id="review-license-row"><strong>License no.:</strong> <span id="review-license"></span></div>
         <div><strong>Email:</strong> <span id="review-email"></span></div>
         <div><strong>Submitted:</strong> <span id="review-submitted"></span></div>
         <div id="review-id-type-row"><strong>ID Type:</strong> <span id="review-id-type"></span></div>
