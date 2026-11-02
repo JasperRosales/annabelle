@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function initApp() {
   renderCalendar();
-  await checkDatabaseStatus();
+  // Don't block the UI on the health check: a sleeping API host can take up to a minute to wake.
+  checkDatabaseStatus();
   // Always start at welcome page — no auto-login
   currentUser = null;
   currentSession = null;
@@ -115,8 +116,8 @@ function navigateTo(viewId) {
   }
 }
 
-// The desktop shell serves /config.js with the API location; fall back to a local API.
-const API_BASE_URL = ((window.TALKCARE_CONFIG && window.TALKCARE_CONFIG.apiBaseUrl) || "http://localhost:4000")
+// The desktop shell serves /config.js with the API location; fall back to the deployed API.
+const API_BASE_URL = ((window.TALKCARE_CONFIG && window.TALKCARE_CONFIG.apiBaseUrl) || "https://talkcare-api.onrender.com")
   .replace(/\/+$/, "");
 
 // The server decides each account's home view (Account.dashboardView); this is only a fallback.
@@ -1414,6 +1415,8 @@ async function checkDatabaseStatus() {
   const text = document.getElementById("db-status-text");
   const box = document.getElementById("db-dialog-status-box");
   document.getElementById("api-base-url").textContent = API_BASE_URL;
+  text.textContent = "Connecting…";
+  box.textContent = "Connecting to the TalkCare server. The first connection can take up to a minute while it wakes up.";
   let message;
   let connected = false;
   try {

@@ -23,7 +23,7 @@ public final class AppConfig {
             System.err.println("Could not read config.properties: " + e.getMessage());
         }
         String api = firstNonBlank(System.getProperty("talkcare.api.url"), System.getenv("TALKCARE_API_URL"),
-                file.getProperty("api.baseUrl"), "http://localhost:4000");
+                file.getProperty("api.baseUrl"), "https://talkcare-api.onrender.com");
         String port = firstNonBlank(System.getProperty("talkcare.ui.port"), System.getenv("TALKCARE_UI_PORT"),
                 file.getProperty("ui.port"), "54321");
         return new AppConfig(api.replaceAll("/+$", ""), Integer.parseInt(port.trim()));
