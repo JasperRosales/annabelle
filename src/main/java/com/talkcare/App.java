@@ -1,10 +1,9 @@
 package com.talkcare;
 
-import java.awt.Desktop;
-import java.net.URI;
+import com.talkcare.server.StaticUiServer;
 
+/** Starts the local UI server and the JavaFX window. */
 public class App {
-    private static StaticUiServer uiServer;
 
     public static void main(String[] args) {
         AppConfig config = AppConfig.load();
@@ -14,43 +13,16 @@ public class App {
         System.out.println("Local UI: http://localhost:" + config.uiPort() + "/");
         System.out.println("=================================================");
 
+        StaticUiServer uiServer = new StaticUiServer(config.uiPort());
         try {
-            uiServer = new StaticUiServer(config);
             uiServer.start();
         } catch (Exception e) {
             System.err.println("Fatal: could not serve the TalkCare UI on port " + config.uiPort() + ": " + e.getMessage());
-            return;
+            System.exit(1);
         }
+        Runtime.getRuntime().addShutdownHook(new Thread(uiServer::stop));
 
-        Runtime.getRuntime().addShutdownHook(new Thread(App::stopUiServer));
-
-        try {
-            TalkCareFXApp.setStartUrl(uiServer.indexUrl());
-            TalkCareFXApp.setOnShutdown(App::stopUiServer);
-            TalkCareFXApp.launchApp(args);
-        } catch (Throwable t) {
-            System.err.println("JavaFX runtime notice: " + t.getMessage());
-            System.out.println("Opening TalkCare in the system browser at " + uiServer.indexUrl());
-            openBrowserFallback(uiServer.indexUrl());
-            try {
-                Thread.currentThread().join();
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    private static void stopUiServer() {
-        if (uiServer != null) uiServer.stop();
-    }
-
-    private static void openBrowserFallback(String url) {
-        try {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(new URI(url));
-            }
-        } catch (Exception ex) {
-            System.err.println("Could not open desktop browser: " + ex.getMessage());
-        }
+        TalkCareFXApp.configure(config, uiServer);
+        TalkCareFXApp.launchApp(args);
     }
 }

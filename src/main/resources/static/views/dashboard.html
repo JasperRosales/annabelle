@@ -9,7 +9,7 @@
     <div class="dash-main-grid">
       <!-- Left: 6 Action Tiles (matching Page 8) -->
       <div class="dash-actions-grid">
-        <div class="dash-tile" onclick="navigateTo('report-form')">
+        <div class="dash-tile" data-action="navigate" data-arg="report-form">
           <div class="dash-tile-icon">&#128196;</div>
           <div>
             <div class="dash-tile-title">Report a Concern</div>
@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <div class="dash-tile" onclick="filterActivityHistory('Resolved')">
+        <div class="dash-tile" data-action="filter-reports" data-arg="Resolved">
           <div class="dash-tile-icon">&#9989;</div>
           <div>
             <div class="dash-tile-title">Resolved</div>
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <div class="dash-tile" onclick="filterActivityHistory('All')">
+        <div class="dash-tile" data-action="filter-reports" data-arg="All">
           <div class="dash-tile-icon">&#128233;</div>
           <div>
             <div class="dash-tile-title">New Notifications</div>
@@ -33,7 +33,7 @@
           </div>
         </div>
 
-        <div class="dash-tile" onclick="navigateTo('admin')">
+        <div class="dash-tile" data-action="navigate" data-arg="admin">
           <div class="dash-tile-icon">&#128197;</div>
           <div>
             <div class="dash-tile-title">Book a Session</div>
@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div class="dash-tile" onclick="navigateTo('services')">
+        <div class="dash-tile" data-action="navigate" data-arg="services">
           <div class="dash-tile-icon">&#128172;</div>
           <div>
             <div class="dash-tile-title">Message</div>
@@ -49,7 +49,7 @@
           </div>
         </div>
 
-        <div class="dash-tile" onclick="filterActivityHistory('Under Review')">
+        <div class="dash-tile" data-action="filter-reports" data-arg="Under Review">
           <div class="dash-tile-icon">&#128193;</div>
           <div>
             <div class="dash-tile-title">Reports</div>
@@ -81,10 +81,10 @@
       <div class="activity-header-title" id="activity-card-title">Activity History</div>
 
       <div class="activity-pills">
-        <button class="activity-pill active" onclick="filterActivityHistory('All', event)" id="pill-all">All (3)</button>
-        <button class="activity-pill" onclick="filterActivityHistory('Under Review', event)" id="pill-review">Under Review (1)</button>
-        <button class="activity-pill" onclick="filterActivityHistory('In Progress', event)" id="pill-progress">In Progress (1)</button>
-        <button class="activity-pill" onclick="filterActivityHistory('Resolved', event)" id="pill-resolved">Resolved (1)</button>
+        <button class="activity-pill active" data-action="filter-reports" data-arg="All" id="pill-all">All (3)</button>
+        <button class="activity-pill" data-action="filter-reports" data-arg="Under Review" id="pill-review">Under Review (1)</button>
+        <button class="activity-pill" data-action="filter-reports" data-arg="In Progress" id="pill-progress">In Progress (1)</button>
+        <button class="activity-pill" data-action="filter-reports" data-arg="Resolved" id="pill-resolved">Resolved (1)</button>
       </div>
 
       <div class="activity-list-box" id="activity-reports-list">
@@ -99,7 +99,7 @@
   <div style="padding: 20px;">
     <div class="report-form-container">
       <h2 class="report-form-title">Report Concern</h2>
-      <form onsubmit="handleReportSubmit(event)">
+      <form data-submit="submit-report">
         <div class="report-field-row">
           <div class="report-field-label">Full Name :</div>
           <input type="text" id="report-name" class="report-field-input" value="Max Smith" required>
@@ -155,7 +155,7 @@
     <div class="report-success-card">
       <img src="assets/talkcare-logo.png" alt="TalkCare Emblem" class="report-success-emblem">
       <h2 class="report-success-title" id="report-success-title">Your Report has been successfully submitted!!!</h2>
-      <button class="btn-auth-submit" style="width: 220px; margin: 0 auto;" onclick="navigateTo('dashboard')">View in Dashboard</button>
+      <button class="btn-auth-submit" style="width: 220px; margin: 0 auto;" data-action="navigate" data-arg="dashboard">View in Dashboard</button>
     </div>
   </div>
 </section>

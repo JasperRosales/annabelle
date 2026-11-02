@@ -7,7 +7,7 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
 ## 🌟 Mga Tampok at Pagsunod sa PDF Wireframe
 
 1. **Frontend**:
-   - **Java / JavaFX** Desktop Application na pinalalakas ng HTML5, CSS3, at JavaScript para sa makinis, modernong visual rendering na 100% tapat sa color scheme, typography, cards, buttons, tabs, at popups ng PDF.
+   - **Java / JavaFX** Desktop Application: HTML5 at CSS3 para sa itsura (100% tapat sa color scheme, typography, cards, buttons, tabs, at popups ng PDF), at **Java** para sa lahat ng behavior. Walang JavaScript ang UI.
    - Exact color palette: Muted sage green (`#95ad91`), deep forest green (`#23492d`), at crisp card containers (`#eaf3e7`).
    - SVG vector assets na kopyang-kopya sa wireframe:
      * TalkCare Official Tree Logo na may bukas na mga dahon/kamay at aklat
@@ -90,7 +90,7 @@ $env:TALKCARE_API_URL = "http://localhost:4000"
 .\run.bat
 ```
 
-Ang desktop app ay nagse-serve ng UI sa `http://localhost:54321` (`ui.port`) para sa WebView. Siguraduhing kasama ang origin na ito sa `CORS_ORIGIN` ng API.
+Ang desktop app ay nagse-serve ng HTML/CSS sa `http://localhost:54321` (`ui.port`) para sa WebView. Ang mga tawag sa API ay ginagawa ng Java (`java.net.http.HttpClient`), kaya hindi kailangan ng CORS setting para sa desktop app.
 
 ### Paraan 1: Gamit ang Batch Launcher (Pinakamadali)
 I-double click lamang ang:
@@ -103,6 +103,20 @@ run.bat
 mvn javafx:run
 ```
 
+## 🧩 Desktop UI architecture (HTML/CSS + Java, no JavaScript)
+
+The window is a JavaFX `WebView` showing the HTML/CSS in `src/main/resources/static`. Everything the page *does* is Java, using the WebView's DOM (`org.w3c.dom`):
+
+- **HTML declares, Java handles.** Elements say what they do with attributes instead of inline JavaScript: `data-action="name" data-arg="..."` (click), `<form data-submit="name">` (submit), `data-input="name"` (typing). `ui/ActionRouter` listens once on the document and dispatches to the controller that registered that name.
+- **One page, many files.** `index.html` holds `<div data-include="views/x.html">` slots; `server/PageAssembler` inlines them before the WebView loads the page.
+- **Packages**
+  - `api`: `TalkCareApi` → `AuthApi`, `ProfileApi`, `ChatApi`, `ReportApi`, `AdminApi`, `HealthApi` (one per API area, sharing `ApiClient`: async HTTP + Jackson JSON).
+  - `model`: records for the API data (`Account`, `Conversation`, `Message`, `Report`, `AdminRequest`, ...) and the `ServiceType` enum (JusticeCare / ThoMatt).
+  - `ui`: `TalkCareUi` (wires everything), `Navigator` (screens + access rules), `Session` (signed-in account, observers), `UiCall` (API result → JavaFX thread), `Dialogs`, `ImagePicker` (native file chooser), `Poller`.
+  - `ui/dom`: `Dom` / `El`, a small fluent wrapper over the WebView DOM.
+  - `ui/controller`: one controller per part of the page, all extending `Controller` (`NavbarController`, `AuthController`, `VerificationController`, `ProfileController`, `InfoPagesController`, `ChatController`, `ProfessionalInboxController`, `ReportsController`, `AdminController`, `ConnectionController`). Screens that react to being shown implement `Screen`.
+- **To add a button:** put `data-action="my-action"` on it in the HTML and register `router.onClick("my-action", ...)` in the controller that owns that screen.
+
 ## Password recovery email
 
-Password reset emails are sent by the API, so SMTP is configured on the server (`TALKCARE_SMTP_*` and `TALKCARE_RESET_URL` in the `talkcare-api` `.env`), not on this computer. The reset link opens this desktop UI at `http://localhost:54321/?resetToken=...`.
+Password reset emails are sent by the API, so SMTP is configured on the server (`TALKCARE_SMTP_*` and `TALKCARE_RESET_URL` in the `talkcare-api` `.env`), not on this computer. The reset link (`http://localhost:54321/?resetToken=...`) opens in the browser; the local UI server hands the token to the running desktop app, which shows the "choose a new password" screen. The app must be running when the link is opened.

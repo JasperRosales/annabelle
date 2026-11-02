@@ -1,9 +1,9 @@
 <div class="password-reset-backdrop" id="forgot-password-modal" aria-hidden="true">
   <div class="password-reset-dialog" role="dialog" aria-modal="true" aria-labelledby="forgot-password-title">
-    <button type="button" class="btn-close-modal" aria-label="Close" onclick="closeForgotPassword()">&times;</button>
+    <button type="button" class="btn-close-modal" aria-label="Close" data-action="close-forgot-password">&times;</button>
     <h2 id="forgot-password-title">Forgot Password</h2>
     <p>Enter the email address linked to your account. If it exists, we’ll send a one-time reset link that expires in 30 minutes.</p>
-    <form onsubmit="requestPasswordReset(event)">
+    <form data-submit="request-password-reset">
       <label for="forgot-password-email">Account email</label>
       <input type="email" id="forgot-password-email" class="auth-form-input" autocomplete="email" required>
       <p class="password-reset-status" id="forgot-password-status" aria-live="polite"></p>
@@ -13,9 +13,9 @@
 </div>
 
 <!-- PROFESSIONAL CREDENTIALS MODAL (Page 6 & Page 7) -->
-<div class="prof-modal-backdrop" id="prof-modal" onclick="closeProfessionalModal(event)">
+<div class="prof-modal-backdrop" id="prof-modal" data-action="close-professional-modal" data-self>
   <div class="prof-modal-card">
-    <button class="btn-close-modal" onclick="closeProfessionalModal()">&times;</button>
+    <button class="btn-close-modal" data-action="close-professional-modal">&times;</button>
     <img src="assets/avatar-case-handler.svg" alt="Professional" class="prof-modal-avatar" id="prof-modal-img">
     <div class="prof-modal-name">
       <span id="prof-modal-title-name">Atty. Sofia Ramos</span>
@@ -38,9 +38,9 @@
 </div>
 
 <!-- SERVER CONNECTION MODAL (TalkCare API status) -->
-<div class="prof-modal-backdrop" id="db-modal" onclick="closeDbModal(event)">
+<div class="prof-modal-backdrop" id="db-modal" data-action="close-db-modal" data-self>
   <div class="db-modal-card">
-    <button class="btn-close-modal" onclick="closeDbModal()">&times;</button>
+    <button class="btn-close-modal" data-action="close-db-modal">&times;</button>
     <div class="db-modal-title">
       <span style="font-size: 24px;">&#127760;</span> TalkCare Server Connection
     </div>
@@ -57,6 +57,6 @@
       <code id="api-base-url"></code>
     </div>
 
-    <button type="button" class="btn-auth-submit" style="margin-top: 10px;" onclick="retryApiConnection()">Check connection again</button>
+    <button type="button" class="btn-auth-submit" style="margin-top: 10px;" data-action="retry-api-connection">Check connection again</button>
   </div>
 </div>

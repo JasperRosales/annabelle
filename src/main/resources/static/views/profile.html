@@ -6,11 +6,10 @@
     <div class="profile-card">
       <div class="profile-avatar-column">
         <img src="assets/individual.svg" alt="Profile" class="profile-avatar-large" id="profile-display-img">
-        <button type="button" class="btn-upload-photo" onclick="document.getElementById('profile-photo-input').click()">
+        <button type="button" class="btn-upload-photo" data-action="pick-profile-photo">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
           Upload Picture
         </button>
-        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoSelect(event)">
       </div>
 
       <div class="profile-fields-column">
@@ -29,7 +28,7 @@
           <input type="password" id="profile-password" class="profile-field-input" value="max123">
         </div>
 
-        <button type="button" class="btn-update-profile" onclick="updateProfileInfo()">Update Information</button>
+        <button type="button" class="btn-update-profile" data-action="save-profile">Update Information</button>
       </div>
     </div>
   </div>
