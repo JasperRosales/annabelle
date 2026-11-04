@@ -59,9 +59,12 @@ public record Account(
         return STATUS_PENDING.equals(status) && !isBlank(idType);
     }
 
-    /** The view the API assigns to this account (Account.dashboardView on the server). */
+    /**
+     * The view the API assigns to this account (Account.dashboardView on the server). Clients
+     * land on their dashboard; older API builds still send the removed "home" view for them.
+     */
     public String homeView() {
-        return isBlank(dashboardView) ? "home" : dashboardView;
+        return isBlank(dashboardView) || "home".equals(dashboardView) ? "dashboard" : dashboardView;
     }
 
     public Account withProfilePicture(String url) {
