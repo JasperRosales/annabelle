@@ -35,6 +35,11 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
    - **Client-only view**: Hindi maaaring magpalit ng account o role mula sa chat interface.
    - **Photo attachments**: Maaaring mag-attach at magpadala ng PNG o JPEG na larawan; mase-save ito kasama ng client message at makikita sa conversation.
 
+3b. **TalkCare Chatbot (AI, Gemini)**:
+   - Ikatlong chat sa Services, sa ilalim ng JusticeCare at ThoMatt.
+   - Nasa **TalkCare API** (`/api/chatbot`) ang Gemini, ang API key (`GEMINI_API_KEY` sa Render) at ang mga guardrail. Walang key o AI code sa desktop app; ipinapadala lang nito ang mensahe at ipinapakita ang sagot.
+   - Guardrails: mental health/well-being, pangkalahatang impormasyon tungkol sa legal rights at victim support sa Pilipinas, at paggamit ng TalkCare lamang. Walang diagnosis, gamot, o legal advice para sa isang partikular na kaso. Ang mga mensaheng may crisis language ay agad sinasagot ng 911 at NCMH Crisis Hotline 1553. Tingnan ang `talkcare-api` README para sa buong listahan.
+
 4. **Upload ng Profile Picture at Pagpili ng ID**:
    - **Profile Screen (Page 4)**: May interactive **"Upload Picture"** camera button kung saan maaaring pumili ng larawan mula sa kompyuter. Magkakaroon agad ito ng real-time preview sa avatar at mase-save sa database at server storage.
    - **ID Verification (Page 1 & 2)**:
