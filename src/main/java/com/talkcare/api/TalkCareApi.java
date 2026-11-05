@@ -9,7 +9,6 @@ public final class TalkCareApi {
     private final AuthApi auth;
     private final ProfileApi profile;
     private final ChatApi chat;
-    private final ChatbotApi chatbot;
     private final ReportApi reports;
     private final AdminApi admin;
     private final HealthApi health;
@@ -21,7 +20,6 @@ public final class TalkCareApi {
         this.auth = new AuthApi(client);
         this.profile = new ProfileApi(client);
         this.chat = new ChatApi(client);
-        this.chatbot = new ChatbotApi(client);
         this.reports = new ReportApi(client);
         this.admin = new AdminApi(client);
         this.health = new HealthApi(client);
@@ -33,7 +31,6 @@ public final class TalkCareApi {
     public AuthApi auth() { return auth; }
     public ProfileApi profile() { return profile; }
     public ChatApi chat() { return chat; }
-    public ChatbotApi chatbot() { return chatbot; }
     public ReportApi reports() { return reports; }
     public AdminApi admin() { return admin; }
     public HealthApi health() { return health; }
