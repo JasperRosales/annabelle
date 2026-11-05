@@ -925,54 +925,6 @@ body.page-welcome .navbar .btn-getstarted:hover {
   transform: translateY(-2px);
 }
 
-/* PAGE 2: HOME HERO ("YOU ARE NOT ALONE.") */
-#view-home {
-  flex: 1;
-}
-
-.home-banner {
-  flex: 1;
-  min-height: 480px;
-  padding: 60px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  color: #ffffff;
-}
-
-.home-banner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.home-banner-title {
-  position: relative;
-  z-index: 1;
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  margin-top: -28px;
-  margin-bottom: 24px;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 0, 0, 0.55);
-}
-
-.home-banner-desc {
-  position: relative;
-  z-index: 1;
-  max-width: 820px;
-  font-size: 16.5px;
-  line-height: 1.7;
-  color: #ffffff;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95), 0 0 14px rgba(0, 0, 0, 0.55);
-}
-
 /* ABOUT US SECTION & TABS (Page 2 & Page 3) */
 .about-section {
   flex: 1;

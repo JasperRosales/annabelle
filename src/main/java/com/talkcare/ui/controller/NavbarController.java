@@ -38,6 +38,8 @@ public final class NavbarController extends Controller {
                 .ifPresent(li -> li.display(account.isClient() ? null : "none"));
         byId("nav-item-services").closest(el -> "LI".equalsIgnoreCase(el.raw().getTagName()))
                 .ifPresent(li -> li.display(account.isClient() ? null : "none"));
+        // Clients already have Dashboard in the top bar; the profile menu skips it for them.
+        byId("dropdown-item-dashboard").display(account.isClient() ? "none" : null);
         byId("nav-user-name").text(account.displayName());
         byId("dropdown-user-name").text(account.displayName());
         byId("dropdown-user-role").text(account.roleLabel());
