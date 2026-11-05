@@ -15,7 +15,7 @@ import java.util.Map;
 public final class Navigator {
     /** Screens only clients use; other roles are sent to their own dashboard. */
     private static final java.util.Set<String> CLIENT_ONLY =
-            java.util.Set.of("dashboard", "services", "chat", "report-form", "report-success");
+            java.util.Set.of("dashboard", "services", "chat", "assistant", "report-form", "report-success");
 
     private final Dom dom;
     private final Session session;
