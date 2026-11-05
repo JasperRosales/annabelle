@@ -15,7 +15,6 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
      * Individual (batang babae na may orange cardigan)
      * Peers (dalawang magkaibigan na nag-uusap)
      * Serene mountain landscape background sa Login screen
-     * Compassionate community warm background sa "YOU ARE NOT ALONE."
      * Official Seals para sa **JusticeCare** at **ThoMatt**
      * Case Handler at Therapist verified avatars
      * Adult Mental Health First Aid USA Certificate sa profile modal
@@ -46,7 +45,7 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
 
 5. **Lahat ng Pahina mula sa PDF (Page 1 hanggang Page 10)**:
    - **Page 1**: Welcome Landing Screen na may 3 choice cards (Justice, Individual, Peers), Mountain Login Box, Create Account Form, at ID Verification form.
-   - **Page 2**: Pending Request screen na may "Okay" button, "YOU ARE NOT ALONE." Hero section, at User Dropdown Drawer menu (My Profile, Contacts, Messages, Scheduling, About Thomatt, About Justicecare, Log out).
+   - **Page 2**: Pending Request screen na may "Okay" button, at User Dropdown Drawer menu (My Profile, Contacts, Messages, Scheduling, About Thomatt, About Justicecare, Log out).
    - **Page 3**: About Us na may 5 functional sub-tabs (About us, Career, Social Impact, Client Impact, Articles).
    - **Page 4**: Profile screen na may photo uploader, Contact Us form na may official TalkCare emblem, at hiwalay na mga artikulo para sa "About Thomatt" at "About Justicecare".
    - **Page 6**: Services screen (Justice Care & ThoMatt cards) at ang JusticeCare Chat interface na may case handler profile modal.
@@ -56,7 +55,7 @@ Isang kumpletong Desktop Application para sa **TalkCare (Mental Health & Justice
    - **Page 10**: TalkCare Admin Dashboard na may Pending Requests list (`Review` buttons para mag-update ng status), Recent Activity timeline, Interactive Schedule Overview calendar, at Active User Profiles.
 
 6. **Role-Based Login**:
-   - Ang server ang nagpapasya ng home view ng bawat account (`dashboardView`): `CLIENT` → Home, `ATTORNEY` → Case Handler dashboard, `PSYCHIATRIST` → Professional dashboard, `ADMIN` → Admin dashboard.
+   - Ang server ang nagpapasya ng home view ng bawat account (`dashboardView`): `CLIENT` → Client dashboard, `ATTORNEY` → Case Handler dashboard, `PSYCHIATRIST` → Professional dashboard, `ADMIN` → Admin dashboard.
    - Role names were renamed: `USER → CLIENT`, `CASE_HANDLER → ATTORNEY`, `THERAPIST → PSYCHIATRIST`.
    - **Hiwalay na sign-in page bawat role**: ang "Log in" ay nagbubukas ng portal chooser (Client, Attorney, Psychiatrist, Administrator). Ipinapadala ng bawat page ang `role` sa `/api/auth/login`, kaya tinatanggihan ang account na iba ang role.
    - **Hiwalay na register page**: Client, Attorney (Roll of Attorneys no.), at Psychiatrist (PRC license no.). Pagkatapos mag-register, mag-a-upload ng ID; ang bagong attorney/psychiatrist ay walang client hangga't hindi ina-approve ng admin. Walang public na register page para sa Administrator.

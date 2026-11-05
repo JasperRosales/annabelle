@@ -68,7 +68,7 @@ public final class NotificationsController extends Controller {
         if (latest.isEmpty()) {
             list.append(dom().create("div", "dsh-empty compact").append(
                     dom().create("strong").text("You're all caught up"),
-                    dom().create("span").text("Updates about your account, reports and sessions appear here.")));
+                    dom().create("span").text("Updates about your account, reports, sessions and replies appear here.")));
             return;
         }
         for (Notification n : latest) {
