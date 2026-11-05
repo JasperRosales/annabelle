@@ -1,6 +1,7 @@
 package com.talkcare.ui;
 
 import com.talkcare.api.TalkCareApi;
+import com.talkcare.ui.controller.AssistantController;
 import com.talkcare.ui.controller.AdminController;
 import com.talkcare.ui.controller.AppointmentsController;
 import com.talkcare.ui.controller.NotificationsController;
@@ -55,6 +56,7 @@ public final class TalkCareUi {
                 new ProfileController(context, navbar),
                 new InfoPagesController(context),
                 new ChatController(context),
+                new AssistantController(context),
                 new ProfessionalInboxController(context, appointments, reportDetails),
                 new ReportsController(context, appointments, reportDetails),
                 appointments,

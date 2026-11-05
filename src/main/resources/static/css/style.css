@@ -4809,3 +4809,36 @@ button.kpi-card:hover {
 @media (max-width: 820px) {
   .profile-layout { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- TalkCare Chatbot (AI assistant) ---------- */
+.assistant-disclaimer {
+  margin: 16px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #2e5932;
+  background: #eef6ec;
+  border: 1px dashed #7a9c78;
+  border-radius: 12px;
+}
+
+.assistant-clear-btn {
+  margin-left: 10px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #23492d;
+  background: #ffffff;
+  border: 1px solid #cadbc7;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.assistant-clear-btn:hover {
+  background: #dfedea;
+}
+
+.assistant-typing .message-bubble {
+  font-style: italic;
+  opacity: 0.7;
+}
