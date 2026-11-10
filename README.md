@@ -121,4 +121,4 @@ The window is a JavaFX `WebView` showing the HTML/CSS in `src/main/resources/sta
 
 ## Password recovery email
 
-Password reset emails are sent by the API, so SMTP is configured on the server (`TALKCARE_SMTP_*` and `TALKCARE_RESET_URL` in the `talkcare-api` `.env`), not on this computer. The reset link (`http://localhost:54321/?resetToken=...`) opens in the browser; the local UI server hands the token to the running desktop app, which shows the "choose a new password" screen. The app must be running when the link is opened.
+Forgot password does not send email. The user enters their account email and a new password; the request appears under the admin dashboard's pending requests, and the new password takes effect only when an administrator approves it.

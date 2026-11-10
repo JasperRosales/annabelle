@@ -27,7 +27,6 @@ public class TalkCareFXApp extends Application {
     private static StaticUiServer uiServer;
 
     private TalkCareUi ui;
-    private String pendingResetToken;
 
     /** Must be called before {@link #launchApp}. */
     public static void configure(AppConfig appConfig, StaticUiServer server) {
@@ -50,20 +49,12 @@ public class TalkCareFXApp extends Application {
             if (state == Worker.State.SUCCEEDED && ui == null) {
                 ui = new TalkCareUi(engine.getDocument(), stage, api);
                 ui.start();
-                if (pendingResetToken != null) ui.openPasswordReset(pendingResetToken);
             } else if (state == Worker.State.FAILED) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "TalkCare could not load its screens. Please restart the app.");
                 alert.initOwner(stage);
                 alert.showAndWait();
             }
         });
-
-        uiServer.onResetToken(token -> Platform.runLater(() -> {
-            if (ui == null) pendingResetToken = token;
-            else ui.openPasswordReset(token);
-            stage.toFront();
-            stage.requestFocus();
-        }));
 
         engine.load(uiServer.indexUrl());
 

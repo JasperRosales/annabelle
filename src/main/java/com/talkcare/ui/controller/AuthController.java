@@ -9,7 +9,7 @@ import com.talkcare.ui.dom.El;
 
 import java.util.concurrent.CompletableFuture;
 
-/** Role-specific sign in and registration, sign out, and the two password-reset steps. */
+/** Role-specific sign in and registration, sign out, and password reset requests. */
 public final class AuthController extends Controller {
     private final VerificationController verification;
 
@@ -26,7 +26,6 @@ public final class AuthController extends Controller {
         router.onClick("forgot-password", action -> openForgotPassword(action.source()));
         router.onClick("close-forgot-password", action -> closeForgotPassword());
         router.onSubmit("request-password-reset", action -> requestPasswordReset(action.source()));
-        router.onSubmit("reset-password", action -> resetPassword(action.source()));
     }
 
     /** Every role has its own sign-in form; {@code data-arg} is the role the API must match. */
@@ -88,6 +87,8 @@ public final class AuthController extends Controller {
         String login = link.closest(el -> el.hasAttr("data-submit"))
                 .map(form -> field(form, "username").trimmedValue()).orElse("");
         El email = byId("forgot-password-email").value(login.contains("@") ? login : "");
+        byId("forgot-password-new").value("");
+        byId("forgot-password-confirm").value("");
         byId("forgot-password-status").text("");
         byId("forgot-password-modal").addClass("show").attr("aria-hidden", "false");
         email.focus();
@@ -98,38 +99,21 @@ public final class AuthController extends Controller {
     }
 
     private void requestPasswordReset(El form) {
-        El status = byId("forgot-password-status").text("Sending reset link…");
-        El button = submitButton(form).disabled(true);
-        UiCall.of(api().auth().requestPasswordReset(byId("forgot-password-email").trimmedValue()))
-                .onSuccess(answer -> status.text(answer.message()))
-                .onError(error -> status.text(message(error, "Could not send the reset link.")))
-                .always(() -> button.disabled(false))
-                .start();
-    }
-
-    /** Opens the "choose a new password" screen for a token from a reset email. */
-    public void startPasswordReset(String token) {
-        byId("password-reset-token").value(token);
-        byId("password-reset-status").text("");
-        navigator().navigate("reset-password");
-    }
-
-    private void resetPassword(El form) {
-        String newPassword = byId("reset-new-password").value();
-        El status = byId("password-reset-status");
-        if (!newPassword.equals(byId("reset-confirm-password").value())) {
+        String newPassword = byId("forgot-password-new").value();
+        El status = byId("forgot-password-status");
+        if (!newPassword.equals(byId("forgot-password-confirm").value())) {
             status.text("The passwords do not match.");
             return;
         }
+        status.text("Sending request…");
         El button = submitButton(form).disabled(true);
-        status.text("Updating password…");
-        UiCall.of(api().auth().resetPassword(byId("password-reset-token").value(), newPassword))
+        UiCall.of(api().auth().requestPasswordReset(byId("forgot-password-email").trimmedValue(), newPassword))
                 .onSuccess(answer -> {
-                    dom().all(el -> "login".equals(el.data("submit"))).forEach(El::resetForm);
-                    navigator().navigate("login");
-                    dialogs().info(answer.message());
+                    byId("forgot-password-new").value("");
+                    byId("forgot-password-confirm").value("");
+                    status.text(answer.message());
                 })
-                .onError(error -> status.text(message(error, "Could not update the password.")))
+                .onError(error -> status.text(message(error, "Could not send the request.")))
                 .always(() -> button.disabled(false))
                 .start();
     }

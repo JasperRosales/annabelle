@@ -3536,6 +3536,7 @@ button.kpi-card:hover {
 
 .request-tag.verify { background: #e7f0fb; color: #1d5fa8; }
 .request-tag.report { background: #fff4e0; color: #9a5800; }
+.request-tag.reset { background: #f1e9fb; color: #6a3aa8; }
 
 .dsh .btn-admin-review {
   height: 34px;

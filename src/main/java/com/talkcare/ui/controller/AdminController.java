@@ -128,7 +128,7 @@ public final class AdminController extends Controller implements Screen {
                     if (list.isEmpty()) {
                         container.append(dom().create("div", "dsh-empty").append(
                             dom().create("strong").text("You're all caught up"),
-                            dom().create("span").text("New verifications and reports will appear here.")));
+                            dom().create("span").text("New verifications, reports and password resets will appear here.")));
                         return;
                     }
                     for (int i = 0; i < list.size(); i++) container.append(requestRow(list.get(i), i));
@@ -142,7 +142,11 @@ public final class AdminController extends Controller implements Screen {
         String title;
         String note;
         String kind;
-        if (request.isVerification()) {
+        if (request.isPasswordReset()) {
+            title = orDefault(request.name(), orDefault(request.email(), "Password reset"));
+            kind = "Password reset";
+            note = roleName(request.role()) + " • " + orDefault(request.email(), "");
+        } else if (request.isVerification()) {
             title = orDefault(request.name(), "Verification request");
             kind = request.isProfessional() ? roleName(request.role()) + " verification" : "ID verification";
             note = orDefault(request.idType(), "ID")
@@ -161,7 +165,7 @@ public final class AdminController extends Controller implements Screen {
         info.append(dom().create("div").append(
                 dom().create("div", "admin-request-title").append(
                         dom().create("span").text(title),
-                        dom().create("span", "request-tag " + (request.isVerification() ? "verify" : "report"), kind)),
+                        dom().create("span", "request-tag " + tagClass(request), kind)),
                 dom().create("div", "admin-request-note", note),
                 dom().create("div", "admin-request-time", "Submitted " + Formats.dateTime(request.submittedAt()))));
         El review = dom().create("button", "btn-admin-review", "Review")
@@ -169,6 +173,11 @@ public final class AdminController extends Controller implements Screen {
                 .attr("data-action", "admin-open-review")
                 .attr("data-arg", String.valueOf(index));
         return dom().create("div", "admin-request-row").append(info, review);
+    }
+
+    private static String tagClass(AdminRequest request) {
+        if (request.isPasswordReset()) return "reset";
+        return request.isVerification() ? "verify" : "report";
     }
 
     private static String roleName(String role) {
@@ -193,16 +202,18 @@ public final class AdminController extends Controller implements Screen {
         setField("review-details", request.details());
         setField("review-witness", request.witness());
         setField("review-existing-remarks", request.remarks());
+        boolean reset = request.isPasswordReset();
         VERIFICATION_ROWS.forEach(id -> byId(id).hidden(!verification));
-        REPORT_ROWS.forEach(id -> byId(id).hidden(verification));
+        REPORT_ROWS.forEach(id -> byId(id).hidden(verification || reset));
+        if (reset) byId("review-role-row").hidden(false);
         byId("review-license-row").hidden(!verification || !request.isProfessional());
 
         El image = byId("review-image");
         boolean hasImage = verification && !orDefault(request.imageUrl(), "").isEmpty();
         image.hidden(!hasImage);
         if (hasImage) image.src(assetUrl(request.imageUrl()));
-        byId("review-verification-actions").hidden(!verification);
-        byId("review-report-actions").hidden(verification);
+        byId("review-verification-actions").hidden(!verification && !reset);
+        byId("review-report-actions").hidden(verification || reset);
         hideAll("review-reason-label", "review-reason", "review-confirm-reject",
                 "review-remarks-label", "review-remarks", "review-save-remarks");
         byId("review-reason").value("");
@@ -235,13 +246,15 @@ public final class AdminController extends Controller implements Screen {
             return;
         }
 
+        boolean approvedReset = reviewing.isPasswordReset() && "APPROVE".equals(action);
         List<El> buttons = byId("admin-review-modal").allByClass("admin-action-button");
         buttons.forEach(b -> b.disabled(true));
         UiCall.of(api().admin().act(reviewing, action, reason, remarks))
                 .onSuccess(ignored -> {
                     closeReview();
                     reload();
-                    dialogs().info("Request updated successfully.");
+                    dialogs().info(approvedReset ? "Password reset approved. The user can now sign in with the new password."
+                            : "Request updated successfully.");
                 })
                 .onError(error -> dialogs().error("Unable to update request: " + error.getMessage()))
                 .always(() -> buttons.forEach(b -> b.disabled(false)))

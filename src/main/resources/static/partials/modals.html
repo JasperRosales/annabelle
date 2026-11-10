@@ -2,12 +2,16 @@
   <div class="password-reset-dialog" role="dialog" aria-modal="true" aria-labelledby="forgot-password-title">
     <button type="button" class="btn-close-modal" aria-label="Close" data-action="close-forgot-password">&times;</button>
     <h2 id="forgot-password-title">Forgot Password</h2>
-    <p>Enter the email address linked to your account. If it exists, we’ll send a one-time reset link that expires in 30 minutes.</p>
+    <p>Enter your account email and choose a new password. An administrator will review the request; your new password works once it is approved.</p>
     <form data-submit="request-password-reset">
       <label for="forgot-password-email">Account email</label>
       <input type="email" id="forgot-password-email" class="auth-form-input" autocomplete="email" required>
+      <label for="forgot-password-new">New password</label>
+      <input type="password" id="forgot-password-new" class="auth-form-input" autocomplete="new-password" minlength="8" required>
+      <label for="forgot-password-confirm">Confirm new password</label>
+      <input type="password" id="forgot-password-confirm" class="auth-form-input" autocomplete="new-password" minlength="8" required>
       <p class="password-reset-status" id="forgot-password-status" aria-live="polite"></p>
-      <button type="submit" class="btn-auth-submit">Send reset link</button>
+      <button type="submit" class="btn-auth-submit">Send request</button>
     </form>
   </div>
 </div>

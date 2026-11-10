@@ -8,19 +8,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 /**
  * Serves the bundled HTML/CSS/images to the embedded WebView on localhost only. The page itself
  * is assembled by {@link PageAssembler}; all behaviour is Java ({@code com.talkcare.ui}).
- * <p>
- * Password-reset emails link to {@code http://localhost:<port>/?resetToken=...}. That link opens
- * in the system browser, so the token is handed to the running app instead (see
- * {@link #onResetToken}).
  */
 public final class StaticUiServer {
     private static final String ROOT = "static/";
@@ -35,7 +29,6 @@ public final class StaticUiServer {
 
     private final int port;
     private final PageAssembler pages = new PageAssembler(ROOT);
-    private volatile Consumer<String> resetTokenHandler = token -> {};
     private HttpServer server;
 
     public StaticUiServer(int port) {
@@ -57,24 +50,12 @@ public final class StaticUiServer {
         return "http://localhost:" + port + "/index.html";
     }
 
-    /** Called (on a server thread) with the token when a password-reset link is opened. */
-    public void onResetToken(Consumer<String> handler) {
-        this.resetTokenHandler = handler;
-    }
-
     private void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         if (!"GET".equals(method) && !"HEAD".equals(method)) {
             send(exchange, 405, "text/plain; charset=UTF-8", "Method not allowed");
             return;
         }
-        String resetToken = queryParam(exchange.getRequestURI().getRawQuery(), "resetToken");
-        if (resetToken != null && !resetToken.isBlank()) {
-            resetTokenHandler.accept(resetToken);
-            send(exchange, 200, "text/html; charset=UTF-8", RESET_HANDOFF_PAGE);
-            return;
-        }
-
         String path = exchange.getRequestURI().getPath();
         if (path.contains("..")) {
             send(exchange, 400, "text/plain; charset=UTF-8", "Bad path");
@@ -93,17 +74,6 @@ public final class StaticUiServer {
         }
         String extension = file.substring(file.lastIndexOf('.') + 1).toLowerCase();
         send(exchange, 200, MIME_TYPES.getOrDefault(extension, "application/octet-stream"), content);
-    }
-
-    private static String queryParam(String rawQuery, String name) {
-        if (rawQuery == null) return null;
-        for (String pair : rawQuery.split("&")) {
-            int eq = pair.indexOf('=');
-            if (eq > 0 && pair.substring(0, eq).equals(name)) {
-                return URLDecoder.decode(pair.substring(eq + 1), StandardCharsets.UTF_8);
-            }
-        }
-        return null;
     }
 
     private byte[] readResource(String name) throws IOException {
@@ -125,15 +95,4 @@ public final class StaticUiServer {
             if (!head) os.write(body);
         }
     }
-
-    private static final String RESET_HANDOFF_PAGE = """
-            <!DOCTYPE html>
-            <html lang="en"><head><meta charset="UTF-8"><title>TalkCare</title>
-            <link rel="stylesheet" href="/css/style.css"></head>
-            <body style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;">
-              <div><h1>Continue in the TalkCare app</h1>
-              <p>Your password reset link was sent to the TalkCare desktop app.<br>
-              Switch to the app to choose a new password. You can close this tab.</p></div>
-            </body></html>
-            """;
 }
