@@ -6,7 +6,7 @@ import com.talkcare.model.ServerMessage;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-/** Sign-in, registration, sign-out and password reset. */
+/** Sign-in, registration, sign-out and password reset requests. */
 public final class AuthApi {
     private final ApiClient client;
 
@@ -38,12 +38,9 @@ public final class AuthApi {
         return client.post("/api/auth/logout", null);
     }
 
-    public CompletableFuture<ServerMessage> requestPasswordReset(String email) {
-        return client.post("/api/auth/forgot-password", Map.of("email", email), ServerMessage.class);
-    }
-
-    public CompletableFuture<ServerMessage> resetPassword(String token, String newPassword) {
-        return client.post("/api/auth/reset-password", Map.of("token", token, "newPassword", newPassword),
+    /** Files a new password for an administrator to approve. */
+    public CompletableFuture<ServerMessage> requestPasswordReset(String email, String newPassword) {
+        return client.post("/api/auth/forgot-password", Map.of("email", email, "newPassword", newPassword),
                 ServerMessage.class);
     }
 

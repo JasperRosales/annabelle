@@ -78,9 +78,4 @@ public final class TalkCareUi {
         connection.check(() -> {});
         navigator.navigate("welcome");
     }
-
-    /** Opens the "choose a new password" screen for a token from a reset email. */
-    public void openPasswordReset(String token) {
-        auth.startPasswordReset(token);
-    }
 }

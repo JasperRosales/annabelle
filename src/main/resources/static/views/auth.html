@@ -207,29 +207,6 @@
   </div>
 </section>
 
-<section class="view-screen" id="view-reset-password">
-  <div class="login-split-section" style="background-image: url('assets/bg-mountain.jpg');">
-    <div class="login-split-overlay"></div>
-    <div class="auth-card password-reset-card">
-      <h2>Reset your password</h2>
-      <p>Choose a new password with at least 8 characters.</p>
-      <form data-submit="reset-password">
-        <input type="hidden" id="password-reset-token">
-        <div class="auth-form-group">
-          <label class="auth-form-label" for="reset-new-password">New password</label>
-          <input type="password" id="reset-new-password" class="auth-form-input" autocomplete="new-password" minlength="8" required>
-        </div>
-        <div class="auth-form-group">
-          <label class="auth-form-label" for="reset-confirm-password">Confirm</label>
-          <input type="password" id="reset-confirm-password" class="auth-form-input" autocomplete="new-password" minlength="8" required>
-        </div>
-        <p class="password-reset-status" id="password-reset-status" aria-live="polite"></p>
-        <button type="submit" class="btn-auth-submit">Update Password</button>
-      </form>
-    </div>
-  </div>
-</section>
-
 <!-- REGISTER: choose an account type, then one registration page per role -->
 <section class="view-screen auth-screen" id="view-register">
   <div class="auth-stage">
