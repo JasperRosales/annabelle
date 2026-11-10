@@ -158,7 +158,7 @@ public final class AdminController extends Controller implements Screen {
         for (Report r : shown) {
             String to = "PSYCHIATRIST".equals(r.recipient()) ? "Psychiatrist" : "Attorney";
             String who = orDefault(r.assignedProfessionalName(), "");
-            container.append(dom().create("div", "report-row")
+            container.append(dom().create("div", "report-row with-action")
                     .attr("data-action", "admin-report-details")
                     .attr("data-arg", String.valueOf(r.id()))
                     .append(dom().create("div", "report-cell-main").append(
@@ -170,7 +170,8 @@ public final class AdminController extends Controller implements Screen {
                             dom().create("div", "report-concern", orDefault(r.concernType(), "—")),
                             dom().create("div").append(dom().create("span", "status-badge " + r.badgeClass(),
                                     orDefault(r.statusLabel(), "Under Review"))),
-                            dom().create("div", "report-chevron", "Review \u203A")));
+                            dom().create("div", "report-action").append(
+                                    dom().create("span", "report-review-btn", "Review"))));
         }
     }
 

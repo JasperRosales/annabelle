@@ -25,7 +25,7 @@ public final class ReportsController extends Controller implements Screen {
     private final AppointmentsController appointments;
     private final ReportDetailsController details;
     private String filter = "All";
-    /** ATTORNEY or PSYCHIATRIST: who receives the report (admins always see it). */
+    /** ATTORNEY or PSYCHIATRIST: who receives the report. */
     private String recipient = Account.ROLE_ATTORNEY;
     private boolean pastSessions;
     private List<Report> shown = List.of();

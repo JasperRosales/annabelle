@@ -3243,6 +3243,40 @@ button.kpi-card:hover {
   font-size: 12px;
 }
 
+/* Rows with a Review button (admin "All reports") */
+.report-table-head.with-action,
+.report-row.with-action {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr) 120px 84px;
+}
+
+.report-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.report-review-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  height: 30px;
+  padding: 0 14px;
+  border: 1px solid #c9d8c9;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #2f5d3a;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.report-row.with-action:hover .report-review-btn {
+  border-color: #395c3c;
+  background: #395c3c;
+  color: #ffffff;
+}
+
 .report-chevron {
   color: #a3b0a4;
   font-size: 20px;
@@ -3719,6 +3753,7 @@ button.kpi-card:hover {
   .kpi-grid.three { grid-template-columns: minmax(0, 1fr); }
   .report-table-head { display: none; }
   .report-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .report-row.with-action { grid-template-columns: minmax(0, 1fr) auto auto; }
   .report-concern,
   .report-chevron { display: none; }
 }
