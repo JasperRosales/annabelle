@@ -4884,3 +4884,51 @@ button.kpi-card:hover {
 .report-recipient { flex: 1; flex-wrap: wrap; }
 .report-manage { margin-top: 18px; border-top: 1px solid #dfe8dc; padding-top: 14px; }
 .report-review { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+
+/* Live notification toasts; the bell panel stays under the navbar while the page scrolls */
+.notif-panel { position: fixed; }
+
+.notif-toasts {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1400;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 340px;
+  max-width: calc(100vw - 40px);
+}
+
+.notif-toast {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border: 1px solid #cfe3cb;
+  border-left: 4px solid #2e8b3e;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(20, 40, 26, 0.18);
+  cursor: pointer;
+  animation: notif-toast-in 0.25s ease-out;
+}
+
+.notif-toast-title {
+  color: #2e8b3e;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.notif-toast-text {
+  color: #2b3f2f;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@keyframes notif-toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}

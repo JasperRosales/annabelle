@@ -6,13 +6,17 @@ import com.talkcare.ui.Formats;
 import com.talkcare.ui.Poller;
 import com.talkcare.ui.UiCall;
 import com.talkcare.ui.dom.El;
+import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
 import java.util.List;
 
-/** The navbar bell: unread count (refreshed every 10 s while signed in) and the notification panel. */
+/**
+ * The navbar bell: unread count, the notification panel, and live pop-up toasts. Polls every
+ * 4 s while signed in; each notification newer than the last one seen pops up as a toast.
+ */
 public final class NotificationsController extends Controller {
-    private final Poller poller = new Poller(Duration.seconds(10));
+    private final Poller poller = new Poller(Duration.seconds(4));
     private List<Notification> latest = List.of();
     private long newestSeen = -1;
     private final List<Runnable> newListeners = new java.util.ArrayList<>();
@@ -25,6 +29,10 @@ public final class NotificationsController extends Controller {
     public void bind(ActionRouter router) {
         router.onClick("toggle-notifications", action -> toggle());
         router.onClick("mark-notifications-read", action -> markAllRead());
+        router.onClick("open-notifications", action -> {
+            action.source().remove();
+            if (!panel().hasClass("show")) toggle();
+        });
         router.observeClicks(target -> {
             El bell = byId("nav-bell");
             if (!panel().contains(target) && !bell.contains(target)) close();
@@ -48,9 +56,23 @@ public final class NotificationsController extends Controller {
                     byId("notif-badge").hidden(unread == 0).text(unread > 9 ? "9+" : String.valueOf(unread));
                     if (panel().hasClass("show")) render();
                     long newest = list.stream().mapToLong(Notification::id).max().orElse(0);
-                    boolean arrived = newestSeen >= 0 && newest > newestSeen;
+                    boolean first = newestSeen < 0;
+                    long seen = newestSeen;
                     newestSeen = Math.max(newestSeen, newest);
-                    if (arrived) newListeners.forEach(Runnable::run);
+                    if (first) {
+                        if (unread > 0) toast(unread == 1 ? "You have 1 unread notification."
+                                : "You have " + unread + " unread notifications.");
+                    } else if (newest > seen) {
+                        list.stream().filter(n -> n.id() > seen && !n.read()).limit(3).toList()
+                                .reversed().forEach(n -> toast(n.message()));
+                        newListeners.forEach(Runnable::run);
+                    }
+                })
+                .onError(error -> {
+                    if (panel().hasClass("show") && latest.isEmpty()) {
+                        byId("notif-list").clear().append(
+                                dom().create("div", "admin-request-error", "Could not load notifications."));
+                    }
                 })
                 .start();
     }
@@ -94,6 +116,23 @@ public final class NotificationsController extends Controller {
 
     private void markAllRead() {
         UiCall.of(api().notifications().markAllRead()).onSuccess(ignored -> refresh()).start();
+    }
+
+    /** A pop-up in the corner that opens the panel when clicked and fades out after a few seconds. */
+    private void toast(String message) {
+        El stack = dom().findById("notif-toasts").orElseGet(() -> {
+            El created = dom().create("div", "notif-toasts").attr("id", "notif-toasts");
+            dom().body().append(created);
+            return created;
+        });
+        while (stack.allByClass("notif-toast").size() >= 3) stack.firstByClass("notif-toast").remove();
+        El toast = dom().create("div", "notif-toast").attr("data-action", "open-notifications").append(
+                dom().create("span", "notif-toast-title", "New notification"),
+                dom().create("span", "notif-toast-text", message));
+        stack.append(toast);
+        PauseTransition hide = new PauseTransition(Duration.seconds(7));
+        hide.setOnFinished(e -> toast.remove());
+        hide.play();
     }
 
     private El panel() {

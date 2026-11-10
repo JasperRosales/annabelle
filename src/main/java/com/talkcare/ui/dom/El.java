@@ -182,6 +182,12 @@ public final class El {
         return this;
     }
 
+    /** Detaches this element from its parent (no-op when already detached). */
+    public void remove() {
+        Node parent = element.getParentNode();
+        if (parent != null) parent.removeChild(element);
+    }
+
     public El replaceChildren(El... children) {
         return clear().append(children);
     }
