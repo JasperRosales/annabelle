@@ -114,7 +114,8 @@ public final class ProfessionalInboxController extends Controller implements Scr
                                                                 orDefault(r.concernType(), "") + " · " + Formats.relative(r.createdAt())))),
                                         dom().create("div").append(dom().create("span",
                                                 "status-badge " + r.badgeClass(), orDefault(r.statusLabel(), "Under Review"))),
-                                        dom().create("div", "report-chevron", "Review \u203A")));
+                                        dom().create("div", "report-action").append(
+                                                dom().create("span", "report-review-btn", "Review"))));
                     }
                 })
                 .onError(error -> view.firstByClass("pro-reports-list").clear()
