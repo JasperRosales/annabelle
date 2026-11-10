@@ -7,9 +7,9 @@
       <label for="forgot-password-email">Account email</label>
       <input type="email" id="forgot-password-email" class="auth-form-input" autocomplete="email" required>
       <label for="forgot-password-new">New password</label>
-      <input type="password" id="forgot-password-new" class="auth-form-input" autocomplete="new-password" minlength="8" required>
+      <span class="pw-field"><input type="password" id="forgot-password-new" class="auth-form-input" autocomplete="new-password" minlength="8" required><button type="button" class="pw-toggle" data-action="toggle-password" aria-label="Show password" title="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line class="pw-slash" x1="3" y1="3" x2="21" y2="21"/></svg></button></span>
       <label for="forgot-password-confirm">Confirm new password</label>
-      <input type="password" id="forgot-password-confirm" class="auth-form-input" autocomplete="new-password" minlength="8" required>
+      <span class="pw-field"><input type="password" id="forgot-password-confirm" class="auth-form-input" autocomplete="new-password" minlength="8" required><button type="button" class="pw-toggle" data-action="toggle-password" aria-label="Show password" title="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line class="pw-slash" x1="3" y1="3" x2="21" y2="21"/></svg></button></span>
       <p class="password-reset-status" id="forgot-password-status" aria-live="polite"></p>
       <button type="submit" class="btn-auth-submit">Send request</button>
     </form>
@@ -131,12 +131,29 @@
     <dl class="detail-grid">
       <div><dt>Filed by</dt><dd id="report-modal-client"></dd></div>
       <div><dt>Type of concern</dt><dd id="report-modal-type"></dd></div>
-      <div><dt>Service</dt><dd id="report-modal-service"></dd></div>
+      <div><dt>Sent to</dt><dd id="report-modal-service"></dd></div>
       <div><dt>Submitted</dt><dd id="report-modal-submitted"></dd></div>
       <div><dt>Last update</dt><dd id="report-modal-updated"></dd></div>
       <div><dt>Involved / witness</dt><dd id="report-modal-witness"></dd></div>
       <div class="wide"><dt>Details</dt><dd id="report-modal-details"></dd></div>
-      <div class="wide"><dt>Remarks from TalkCare</dt><dd id="report-modal-remarks"></dd></div>
+      <div class="wide"><dt>Remarks from TalkCare</dt><dd id="report-modal-remarks" style="white-space: pre-line;"></dd></div>
     </dl>
+    <div class="report-manage" id="report-modal-manage" hidden>
+      <button type="button" class="dsh-btn primary" id="report-review-toggle" data-action="report-review-open">Review the report</button>
+      <div class="report-review" id="report-modal-review" hidden>
+        <p class="dsh-card-sub">Set the status (it can be changed again at any time) or add remarks.</p>
+        <div class="segmented">
+          <button type="button" class="activity-pill report-status-pill" data-action="report-set-status" data-arg="UNDER_REVIEW">Under review</button>
+          <button type="button" class="activity-pill report-status-pill" data-action="report-set-status" data-arg="IN_PROGRESS">Mark In Progress</button>
+          <button type="button" class="activity-pill report-status-pill" data-action="report-set-status" data-arg="RESOLVED">Mark Resolved</button>
+        </div>
+        <label class="admin-review-input-label" for="report-modal-new-remarks">Remarks</label>
+        <textarea class="admin-review-textarea" id="report-modal-new-remarks" rows="3" placeholder="Add remarks for this report"></textarea>
+        <div class="admin-review-actions">
+          <button type="button" class="admin-action-button" data-action="report-save-remarks">Add Remarks</button>
+        </div>
+        <div class="report-submit-status" id="report-modal-review-status" role="alert" aria-live="polite"></div>
+      </div>
+    </div>
   </section>
 </div>

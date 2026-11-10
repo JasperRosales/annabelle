@@ -10,10 +10,12 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-/** The navbar bell: unread count (refreshed every 30 s while signed in) and the notification panel. */
+/** The navbar bell: unread count (refreshed every 10 s while signed in) and the notification panel. */
 public final class NotificationsController extends Controller {
-    private final Poller poller = new Poller(Duration.seconds(30));
+    private final Poller poller = new Poller(Duration.seconds(10));
     private List<Notification> latest = List.of();
+    private long newestSeen = -1;
+    private final List<Runnable> newListeners = new java.util.ArrayList<>();
 
     public NotificationsController(UiContext context) {
         super(context);
@@ -31,6 +33,11 @@ public final class NotificationsController extends Controller {
         session().addListener(this::sessionChanged);
     }
 
+    /** Runs when a notification newer than the last one seen arrives (not on the first load). */
+    public void onNew(Runnable listener) {
+        newListeners.add(listener);
+    }
+
     /** Reloads now (e.g. after an action that creates notifications). */
     public void refresh() {
         if (!session().isSignedIn()) return;
@@ -40,6 +47,10 @@ public final class NotificationsController extends Controller {
                     long unread = list.stream().filter(n -> !n.read()).count();
                     byId("notif-badge").hidden(unread == 0).text(unread > 9 ? "9+" : String.valueOf(unread));
                     if (panel().hasClass("show")) render();
+                    long newest = list.stream().mapToLong(Notification::id).max().orElse(0);
+                    boolean arrived = newestSeen >= 0 && newest > newestSeen;
+                    newestSeen = Math.max(newestSeen, newest);
+                    if (arrived) newListeners.forEach(Runnable::run);
                 })
                 .start();
     }
@@ -51,6 +62,7 @@ public final class NotificationsController extends Controller {
         } else {
             poller.stop();
             latest = List.of();
+            newestSeen = -1;
             byId("notif-badge").hidden(true);
             close();
         }

@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Report(long id, String reportCode, String fullName, String email, String contactNo,
                      String concernType, String concernDetails, String involvedWitness, String serviceType,
-                     String status, String statusLabel, String remarks, String createdAt, String updatedAt) {
+                     String status, String statusLabel, String remarks, String createdAt, String updatedAt,
+                     String recipient, String assignedProfessionalName) {
 
     public static final String UNDER_REVIEW = "UNDER_REVIEW";
     public static final String IN_PROGRESS = "IN_PROGRESS";

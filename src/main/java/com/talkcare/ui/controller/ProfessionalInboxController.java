@@ -45,7 +45,8 @@ public final class ProfessionalInboxController extends Controller implements Scr
         router.onClick("professional-select", action -> select(Long.parseLong(action.arg())));
         router.onSubmit("professional-reply", action -> reply());
         router.onClick("pro-report-details", action -> reports.stream()
-                .filter(r -> r.id() == Long.parseLong(action.arg())).findFirst().ifPresent(details::show));
+                .filter(r -> r.id() == Long.parseLong(action.arg())).findFirst()
+                .ifPresent(r -> details.show(r, updated -> loadReports())));
         appointments.onChange(() -> {
             if (List.of(VIEWS).contains(navigator().currentView())) loadSessions();
         });
@@ -97,8 +98,8 @@ public final class ProfessionalInboxController extends Controller implements Scr
                     El container = view.firstByClass("pro-reports-list").clear();
                     if (list.isEmpty()) {
                         container.append(dom().create("div", "dsh-empty compact").append(
-                                dom().create("strong").text("No assigned reports"),
-                                dom().create("span").text("Reports routed to you will be listed here.")));
+                                dom().create("strong").text("No reports sent to you"),
+                                dom().create("span").text("Reports clients send to you will be listed here.")));
                         return;
                     }
                     for (Report r : list) {
@@ -113,7 +114,7 @@ public final class ProfessionalInboxController extends Controller implements Scr
                                                                 orDefault(r.concernType(), "") + " · " + Formats.relative(r.createdAt())))),
                                         dom().create("div").append(dom().create("span",
                                                 "status-badge " + r.badgeClass(), orDefault(r.statusLabel(), "Under Review"))),
-                                        dom().create("div", "report-chevron", "\u203A")));
+                                        dom().create("div", "report-chevron", "Review \u203A")));
                     }
                 })
                 .onError(error -> view.firstByClass("pro-reports-list").clear()

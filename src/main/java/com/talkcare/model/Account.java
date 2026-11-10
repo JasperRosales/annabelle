@@ -46,6 +46,15 @@ public record Account(
         return ROLE_CLIENT.equals(role);
     }
 
+    public boolean isAdmin() {
+        return ROLE_ADMIN.equals(role);
+    }
+
+    /** Chat, Book a Session and Report a Concern stay hidden from clients until they are verified. */
+    public boolean canUseServices() {
+        return !isClient() || isVerified();
+    }
+
     public boolean isProfessional() {
         return ROLE_ATTORNEY.equals(role) || ROLE_PSYCHIATRIST.equals(role);
     }

@@ -20,6 +20,11 @@ public final class NavbarController extends Controller {
             if (!menu().contains(target) && !pill.contains(target)) closeMenu();
         });
         navigator().beforeNavigate(this::closeMenu);
+        router.onClick("toggle-password", action -> action.source()
+                .closest(el -> el.hasClass("pw-field"))
+                .ifPresent(field -> setRevealed(field, !action.source().hasClass("revealed"))));
+        // Never leave a password visible on another screen.
+        navigator().beforeNavigate(() -> dom().byClass("pw-field").forEach(field -> setRevealed(field, false)));
         session().addListener(this::refresh);
     }
 
@@ -37,9 +42,12 @@ public final class NavbarController extends Controller {
         byId("nav-item-dashboard").closest(el -> "LI".equalsIgnoreCase(el.raw().getTagName()))
                 .ifPresent(li -> li.display(account.isClient() ? null : "none"));
         byId("nav-item-services").closest(el -> "LI".equalsIgnoreCase(el.raw().getTagName()))
-                .ifPresent(li -> li.display(account.isClient() ? null : "none"));
+                .ifPresent(li -> li.display(account.isClient() && account.canUseServices() ? null : "none"));
         // Clients already have Dashboard in the top bar; the profile menu skips it for them.
         byId("dropdown-item-dashboard").display(account.isClient() ? "none" : null);
+        // Admins and professionals read messages inside their dashboards; admins have no Contact Us.
+        byId("dropdown-item-messages").display(account.isClient() && account.canUseServices() ? null : "none");
+        byId("dropdown-item-contact").display(account.isAdmin() ? "none" : null);
         byId("nav-user-name").text(account.displayName());
         byId("dropdown-user-name").text(account.displayName());
         byId("dropdown-user-role").text(account.roleLabel());
@@ -52,6 +60,15 @@ public final class NavbarController extends Controller {
     public void previewAvatar(String url) {
         byId("nav-avatar-img").src(url);
         byId("dropdown-avatar-img").src(url);
+    }
+
+    /** Shows (text) or hides (password) the input next to an eye button. */
+    private static void setRevealed(El field, boolean revealed) {
+        field.descendants(el -> "INPUT".equalsIgnoreCase(el.raw().getTagName()))
+                .forEach(input -> input.attr("type", revealed ? "text" : "password"));
+        field.allByClass("pw-toggle").forEach(button -> button.toggleClass("revealed", revealed)
+                .attr("aria-label", revealed ? "Hide password" : "Show password")
+                .attr("title", revealed ? "Hide password" : "Show password"));
     }
 
     private El menu() {

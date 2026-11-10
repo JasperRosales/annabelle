@@ -9,10 +9,19 @@
       </div>
       <div class="dsh-header-actions">
         <span class="account-chip" id="dash-account-status">Account</span>
-        <button type="button" class="dsh-btn secondary" data-action="open-book-session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book a session</button>
-        <button type="button" class="dsh-btn primary" data-action="navigate" data-arg="report-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg> Report a concern</button>
+        <button type="button" class="dsh-btn secondary needs-verified" data-action="open-book-session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book a session</button>
+        <button type="button" class="dsh-btn primary needs-verified" data-action="navigate" data-arg="report-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg> Report a concern</button>
       </div>
     </header>
+
+    <div class="pro-approval" id="dash-verify-notice" hidden>
+      <span class="pro-approval-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+      <div class="pro-approval-body">
+        <strong class="pro-approval-title">Your account is not verified yet</strong>
+        <p class="pro-approval-text" id="dash-verify-text">Chat, Book a Session and Report a Concern become available once an administrator verifies your account.</p>
+      </div>
+      <button type="button" class="dsh-btn primary" id="dash-verify-action" data-action="navigate" data-arg="id-verify" hidden>Upload ID</button>
+    </div>
 
     <div class="kpi-grid">
       <button type="button" class="kpi-card tone-neutral" data-action="filter-reports" data-arg="All">
@@ -76,7 +85,7 @@
               <h2 class="dsh-card-title">Sessions</h2>
               <p class="dsh-card-sub">Your requested, confirmed and past sessions.</p>
             </div>
-            <button type="button" class="auth-link" data-action="open-book-session">+ Book</button>
+            <button type="button" class="auth-link needs-verified" data-action="open-book-session">+ Book</button>
           </div>
           <div class="segmented">
             <button class="activity-pill client-session-tab active" data-action="client-sessions-tab" data-arg="upcoming">Upcoming</button>
@@ -88,17 +97,17 @@
         <section class="dsh-card">
           <h2 class="dsh-card-title">Quick actions</h2>
           <div class="quick-actions">
-            <button type="button" class="quick-action" data-action="navigate" data-arg="report-form">
+            <button type="button" class="quick-action needs-verified" data-action="navigate" data-arg="report-form">
               <span class="quick-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg></span>
               <span class="quick-action-text"><strong>Report a concern</strong><span>Submit a new concern for review</span></span>
               <span class="quick-action-chevron">&rsaquo;</span>
             </button>
-            <button type="button" class="quick-action" data-action="navigate" data-arg="services">
+            <button type="button" class="quick-action needs-verified" data-action="navigate" data-arg="services">
               <span class="quick-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
               <span class="quick-action-text"><strong>Messages</strong><span>Chat with JusticeCare or ThoMatt</span></span>
               <span class="quick-action-chevron">&rsaquo;</span>
             </button>
-            <button type="button" class="quick-action" data-action="open-book-session">
+            <button type="button" class="quick-action needs-verified" data-action="open-book-session">
               <span class="quick-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
               <span class="quick-action-text"><strong>Book a session</strong><span>Request a time with your professional</span></span>
               <span class="quick-action-chevron">&rsaquo;</span>
@@ -139,6 +148,14 @@
     <div class="report-form-container">
       <h2 class="report-form-title">Report Concern</h2>
       <form data-submit="submit-report">
+        <div class="report-field-row">
+          <div class="report-field-label">Send report to :</div>
+          <div class="segmented report-recipient" role="tablist" aria-label="Report recipient">
+            <button type="button" class="activity-pill report-recipient-pill active" data-action="report-recipient" data-arg="ATTORNEY">Attorney (JusticeCare)</button>
+            <button type="button" class="activity-pill report-recipient-pill" data-action="report-recipient" data-arg="PSYCHIATRIST">Psychiatrist (ThoMatt)</button>
+          </div>
+        </div>
+
         <div class="report-field-row">
           <div class="report-field-label">Full Name :</div>
           <input type="text" id="report-name" class="report-field-input" required>

@@ -54,6 +54,23 @@
       <div class="admin-request-list" id="admin-pending-requests-list"></div>
     </section>
 
+    <section class="dsh-card">
+      <div class="dsh-card-head">
+        <div>
+          <h2 class="dsh-card-title">All reports <span class="count-chip" id="admin-report-count">0</span></h2>
+          <p class="dsh-card-sub">Every report, whichever attorney or psychiatrist it was sent to. Select one to review or change its status.</p>
+        </div>
+      </div>
+      <div class="segmented">
+        <button class="activity-pill admin-report-pill active" data-action="admin-report-filter" data-arg="ALL">All</button>
+        <button class="activity-pill admin-report-pill" data-action="admin-report-filter" data-arg="UNDER_REVIEW">Under review</button>
+        <button class="activity-pill admin-report-pill" data-action="admin-report-filter" data-arg="IN_PROGRESS">In progress</button>
+        <button class="activity-pill admin-report-pill" data-action="admin-report-filter" data-arg="RESOLVED">Resolved</button>
+      </div>
+      <div class="report-table-head"><span>Report</span><span>Concern</span><span>Status</span><span></span></div>
+      <div class="report-table" id="admin-reports-list"></div>
+    </section>
+
     <div class="dsh-grid even">
       <section class="dsh-card">
         <h2 class="dsh-card-title">Recent activity</h2>
@@ -131,6 +148,7 @@
       <button type="button" class="admin-action-button reject" id="review-confirm-reject" data-action="admin-review" data-arg="REJECT" hidden>Confirm Reject</button>
     </div>
     <div class="admin-review-actions" id="review-report-actions" hidden>
+      <button type="button" class="admin-action-button" data-action="admin-review" data-arg="UNDER_REVIEW">Under Review</button>
       <button type="button" class="admin-action-button" data-action="admin-review" data-arg="IN_PROGRESS">Mark In Progress</button>
       <button type="button" class="admin-action-button approve" data-action="admin-review" data-arg="RESOLVED">Mark Resolved</button>
       <button type="button" class="admin-action-button" data-action="show-admin-remarks">Add Remarks</button>

@@ -25,11 +25,20 @@ public final class ReportApi {
         return client.get("/api/reports", REPORTS);
     }
 
+    /** Sets the status (code, or null to keep it) and/or appends remarks. Admins and the receiving professional. */
+    public CompletableFuture<Report> update(long id, String status, String remarks) {
+        java.util.Map<String, String> body = new java.util.HashMap<>();
+        if (status != null) body.put("status", status);
+        if (remarks != null) body.put("remarks", remarks);
+        return client.patch("/api/reports/" + id + "/status", body, Report.class);
+    }
+
     public CompletableFuture<Report> submit(NewReport report) {
         return client.post("/api/reports", report, Report.class);
     }
 
     /** Body of POST /api/reports. */
     public record NewReport(String fullName, String email, String address, String contactNo,
-                            String concernDetails, String concernType, String involvedWitness) {}
+                            String concernDetails, String concernType, String involvedWitness,
+                            String recipient) {}
 }

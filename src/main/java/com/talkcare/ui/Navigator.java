@@ -16,6 +16,9 @@ public final class Navigator {
     /** Screens only clients use; other roles are sent to their own dashboard. */
     private static final java.util.Set<String> CLIENT_ONLY =
             java.util.Set.of("dashboard", "services", "chat", "report-form", "report-success");
+    /** Client services that need a verified account; unverified clients stay on their dashboard. */
+    private static final java.util.Set<String> VERIFIED_ONLY =
+            java.util.Set.of("services", "chat", "report-form", "report-success");
 
     private final Dom dom;
     private final Session session;
@@ -79,6 +82,7 @@ public final class Navigator {
             String home = session.homeView();
             if ("home".equals(viewId)) return home;
             if (CLIENT_ONLY.contains(viewId) && !session.require().isClient()) return home;
+            if (VERIFIED_ONLY.contains(viewId) && !session.require().canUseServices()) return home;
             if ("admin".equals(viewId) && !"admin".equals(home)) return home;
             return viewId;
         }

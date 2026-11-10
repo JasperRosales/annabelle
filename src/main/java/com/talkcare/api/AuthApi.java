@@ -34,6 +34,11 @@ public final class AuthApi {
         return client.post(path, registration, Account.class);
     }
 
+    /** The signed-in account as the API currently sees it (status, verification). */
+    public CompletableFuture<Account> me() {
+        return client.get("/api/auth/me", Account.class);
+    }
+
     public CompletableFuture<Void> logout() {
         return client.post("/api/auth/logout", null);
     }

@@ -46,7 +46,10 @@ public final class TalkCareUi {
         this.navbar = new NavbarController(context);
         this.connection = new ConnectionController(context);
         this.auth = new AuthController(context, verification);
-        this.admin = new AdminController(context, appointments);
+        this.admin = new AdminController(context, appointments, reportDetails);
+        NotificationsController notifications = new NotificationsController(context);
+        // A new notification usually means something changed: refresh the admin dashboard.
+        notifications.onNew(admin::refreshIfShown);
         List<Controller> controllers = List.of(
                 navbar,
                 connection,
@@ -59,7 +62,7 @@ public final class TalkCareUi {
                 new ReportsController(context, appointments, reportDetails),
                 appointments,
                 reportDetails,
-                new NotificationsController(context),
+                notifications,
                 admin);
 
         ActionRouter router = new ActionRouter(error -> {

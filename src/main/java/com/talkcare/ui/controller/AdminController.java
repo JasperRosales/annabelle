@@ -32,14 +32,19 @@ public final class AdminController extends Controller implements Screen {
 
     private final AdminCalendar calendar;
     private final AppointmentsController appointments;
+    private final ReportDetailsController reportDetails;
+    private List<Report> allReports = List.of();
+    private String reportFilter = "ALL";
     private List<AdminRequest> requests = List.of();
     private AdminRequest reviewing;
     private List<Account> users = List.of();
     private String userRole = "ALL";
     private String userQuery = "";
 
-    public AdminController(UiContext context, AppointmentsController appointments) {
+    public AdminController(UiContext context, AppointmentsController appointments,
+                           ReportDetailsController reportDetails) {
         super(context);
+        this.reportDetails = reportDetails;
         this.calendar = new AdminCalendar(context.dom());
         this.appointments = appointments;
     }
@@ -53,6 +58,14 @@ public final class AdminController extends Controller implements Screen {
         router.onClick("show-admin-remarks", action ->
                 showAll("review-remarks-label", "review-remarks", "review-save-remarks"));
         router.onClick("admin-review", action -> submitReview(action.arg()));
+        router.onClick("admin-report-filter", action -> {
+            reportFilter = action.arg();
+            dom().byClass("admin-report-pill").forEach(p -> p.toggleClass("active", reportFilter.equals(p.data("arg"))));
+            renderReports();
+        });
+        router.onClick("admin-report-details", action -> allReports.stream()
+                .filter(r -> r.id() == Long.parseLong(action.arg())).findFirst()
+                .ifPresent(r -> reportDetails.show(r, updated -> reload())));
         router.onClick("admin-calendar-prev", action -> { calendar.shift(-1); loadSchedule(); });
         router.onClick("admin-calendar-next", action -> { calendar.shift(1); loadSchedule(); });
         router.onClick("admin-calendar-day", action -> {
@@ -86,6 +99,11 @@ public final class AdminController extends Controller implements Screen {
         reload();
     }
 
+    /** Reloads the dashboard when it is on screen (e.g. a new admin notification arrived). */
+    public void refreshIfShown() {
+        if ("admin".equals(navigator().currentView())) reload();
+    }
+
     /** Draws an empty calendar for the current month (before any schedule is loaded). */
     public void renderEmptyCalendar() {
         calendar.render(Set.of());
@@ -114,9 +132,46 @@ public final class AdminController extends Controller implements Screen {
 
     private void loadOpenReports() {
         UiCall.of(api().reports().all())
-                .onSuccess(all -> byId("stat-open-reports").text(String.valueOf(all.stream().filter(Report::isOpen).count())))
-                .onError(error -> byId("stat-open-reports").text("—"))
+                .onSuccess(all -> {
+                    allReports = all;
+                    byId("stat-open-reports").text(String.valueOf(all.stream().filter(Report::isOpen).count()));
+                    renderReports();
+                })
+                .onError(error -> {
+                    byId("stat-open-reports").text("—");
+                    showError("admin-reports-list", "Unable to load reports: " + error.getMessage());
+                })
                 .start();
+    }
+
+    private void renderReports() {
+        List<Report> shown = allReports.stream()
+                .filter(r -> "ALL".equals(reportFilter) || reportFilter.equals(r.status()))
+                .toList();
+        byId("admin-report-count").text(String.valueOf(shown.size()));
+        El container = byId("admin-reports-list").clear();
+        if (shown.isEmpty()) {
+            container.append(dom().create("div", "dsh-empty compact").append(
+                    dom().create("strong").text("No reports here")));
+            return;
+        }
+        for (Report r : shown) {
+            String to = "PSYCHIATRIST".equals(r.recipient()) ? "Psychiatrist" : "Attorney";
+            String who = orDefault(r.assignedProfessionalName(), "");
+            container.append(dom().create("div", "report-row")
+                    .attr("data-action", "admin-report-details")
+                    .attr("data-arg", String.valueOf(r.id()))
+                    .append(dom().create("div", "report-cell-main").append(
+                                    dom().create("span", "report-icon"),
+                                    dom().create("div").append(
+                                            dom().create("div", "report-code", orDefault(r.reportCode(), "Report")),
+                                            dom().create("div", "report-meta", orDefault(r.fullName(), "Client")
+                                                    + " → " + to + (who.isEmpty() ? "" : " " + who)))),
+                            dom().create("div", "report-concern", orDefault(r.concernType(), "—")),
+                            dom().create("div").append(dom().create("span", "status-badge " + r.badgeClass(),
+                                    orDefault(r.statusLabel(), "Under Review"))),
+                            dom().create("div", "report-chevron", "Review \u203A")));
+        }
     }
 
     private void loadPendingRequests() {
@@ -366,8 +421,11 @@ public final class AdminController extends Controller implements Screen {
                 + "? They will be signed out and cannot sign in until reactivated.")) return;
         UiCall.of(api().admin().setUserStatus(userId, action))
                 .onSuccess(updated -> {
-                    loadUsers();
-                    loadActivity();
+                    reload();
+                    if ("REACTIVATE".equals(action) && "PENDING_VERIFICATION".equals(updated.status())) {
+                        dialogs().info(updated.displayName() + " was reactivated. Their account request is back under "
+                                + "Pending requests for you to review and approve.");
+                    }
                 })
                 .onError(error -> dialogs().error("Could not update the account: " + error.getMessage()))
                 .start();

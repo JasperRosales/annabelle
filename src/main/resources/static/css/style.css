@@ -4810,3 +4810,42 @@ button.kpi-card:hover {
 @media (max-width: 820px) {
   .profile-layout { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Show/hide password */
+.pw-field {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.pw-field > input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding-right: 44px;
+  box-sizing: border-box;
+}
+.pw-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #5b6f5e;
+  cursor: pointer;
+}
+.pw-toggle:hover { color: #23492d; background: rgba(35, 73, 45, 0.08); }
+.pw-toggle .pw-slash { display: none; }
+.pw-toggle.revealed .pw-slash { display: inline; }
+
+/* Report recipient choice and report review */
+.report-recipient { flex: 1; flex-wrap: wrap; }
+.report-manage { margin-top: 18px; border-top: 1px solid #dfe8dc; padding-top: 14px; }
+.report-review { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
